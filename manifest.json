@@ -1,0 +1,22 @@
+{
+  "name": "Acudiente - I.E. De María",
+  "short_name": "Acudiente",
+  "start_url": "/Observacionesycontroldeausentismoescolar/",
+  "scope": "/Observacionesycontroldeausentismoescolar/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1b5e20",
+  "description": "Aplicativo del acudiente - Control de observaciones y ausentismo escolar",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
