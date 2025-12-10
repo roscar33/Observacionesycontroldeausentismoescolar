@@ -155,7 +155,6 @@
       margin-bottom: 12px;
     }
 
-    /* Tabs / menú */
     .tabs {
       display: inline-flex;
       border-radius: 999px;
@@ -356,7 +355,7 @@
       margin-top: 12px;
       padding-top: 10px;
       border-top: 1px dashed #cbd5e1;
-      display: none; /* se muestra solo después de buscar */
+      display: none;
     }
 
     canvas.signature-pad {
@@ -376,7 +375,6 @@
       color: var(--text-muted);
     }
 
-    /* Motivos excusa */
     .motivo-group {
       border-radius: 14px;
       border: 1px solid #e2e8f0;
@@ -424,7 +422,6 @@
     <header class="top-bar">
       <div class="brand">
         <div class="brand-logo">
-          <!-- Asegúrate de tener escudo.png en la misma carpeta -->
           <img src="escudo.png" alt="Escudo Institución Educativa de María">
         </div>
         <div class="brand-text">
@@ -468,7 +465,7 @@
         <div id="observacionesResumen" class="info-text" style="margin-top:10px;"></div>
         <div id="listaObservaciones" class="records-list"></div>
 
-        <!-- Panel para firma del acudiente (se muestra luego de buscar) -->
+        <!-- Panel para firma del acudiente -->
         <div id="panelFirmaObs" class="signature-panel">
           <div class="form-group">
             <label>Firma del acudiente</label>
@@ -488,7 +485,7 @@
 
       <!-- TAB: EXCUSA -->
       <div id="tab-excusa" class="tab-content">
-        <!-- Paso 1: documento del estudiante -->
+        <!-- Paso 1: documento -->
         <form id="formIdentExcusa">
           <div class="form-group">
             <label for="docExcusa">Documento del estudiante</label>
@@ -502,7 +499,7 @@
 
         <div id="excusaResumen" class="info-text" style="margin-top:8px;"></div>
 
-        <!-- Paso 2: formulario completo (se muestra después de continuar) -->
+        <!-- Paso 2: formulario excusa -->
         <form id="formExcusa" style="display:none; margin-top:10px;">
           <div class="form-group">
             <label for="fechaInasistencia">Fecha de la inasistencia</label>
@@ -512,8 +509,8 @@
           <div class="form-group">
             <label>Motivo de la inasistencia</label>
             <div class="field-hint">
-              Escoja una opción. Es importante que explique la situación en el cuadro de texto.
-              <strong>Si selecciona “Otro” es obligatorio escribir la explicación.</strong>
+              Escoja una opción y explique brevemente la situación en el cuadro de texto.
+              <strong>Todos los motivos requieren explicación escrita.</strong>
             </div>
           </div>
 
@@ -579,7 +576,6 @@
       doc, query, where
     } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-    // --------- CONFIG FIREBASE ----------
     const firebaseConfig = {
       apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8",
       authDomain: "diariodeprocesos-6f78d.firebaseapp.com",
@@ -594,7 +590,6 @@
     const colRegistros = collection(db, "registrosComportamentales");
     const colExcusas   = collection(db, "excusasInasistencia");
 
-    // --------- ESTADO CONEXIÓN ----------
     const connStatus = document.getElementById('connStatus');
     function updateConn() {
       if (navigator.onLine) {
@@ -609,7 +604,7 @@
     window.addEventListener('offline', updateConn);
     updateConn();
 
-    // --------- TABS ----------
+    // TABS
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = {
       observaciones: document.getElementById('tab-observaciones'),
@@ -627,7 +622,6 @@
       });
     });
 
-    // --------- UTILIDADES ----------
     function escapeHTML(s) {
       if (!s) return "";
       return String(s)
@@ -637,7 +631,7 @@
         .replace(/'/g, "&#39;");
     }
 
-    // --------- CONSULTAR OBSERVACIONES ----------
+    // ---------- OBSERVACIONES ----------
     const formBuscarObs = document.getElementById('formBuscarObs');
     const docObsInput = document.getElementById('docObs');
     const listaObservaciones = document.getElementById('listaObservaciones');
@@ -680,14 +674,12 @@
 
         panelFirmaObs.style.display = "block";
 
-        // Orden por fecha descendente (texto YYYY-MM-DD)
         observacionesActuales.sort((a,b) => (b.fecha || "").localeCompare(a.fecha || ""));
-
         const nombre = observacionesActuales[0].nombreEstudiante || "";
         obsResumen.textContent = `Estudiante: ${nombre} · Total de observaciones: ${observacionesActuales.length}`;
 
         let html = "";
-        observacionesActuales.forEach((r) => {
+        observacionesActuales.forEach(r => {
           html += '<div class="obs-card">';
           html += '  <div class="obs-header">';
           html += '    <span>Fecha: ' + escapeHTML(r.fecha || "") + '</span>';
@@ -714,7 +706,6 @@
 
         listaObservaciones.innerHTML = html;
 
-        // enlazar botones "Firmar..." solo para PENDIENTES
         document.querySelectorAll('.btn-firmar').forEach(btn => {
           btn.addEventListener('click', () => {
             obsSeleccionadaId = btn.dataset.id;
@@ -728,7 +719,6 @@
           });
         });
 
-        // botones "Ver esta anotación" (solo informativos, sin activar envío)
         document.querySelectorAll('.btn-firmar-seleccionar').forEach(btn => {
           btn.addEventListener('click', () => {
             const fecha = btn.dataset.fecha || "";
@@ -747,21 +737,20 @@
       }
     });
 
-    // --------- FIRMA ACUDIENTE (OBSERVACIONES) ----------
+    // FIRMA ACUDIENTE (OBSERVACIONES)
     const firmaCanvas = document.getElementById('signaturePadAcudiente');
     const firmaCtx = firmaCanvas.getContext('2d');
     const firmaInfo = document.getElementById('firmaInfo');
     const btnLimpiarFirmaAcudiente = document.getElementById('btnLimpiarFirmaAcudiente');
     const btnEnviarFirmaAcudiente = document.getElementById('btnEnviarFirmaAcudiente');
 
-    function ajustarCanvasFirma() {
+    function ajustarCanvasFirmaObs() {
       const w = firmaCanvas.getBoundingClientRect().width || 500;
       firmaCanvas.width = w;
       firmaCanvas.height = 220;
       firmaCtx.clearRect(0, 0, firmaCanvas.width, firmaCanvas.height);
     }
-    ajustarCanvasFirma();
-    window.addEventListener('resize', ajustarCanvasFirma);
+    ajustarCanvasFirmaObs();
 
     let firmando = false, fx = 0, fy = 0;
     function getPosFirma(e) {
@@ -795,10 +784,7 @@
       firmaCtx.stroke();
       fx = p.x; fy = p.y;
     }
-    function stopFirma(e) {
-      e && e.preventDefault();
-      firmando = false;
-    }
+    function stopFirma(e) { e && e.preventDefault(); firmando = false; }
 
     firmaCanvas.addEventListener("mousedown", startFirma);
     firmaCanvas.addEventListener("mousemove", drawFirma);
@@ -837,7 +823,6 @@
         btnEnviarFirmaAcudiente.disabled = true;
         btnEnviarFirmaAcudiente.classList.add("btn-disabled");
 
-        // refrescar observaciones si ya había una búsqueda
         if (docObsInput.value.trim()) {
           formBuscarObs.dispatchEvent(new Event("submit"));
         }
@@ -847,7 +832,7 @@
       }
     });
 
-    // --------- EXCUSA POR INASISTENCIA ----------
+    // ---------- EXCUSA ----------
     const formIdentExcusa = document.getElementById('formIdentExcusa');
     const formExcusa = document.getElementById('formExcusa');
     const docExcusa = document.getElementById('docExcusa');
@@ -867,16 +852,32 @@
     const canvasExcusa = document.getElementById('signaturePadExcusa');
     const ctxExcusa = canvasExcusa.getContext('2d');
 
-    function ajustarCanvasExcusa() {
-      const w = canvasExcusa.getBoundingClientRect().width || 500;
-      canvasExcusa.width = w;
-      canvasExcusa.height = 220;
-      ctxExcusa.clearRect(0, 0, canvasExcusa.width, canvasExcusa.height);
-    }
-    ajustarCanvasExcusa();
-    window.addEventListener('resize', ajustarCanvasExcusa);
-
     let firmandoExcusa = false, ex = 0, ey = 0;
+    let excusaTieneTrazo = false;       // ¿dibujó algo?
+    let firmaExcusaDataURL = null;      // copia de seguridad de la firma
+
+    function ajustarCanvasExcusa(redibujar = true) {
+      const w = canvasExcusa.getBoundingClientRect().width || 500;
+      const h = 220;
+
+      canvasExcusa.width = w;
+      canvasExcusa.height = h;
+      ctxExcusa.clearRect(0, 0, w, h);
+
+      if (redibujar && firmaExcusaDataURL) {
+        const img = new Image();
+        img.onload = () => {
+          ctxExcusa.drawImage(img, 0, 0, w, h);
+        };
+        img.src = firmaExcusaDataURL;
+      }
+    }
+
+    // Inicial
+    ajustarCanvasExcusa(false);
+    // Si la pantalla cambia de tamaño, redibujamos la firma guardada
+    window.addEventListener('resize', () => ajustarCanvasExcusa(true));
+
     function getPosExcusa(e) {
       const rect = canvasExcusa.getBoundingClientRect();
       let x, y;
@@ -889,12 +890,14 @@
       }
       return { x, y };
     }
+
     function startExcusa(e) {
       e.preventDefault();
       firmandoExcusa = true;
       const p = getPosExcusa(e);
       ex = p.x; ey = p.y;
     }
+
     function drawExcusa(e) {
       if (!firmandoExcusa) return;
       e.preventDefault();
@@ -907,10 +910,16 @@
       ctxExcusa.lineTo(p.x, p.y);
       ctxExcusa.stroke();
       ex = p.x; ey = p.y;
+      excusaTieneTrazo = true;
     }
+
     function stopExcusa(e) {
       e && e.preventDefault();
       firmandoExcusa = false;
+      // Guardamos una copia de la firma cada vez que termina un trazo
+      if (excusaTieneTrazo) {
+        firmaExcusaDataURL = canvasExcusa.toDataURL("image/png");
+      }
     }
 
     canvasExcusa.addEventListener("mousedown", startExcusa);
@@ -923,6 +932,8 @@
 
     document.getElementById('btnLimpiarFirmaExcusa').addEventListener('click', () => {
       ctxExcusa.clearRect(0, 0, canvasExcusa.width, canvasExcusa.height);
+      excusaTieneTrazo = false;
+      firmaExcusaDataURL = null;
     });
 
     // Buscar nombre según documento y mostrar formulario
@@ -951,7 +962,7 @@
           }
         });
 
-        // Estudiante ficticio de prueba
+        // estudiante ficticio de pruebas
         if (!nombre && docEst === "15271403") {
           nombre = "OSCAR BARRIENTOS";
         }
@@ -987,19 +998,30 @@
         return;
       }
 
-      // Motivo seleccionado
       let motivoTipo = null;
       let motivoDetalle = "";
 
       if (motivoEnfermedad.checked) {
         motivoTipo = "Enfermedad";
         motivoDetalle = motivoEnfermedadTexto.value.trim();
+        if (!motivoDetalle) {
+          alert("Por favor explique brevemente la situación de enfermedad.");
+          return;
+        }
       } else if (motivoCita.checked) {
         motivoTipo = "Cita médica";
         motivoDetalle = motivoCitaTexto.value.trim();
+        if (!motivoDetalle) {
+          alert("Por favor explique brevemente la cita médica.");
+          return;
+        }
       } else if (motivoCalamidad.checked) {
         motivoTipo = "Calamidad";
         motivoDetalle = motivoCalamidadTexto.value.trim();
+        if (!motivoDetalle) {
+          alert("Por favor explique brevemente la calamidad.");
+          return;
+        }
       } else if (motivoOtro.checked) {
         motivoTipo = "Otro";
         motivoDetalle = motivoOtroTexto.value.trim();
@@ -1014,8 +1036,13 @@
         return;
       }
 
+      // Verificar que haya firma guardada
+      if (!firmaExcusaDataURL || !excusaTieneTrazo) {
+        alert("Por favor dibuje la firma del acudiente antes de enviar la excusa.");
+        return;
+      }
+
       try {
-        const firmaData = canvasExcusa.toDataURL("image/png");
         const fechaEnvio = new Date().toISOString();
 
         await addDoc(colExcusas, {
@@ -1023,17 +1050,19 @@
           fechaInasistencia: fechaIna,
           motivoTipo,
           motivoDetalle,
-          firmaAcudiente: firmaData,
+          firmaAcudiente: firmaExcusaDataURL,
           fechaEnvio
         });
 
         alert(
-          "Recuerde que es obligación del estudiante ponerse al día con las actividades delegadas durante su ausencia.\n\n" +
+          "Recuerde que es responsabilidad del estudiante ponerse al día con las actividades delegadas durante su ausencia.\n\n" +
           "Solamente se le reconocerán las notas por los trabajos correspondientes a la jornada en la que no asistió si presenta la excusa."
         );
 
         formExcusa.reset();
         ctxExcusa.clearRect(0, 0, canvasExcusa.width, canvasExcusa.height);
+        excusaTieneTrazo = false;
+        firmaExcusaDataURL = null;
         fechaInasistencia.valueAsDate = new Date();
 
       } catch (err) {
@@ -1042,7 +1071,6 @@
       }
     });
 
-    // valor inicial de fecha (por si ya se muestra)
     fechaInasistencia.valueAsDate = new Date();
   </script>
 </body>
