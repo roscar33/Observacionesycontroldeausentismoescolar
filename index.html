@@ -6,11 +6,11 @@
 
     <title>Portal del Acudiente - I.E. De María</title>
 
-    <!-- Manifest para PWA -->
-    <link rel="manifest" href="manifest.json">
+    <!-- PWA: manifest con ruta completa -->
+    <link rel="manifest" href="/Observacionesycontroldeausentismoescolar/manifest.json">
     <meta name="theme-color" content="#1b5e20">
 
-    <!-- Estilos generales -->
+    <!-- Estilos -->
     <style>
         body {
             margin: 0;
@@ -138,10 +138,10 @@
         const db = firebase.firestore();
     </script>
 
-    <!-- SERVICE WORKER -->
+    <!-- Service Worker con ruta completa -->
     <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("sw.js")
+            navigator.serviceWorker.register("/Observacionesycontroldeausentismoescolar/sw.js")
                 .catch(err => console.log("Error SW:", err));
         }
     </script>
@@ -151,7 +151,7 @@
 
     <!-- ENCABEZADO -->
     <div class="header">
-        <img src="escudo.png">
+        <img src="/Observacionesycontroldeausentismoescolar/escudo.png">
         <h2>Institución Educativa de María</h2>
         <h3>Sede Rural Santa Juana (Primaria) – 2026</h3>
         <strong>Docente: Oscar Barrientos</strong>
@@ -229,8 +229,13 @@
         const ctx = canvas.getContext("2d");
         let dibujando = false;
 
-        canvas.width = canvas.offsetWidth;
-        canvas.height = 200;
+        function ajustarCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 200;
+        }
+
+        ajustarCanvas();
+        window.addEventListener("resize", ajustarCanvas);
 
         canvas.addEventListener("mousedown", e => {
             dibujando = true;
