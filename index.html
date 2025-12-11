@@ -6,11 +6,10 @@
 
     <title>Portal del Acudiente - I.E. De María</title>
 
-    <!-- PWA: manifest con ruta completa -->
+    <!-- PWA -->
     <link rel="manifest" href="/Observacionesycontroldeausentismoescolar/manifest.json">
     <meta name="theme-color" content="#1b5e20">
 
-    <!-- Estilos -->
     <style>
         body {
             margin: 0;
@@ -67,17 +66,22 @@
             box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
         }
 
+        h3 {
+            margin-top: 0;
+        }
+
         input, select, textarea {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
             border-radius: 10px;
             border: 1px solid #aaa;
+            font-size: 15px;
         }
 
         textarea {
             resize: none;
-            height: 120px;
+            min-height: 120px;
         }
 
         .btn {
@@ -90,10 +94,15 @@
             border-radius: 10px;
             border: none;
             cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn.secundario {
+            background: #444;
         }
 
         .btn:hover {
-            background: #145018;
+            opacity: 0.95;
         }
 
         .signature-container {
@@ -109,6 +118,7 @@
             background: white;
             border-radius: 10px;
             border: 2px solid #ccc;
+            touch-action: none; /* mejora escritura táctil */
         }
 
         .footer-text {
@@ -118,9 +128,20 @@
             color: #145018;
             text-align: center;
         }
+
+        .info-text {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .resumen-observaciones > div {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            font-size: 14px;
+        }
     </style>
 
-    <!-- FIREBASE -->
+    <!-- FIREBASE (versión compat para hacerlo sencillo) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
@@ -138,7 +159,7 @@
         const db = firebase.firestore();
     </script>
 
-    <!-- Service Worker con ruta completa -->
+    <!-- Service Worker -->
     <script>
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("/Observacionesycontroldeausentismoescolar/sw.js")
@@ -151,7 +172,7 @@
 
     <!-- ENCABEZADO -->
     <div class="header">
-        <img src="/Observacionesycontroldeausentismoescolar/escudo.png">
+        <img src="/Observacionesycontroldeausentismoescolar/escudo.png" alt="Escudo I.E. De María">
         <h2>Institución Educativa de María</h2>
         <h3>Sede Rural Santa Juana (Primaria) – 2026</h3>
         <strong>Docente: Oscar Barrientos</strong>
@@ -165,51 +186,60 @@
 
     <!-- CONSULTAR OBSERVACIONES -->
     <div id="observaciones" class="container">
-
         <h3>Documento del estudiante</h3>
         <input type="number" id="docObs" placeholder="Ej: 15271403">
-
+        <div class="info-text">
+            Digite el número de documento del estudiante para ver las observaciones registradas.
+        </div>
         <button class="btn" onclick="buscarObservaciones()">Buscar observaciones</button>
 
-        <div id="resultadoObs"></div>
+        <div id="resultadoObs" class="resumen-observaciones"></div>
     </div>
 
     <!-- ENVIAR EXCUSA -->
     <div id="excusas" class="container" style="display:none;">
-
+        <!-- Paso 1: documento -->
         <h3>Documento del estudiante</h3>
-        <input type="number" id="docExc" placeholder="Ej: 15271403" oninput="cargarNombre()">
-
-        <div id="nombreEstudiante" style="margin-top:10px; font-weight:bold;"></div>
-
-        <h3>Fecha de inasistencia</h3>
-        <input type="date" id="fechaExc">
-
-        <h3>Motivo</h3>
-        <select id="motivo">
-            <option value="Enfermedad">Enfermedad</option>
-            <option value="Cita médica">Cita médica</option>
-            <option value="Calamidad">Calamidad</option>
-            <option value="Otro">Otro (especifique)</option>
-        </select>
-
-        <textarea id="detalleMotivo" placeholder="Explique la razón de la inasistencia"></textarea>
-
-        <h3>Firma del acudiente</h3>
-        <div class="signature-container">
-            <canvas id="firmaPad"></canvas>
-            <button class="btn" style="background:#444;" onclick="limpiarFirma()">Limpiar firma</button>
+        <input type="number" id="docExc" placeholder="Ej: 15271403">
+        <div class="info-text">
+            Digite el número de documento del estudiante para registrar una excusa de inasistencia.
         </div>
+        <button class="btn" onclick="mostrarFormularioExcusa()">Continuar</button>
 
-        <button class="btn" onclick="enviarExcusa()">Enviar excusa</button>
+        <!-- Paso 2: formulario (se muestra luego de documento) -->
+        <div id="formExcusa" style="display:none; margin-top:20px;">
+            <div id="nombreEstudiante" style="margin-bottom:10px; font-weight:bold;"></div>
+
+            <h3>Fecha de inasistencia</h3>
+            <input type="date" id="fechaExc">
+
+            <h3>Motivo</h3>
+            <select id="motivo">
+                <option value="Enfermedad">Enfermedad</option>
+                <option value="Cita médica">Cita médica</option>
+                <option value="Calamidad">Calamidad</option>
+                <option value="Otro">Otro (especifique)</option>
+            </select>
+
+            <textarea id="detalleMotivo" placeholder="Especifique aquí la razón de la inasistencia"></textarea>
+
+            <h3>Firma del acudiente</h3>
+            <div class="signature-container">
+                <canvas id="firmaPad"></canvas>
+                <button type="button" class="btn secundario" onclick="limpiarFirma()">Limpiar firma</button>
+            </div>
+
+            <button class="btn" onclick="enviarExcusa()">Enviar excusa</button>
+        </div>
     </div>
 
     <div class="footer-text">
         “Familia y escuela caminamos juntos: al colaborar y comunicarnos, construimos el mejor camino para el bienestar y aprendizaje de nuestros hijos.”
     </div>
 
-    <!-- LÓGICA DEL SISTEMA -->
+    <!-- LÓGICA -->
     <script>
+        // ----- Cambio de pestañas -----
         function mostrarObservaciones() {
             document.getElementById("observaciones").style.display = "block";
             document.getElementById("excusas").style.display = "none";
@@ -224,119 +254,204 @@
             document.getElementById("btnObs").classList.remove("active");
         }
 
-        // CANVAS FIRMA
-        const canvas = document.getElementById("firmaPad");
-        const ctx = canvas.getContext("2d");
+        // ----- Firma (canvas) -----
+        let canvas = document.getElementById("firmaPad");
+        let ctx = canvas.getContext("2d");
         let dibujando = false;
+        let lastX = 0;
+        let lastY = 0;
 
-        function ajustarCanvas() {
-            canvas.width = canvas.offsetWidth;
+        function ajustarCanvasFirma() {
+            // Solo ajustar si el formulario está visible
+            const formVisible = document.getElementById("formExcusa").style.display !== "none";
+            if (!formVisible) return;
+
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
             canvas.height = 200;
+            ctx.lineWidth = 2;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "#000000";
         }
 
-        ajustarCanvas();
-        window.addEventListener("resize", ajustarCanvas);
-
-        canvas.addEventListener("mousedown", e => {
+        function empezarDibujo(x, y) {
             dibujando = true;
-            ctx.moveTo(e.offsetX, e.offsetY);
-        });
+            [lastX, lastY] = [x, y];
+        }
 
-        canvas.addEventListener("mousemove", e => {
+        function dibujarLinea(x, y) {
             if (!dibujando) return;
-            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
             ctx.stroke();
+            [lastX, lastY] = [x, y];
+        }
+
+        function detenerDibujo() {
+            dibujando = false;
+        }
+
+        // Eventos de ratón
+        canvas.addEventListener("mousedown", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            empezarDibujo(e.clientX - rect.left, e.clientY - rect.top);
         });
 
-        canvas.addEventListener("mouseup", () => dibujando = false);
-        canvas.addEventListener("mouseout", () => dibujando = false);
+        canvas.addEventListener("mousemove", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            dibujarLinea(e.clientX - rect.left, e.clientY - rect.top);
+        });
+
+        canvas.addEventListener("mouseup", detenerDibujo);
+        canvas.addEventListener("mouseleave", detenerDibujo);
+
+        // Eventos táctiles
+        canvas.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const t = e.touches[0];
+            empezarDibujo(t.clientX - rect.left, t.clientY - rect.top);
+        });
+
+        canvas.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const t = e.touches[0];
+            dibujarLinea(t.clientX - rect.left, t.clientY - rect.top);
+        });
+
+        canvas.addEventListener("touchend", detenerDibujo);
+        canvas.addEventListener("touchcancel", detenerDibujo);
 
         function limpiarFirma() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // BUSCAR OBSERVACIONES
+        window.addEventListener("resize", ajustarCanvasFirma);
+
+        // ----- Observaciones -----
         async function buscarObservaciones() {
-            const doc = document.getElementById("docObs").value;
-
-            if (doc.trim() === "") {
-                alert("Digite el documento");
-                return;
-            }
-
+            const doc = document.getElementById("docObs").value.trim();
             const resDiv = document.getElementById("resultadoObs");
-            resDiv.innerHTML = "<em>Cargando...</em>";
 
-            const snap = await db.collection("registrosComportamentales")
-                                 .where("documento", "==", doc)
-                                 .get();
-
-            if (snap.empty) {
-                resDiv.innerHTML = "<strong>No hay observaciones registradas.</strong>";
+            if (doc === "") {
+                alert("Por favor, digite el documento del estudiante.");
                 return;
             }
 
-            let html = "";
-            snap.forEach(doc => {
-                const d = doc.data();
-                html += `
-                <div style="border-bottom:1px solid #ccc; padding:10px;">
-                    <strong>Fecha:</strong> ${d.fecha}<br>
-                    <strong>Comportamiento:</strong> ${d.comportamiento}<br>
-                    <strong>Descargos:</strong> ${d.descargos}<br>
-                    <strong>Procedimiento:</strong> ${d.procedimiento}<br>
-                    <strong>Firma acudiente:</strong> ${d.firmaAcudiente ? "Registrada" : "Pendiente"}
-                </div>`;
-            });
+            resDiv.innerHTML = "<em>Cargando observaciones...</em>";
 
-            resDiv.innerHTML = html;
-        }
+            try {
+                const snap = await db.collection("registrosComportamentales")
+                                     .where("documento", "==", doc)
+                                     .get();
 
-        // MOSTRAR NOMBRE
-        async function cargarNombre() {
-            const doc = document.getElementById("docExc").value;
+                if (snap.empty) {
+                    resDiv.innerHTML = "<strong>No hay observaciones registradas para este documento.</strong>";
+                    return;
+                }
 
-            if (doc.trim() === "") return;
+                let html = "";
+                snap.forEach(d => {
+                    const r = d.data();
+                    html += `
+                        <div>
+                            <strong>Fecha:</strong> ${r.fecha || ""}<br>
+                            <strong>Comportamiento:</strong> ${r.comportamiento || ""}<br>
+                            <strong>Descargos:</strong> ${r.descargos || ""}<br>
+                            <strong>Procedimiento:</strong> ${r.procedimiento || ""}<br>
+                            <strong>Firma acudiente:</strong> ${r.firmaAcudiente ? "Registrada" : "Pendiente"}
+                        </div>
+                    `;
+                });
 
-            const snap = await db.collection("registrosComportamentales")
-                                 .where("documento", "==", doc)
-                                 .limit(1)
-                                 .get();
-
-            if (!snap.empty) {
-                document.getElementById("nombreEstudiante").innerHTML =
-                    "Estudiante: " + snap.docs[0].data().nombreEstudiante;
+                resDiv.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                resDiv.innerHTML = "<strong>Ocurrió un error al buscar las observaciones.</strong>";
             }
         }
 
-        // ENVIAR EXCUSA
+        // ----- Excusas -----
+        async function mostrarFormularioExcusa() {
+            const doc = document.getElementById("docExc").value.trim();
+            const nombreDiv = document.getElementById("nombreEstudiante");
+            const form = document.getElementById("formExcusa");
+
+            if (doc === "") {
+                alert("Por favor, digite el documento del estudiante.");
+                return;
+            }
+
+            // Mostrar formulario
+            form.style.display = "block";
+
+            // Buscar nombre del estudiante en registros (si existe)
+            try {
+                const snap = await db.collection("registrosComportamentales")
+                                     .where("documento", "==", doc)
+                                     .limit(1)
+                                     .get();
+
+                if (!snap.empty) {
+                    const datos = snap.docs[0].data();
+                    nombreDiv.textContent = "Estudiante: " + (datos.nombreEstudiante || "(sin nombre registrado)");
+                } else {
+                    nombreDiv.textContent = "Estudiante: (no encontrado en registros, pero puede enviar la excusa)";
+                }
+            } catch (err) {
+                console.error(err);
+                nombreDiv.textContent = "Estudiante: (no se pudo verificar el nombre, pero puede enviar la excusa)";
+            }
+
+            // Ajustar canvas AHORA que ya es visible
+            setTimeout(ajustarCanvasFirma, 50);
+        }
+
         async function enviarExcusa() {
-            const doc = document.getElementById("docExc").value;
+            const doc = document.getElementById("docExc").value.trim();
             const fecha = document.getElementById("fechaExc").value;
             const motivo = document.getElementById("motivo").value;
-            const detalle = document.getElementById("detalleMotivo").value;
+            const detalle = document.getElementById("detalleMotivo").value.trim();
 
             if (!doc || !fecha || !motivo || !detalle) {
-                alert("Complete todos los campos");
+                alert("Por favor, complete todos los campos de la excusa.");
                 return;
             }
 
+            // Validar que haya algo dibujado (firma)
             const firmaImg = canvas.toDataURL();
+            // Esta validación es simple: si el canvas está completamente blanco
+            // toDataURL será siempre diferente, pero aceptaremos cualquier trazo.
+            // Si quieres obligar a firmar sí o sí, se podría mejorar esto.
 
-            await db.collection("excusas").add({
-                documento: doc,
-                fecha,
-                motivo,
-                detalle,
-                firma: firmaImg,
-                fechaRegistro: new Date()
-            });
+            try {
+                await db.collection("excusas").add({
+                    documento: doc,
+                    fecha,
+                    motivo,
+                    detalle,
+                    firma: firmaImg,
+                    fechaRegistro: new Date()
+                });
 
-            alert("Excusa enviada.\n\nRecuerde que es obligación del estudiante ponerse al día con las actividades delegadas durante su ausencia.");
+                alert(
+                    "Excusa enviada correctamente.\n\n" +
+                    "Recuerde que es obligación del estudiante ponerse al día con las actividades delegadas " +
+                    "durante su ausencia. Solo se reconocerán las notas de los trabajos correspondientes " +
+                    "a la jornada en la que no asistió, si presenta la excusa."
+                );
 
-            limpiarFirma();
-            document.getElementById("fechaExc").value = "";
-            document.getElementById("detalleMotivo").value = "";
+                // Limpiar formulario
+                document.getElementById("fechaExc").value = "";
+                document.getElementById("motivo").value = "Enfermedad";
+                document.getElementById("detalleMotivo").value = "";
+                limpiarFirma();
+            } catch (err) {
+                console.error(err);
+                alert("Ocurrió un error al enviar la excusa. Intente nuevamente.");
+            }
         }
     </script>
 
