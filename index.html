@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguimiento de Procesos Escolares – Primaria 2026</title>
 
+<style>
+  body{margin:0;font-family:Arial,sans-serif;background:#dff5e1;padding-bottom:80px}
+  header{background:#1b5e20;color:#fff;padding:18px 16px 16px;text-align:center;border-bottom-left-radius:20px;border-bottom-right-radius:20px}
+  header img{width:90px;height:auto;display:block;margin:0 auto 10px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+  .inst{font-size:28px;font-weight:900;line-height:1.12;margin:0}
+  .sede{font-size:16px;font-weight:700;margin:8px 0 0;opacity:.95}
+  .docente{font-size:15px;font-weight:800;margin:8px 0 0}
+  .app-title{margin:14px auto 0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:10px 12px;border-radius:14px;font-weight:900;font-size:15px;display:inline-block}
+
+  .menu{display:flex;justify-content:space-around;background:#2e7d32;padding:10px;margin:15px;border-radius:30px}
+  .menu button{border:none;padding:12px 20px;border-radius:20px;font-weight:bold;cursor:pointer}
+  .menu .active{background:#1b5e20;color:#fff}
+  .menu button:not(.active){background:#fff;color:#2e7d32}
+
+  .container{background:#fff;margin:15px;padding:15px;border-radius:15px;box-shadow:0 2px 5px rgba(0,0,0,.15)}
+  h3{margin-top:0}
+  label{display:block;margin-top:10px;font-weight:bold}
+  input,textarea,select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:1px solid #aaa;font-size:15px}
+  textarea{min-height:100px}
+
+  .btn{margin-top:15px;width:100%;padding:15px;background:#1b5e20;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
+  .btn.sec{background:#555}
+  .btn:disabled{opacity:.65;cursor:not-allowed}
+
+  .registro{border-bottom:1px solid #ddd;padding:15px 0}
+  .badge{padding:8px 12px;border-radius:12px;font-weight:bold;display:inline-block}
+  .green{background:#dcfce7;color:#166534}
+  .orange{background:#ffedd5;color:#9a3412}
+  .red{background:#fee2e2;color:#991b1b}
+
+  canvas{width:100%;height:180px;border:2px dashed #666;border-radius:10px;background:#fff;touch-action:none}
+
+  .msg{margin-top:10px;padding:10px;border-radius:10px;font-size:14px}
+  .msg.green{background:#ecfdf5}
+  .msg.orange{background:#fff7ed}
+  .msg.red{background:#fff1f2}
+
+  .info-text{margin-top:10px;color:#555;font-size:14px}
+  .firmado{font-weight:bold;margin-top:10px}
+
+  .footer-text{margin:0 15px 15px;text-align:center;font-weight:900;color:#145018;font-size:16px}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging-compat.js"></script>
+
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8",
+    authDomain: "diariodeprocesos-6f78d.firebaseapp.com",
+    projectId: "diariodeprocesos-6f78d",
+    messagingSenderId: "487922338632",
+    appId: "1:487922338632:web:47fc48c23dbea064b0817d"
+  });
+
+  const db = firebase.firestore();
+  const messaging = firebase.messaging();
+
+  // ✅ TU VAPID KEY (ya pegada)
+  const VAPID_KEY = "BBb7mnS_6JnPLX2F6xFTNcp55SBkTEXYdocOW19CaplHQ83m7KJ_tX-2STuN3iB3ZBby9I6dvehPhYjeMg0t9Gw";
+</script>
+</head>
+
+<body>
+<header>
+  <img src="/Observacionesycontroldeausentismoescolar/escudo.png" alt="Escudo Institución Educativa de María">
+  <h1 class="inst">Institución Educativa de María</h1>
+  <div class="sede">Sede Rural Santa Juana (Primaria) – 2026</div>
+  <div class="docente">Docente: Oscar Barrientos</div>
+  <div class="app-title">Seguimiento de Procesos Escolares</div>
+</header>
+
+<div class="menu">
+  <button id="btnObs" class="active">Observaciones</button>
+  <button id="btnExc">Excusas</button>
+</div>
+
+<div id="obs" class="container">
+  <h3>Documento del estudiante</h3>
+  <input id="docObs" placeholder="Ej: 15271403">
+  <div class="info-text">Digite el documento para consultar observaciones y firmar cada registro.</div>
+  <button class="btn" onclick="buscar()">Buscar observaciones</button>
+  <div id="estadoNoti" class="info-text"></div>
+  <div id="resultado"></div>
+</div>
+
+<div id="exc" class="container" style="display:none">
+  <h3>Excusa de inasistencia</h3>
+
+  <input id="docExc" placeholder="Documento del estudiante">
+  <div class="info-text">Primero digite el documento para identificarse y luego continúe.</div>
+  <button class="btn" id="btnContinuarExc" type="button">Continuar</button>
+
+  <div id="formExc" style="display:none; margin-top:15px;">
+    <label>Fecha de la inasistencia</label>
+    <input type="date" id="fechaExc">
+    <div class="info-text">Seleccione la fecha en la que el estudiante no asistió.</div>
+
+    <label>Motivo</label>
+    <select id="motivo">
+      <option>Enfermedad</option>
+      <option>Cita médica</option>
+      <option>Calamidad</option>
+      <option>Otro</option>
+    </select>
+
+    <label>Detalle</label>
+    <textarea id="detalle" placeholder="Escriba el detalle de la excusa"></textarea>
+
+    <label>Firma del acudiente</label>
+    <canvas id="firmaExc"></canvas>
+    <button class="btn sec" type="button" onclick="limpiarExc()">Limpiar firma</button>
+    <button class="btn" id="btnEnviarExc" type="button" onclick="enviarExc()">Enviar excusa</button>
+
+    <div id="estadoExc" class="info-text"></div>
+  </div>
+</div>
+
+<div class="footer-text">
+  “Familia y escuela caminamos juntos: al colaborar y comunicarnos, construimos el mejor camino para el bienestar y aprendizaje de nuestros hijos.”
+</div>
+
+<script>
+  // Tabs
+  const obs = document.getElementById("obs");
+  const exc = document.getElementById("exc");
+  const btnObs = document.getElementById("btnObs");
+  const btnExc = document.getElementById("btnExc");
+  btnObs.onclick = () => { obs.style.display="block"; exc.style.display="none"; btnObs.classList.add("active"); btnExc.classList.remove("active"); };
+  btnExc.onclick = () => { obs.style.display="none"; exc.style.display="block"; btnExc.classList.add("active"); btnObs.classList.remove("active"); };
+
+  // Firma helper
+  let firmas = {};
+  function preparar(canvas){
+    const ctx = canvas.getContext("2d");
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 180;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    let dib=false, lx=0, ly=0;
+
+    function pos(e){
+      const r = canvas.getBoundingClientRect();
+      const t = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      return { x: t.clientX - r.left, y: t.clientY - r.top };
+    }
+    function start(e){ e.preventDefault(); dib=true; const p=pos(e); lx=p.x; ly=p.y; }
+    function move(e){
+      if(!dib) return;
+      e.preventDefault();
+      const p=pos(e);
+      ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(p.x,p.y); ctx.stroke();
+      lx=p.x; ly=p.y;
+    }
+    function end(e){ e && e.preventDefault(); dib=false; }
+
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", move);
+    canvas.addEventListener("mouseup", end);
+    canvas.addEventListener("mouseleave", end);
+    canvas.addEventListener("touchstart", start, {passive:false});
+    canvas.addEventListener("touchmove", move, {passive:false});
+    canvas.addEventListener("touchend", end, {passive:false});
+
+    return { clear:()=>ctx.clearRect(0,0,canvas.width,canvas.height), data:()=>canvas.toDataURL("image/png") };
+  }
+
+  // ✅ NOTIFICACIONES: activar y guardar token en Firestore
+  async function activarNotificaciones(documentoEstudiante){
+    const estado = document.getElementById("estadoNoti");
+
+    if(location.protocol !== "https:" && location.hostname !== "localhost"){
+      estado.textContent = "⚠️ Notificaciones requieren HTTPS (GitHub Pages ya lo tiene).";
+      return;
+    }
+    if(!("Notification" in window)){
+      estado.textContent = "⚠️ Este dispositivo no soporta notificaciones web.";
+      return;
+    }
+    if(Notification.permission === "denied"){
+      estado.textContent = "⚠️ Notificaciones bloqueadas. Habilítelas en ajustes del navegador.";
+      return;
+    }
+
+    try{
+      // Registrar SW (archivo en la raíz del repo)
+      if("serviceWorker" in navigator){
+        await navigator.serviceWorker.register("/Observacionesycontroldeausentismoescolar/firebase-messaging-sw.js");
+      }
+
+      if(Notification.permission !== "granted"){
+        const perm = await Notification.requestPermission();
+        if(perm !== "granted"){
+          estado.textContent = "⚠️ Permiso de notificaciones no concedido.";
+          return;
+        }
+      }
+
+      const token = await messaging.getToken({ vapidKey: VAPID_KEY });
+      if(!token){
+        estado.textContent = "⚠️ No se pudo obtener token.";
+        return;
+      }
+
+      // Guardar token asociado al documento del estudiante (sin duplicar por token)
+      const q = await db.collection("tokensAcudientes").where("token","==",token).limit(1).get();
+      if(q.empty){
+        await db.collection("tokensAcudientes").add({
+          documentoEstudiante: String(documentoEstudiante),
+          token,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      estado.textContent = "✅ Notificaciones activadas (siempre que se acepten permisos).";
+    }catch(err){
+      console.error(err);
+      estado.textContent = "⚠️ Error activando notificaciones.";
+    }
+  }
+
+  // Observaciones
+  async function buscar(){
+    const doc = document.getElementById("docObs").value.trim();
+    const res = document.getElementById("resultado");
+    if(!doc){ res.innerHTML="<div class='info-text'><b>Digite el documento.</b></div>"; return; }
+
+    // 👇 Aquí se activa la suscripción de notificaciones
+    activarNotificaciones(doc);
+
+    res.innerHTML = "Buscando…";
+
+    try{
+      const snap = await db.collection("registrosComportamentales")
+        .where("documentoEstudiante","==", doc)
+        .get();
+
+      if(snap.empty){ res.innerHTML="<div class='info-text'><b>No hay registros.</b></div>"; return; }
+
+      const docs = snap.docs.slice().sort((a,b)=>{
+        const A=a.data().fecha||"", B=b.data().fecha||"";
+        return String(A).localeCompare(String(B));
+      });
+
+      let i=1;
+      res.innerHTML="";
+
+      for(const d of docs){
+        const r = d.data();
+        const color = (i==1) ? "green" : (i==2) ? "orange" : "red";
+        const msg = (i<3)
+          ? "Recuerde: si aparece una anotación N° 3, el acudiente será citado a entrevista con el docente."
+          : "Por favor comuníquese con el docente para programar entrevista de seguimiento.";
+
+        const firmado = !!(r.firmaAcudiente && String(r.firmaAcudiente).startsWith("data:image/"));
+
+        res.innerHTML += `
+          <div class="registro">
+            <div class="badge ${color}">Registro N° ${i}</div>
+            <p><b>Fecha:</b> ${r.fecha||""}</p>
+            <p><b>Comportamiento:</b> ${r.comportamiento||""}</p>
+            <p><b>Descargos:</b> ${r.descargos||""}</p>
+            <p><b>Procedimiento:</b> ${r.procedimiento||""}</p>
+
+            ${
+              firmado
+              ? `<div class="firmado">✔ Registro firmado (recibido)</div>`
+              : `
+                <div class="info-text"><b>Firme este registro:</b></div>
+                <canvas id="c${d.id}"></canvas>
+                <button class="btn" id="b${d.id}" onclick="firmar('${d.id}',${i})">Firmar</button>
+              `
+            }
+
+            <div class="msg ${color}">${msg}</div>
+          </div>
+        `;
+
+        if(!firmado){
+          setTimeout(()=>{
+            const c=document.getElementById("c"+d.id);
+            if(c) firmas[d.id]=preparar(c);
+          },50);
+        }
+        i++;
+      }
+    }catch(err){
+      console.error(err);
+      res.innerHTML="<div class='info-text'><b>Error al buscar registros.</b></div>";
+    }
+  }
+
+  async function firmar(id,n){
+    const api=firmas[id];
+    const btn=document.getElementById("b"+id);
+    if(!api) return;
+    btn.disabled=true;
+
+    try{
+      await db.collection("registrosComportamentales").doc(id).update({
+        firmaAcudiente: api.data(),
+        fechaFirmaAcudiente: new Date().toISOString()
+      });
+
+      alert(n<3
+        ? `✅ Registro N° ${n} firmado.\n\nRecuerde: si aparece una anotación N° 3, será citado a entrevista con el docente.`
+        : `✅ Registro N° ${n} firmado.\n\nPor favor póngase en contacto con el docente para programar entrevista de seguimiento.`
+      );
+      buscar();
+    }catch(err){
+      console.error(err);
+      alert("❌ No se pudo guardar la firma.");
+      btn.disabled=false;
+    }
+  }
+
+  // Excusas (2 pasos)
+  const btnContinuarExc=document.getElementById("btnContinuarExc");
+  const formExc=document.getElementById("formExc");
+  const estadoExc=document.getElementById("estadoExc");
+  let apiExc=null;
+
+  btnContinuarExc.addEventListener("click", ()=>{
+    const doc=(document.getElementById("docExc").value||"").trim();
+    if(!doc){ alert("Por favor digite el documento del estudiante."); return; }
+    formExc.style.display="block";
+    estadoExc.textContent="";
+    setTimeout(()=>{ apiExc=preparar(document.getElementById("firmaExc")); },80);
+  });
+
+  function limpiarExc(){ if(apiExc) apiExc.clear(); }
+
+  async function enviarExc(){
+    const doc=(document.getElementById("docExc").value||"").trim();
+    const fecha=document.getElementById("fechaExc").value;
+    const mot=document.getElementById("motivo").value;
+    const det=(document.getElementById("detalle").value||"").trim();
+
+    if(!doc){ alert("Falta el documento."); return; }
+    if(!fecha || !mot || !det){ alert("Complete fecha, motivo y detalle."); return; }
+    if(!apiExc){ alert("Primero pulse Continuar y firme."); return; }
+
+    document.getElementById("btnEnviarExc").disabled=true;
+    estadoExc.textContent="Enviando…";
+
+    try{
+      await db.collection("excusasInasistencia").add({
+        documentoEstudiante: doc,
+        fechaInasistencia: fecha,
+        motivoTipo: mot,
+        motivoDetalle: det,
+        firmaAcudiente: apiExc.data(),
+        fechaEnvio: new Date().toISOString()
+      });
+      alert("✅ Excusa enviada");
+      estadoExc.textContent="Excusa enviada ✅";
+      document.getElementById("fechaExc").value="";
+      document.getElementById("motivo").value="Enfermedad";
+      document.getElementById("detalle").value="";
+      limpiarExc();
+    }catch(err){
+      console.error(err);
+      alert("❌ No se pudo enviar la excusa.");
+      estadoExc.textContent="Error al enviar.";
+    }finally{
+      document.getElementById("btnEnviarExc").disabled=false;
+    }
+  }
+</script>
+</body>
+</html>
