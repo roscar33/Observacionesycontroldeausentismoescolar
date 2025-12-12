@@ -2,39 +2,76 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
 <title>Seguimiento de Procesos Escolares · Primaria 2026</title>
 <meta name="theme-color" content="#1b5e20" />
 
+<!-- Optimización para APK -->
+<meta name="mobile-web-app-capable" content="yes">
+
 <style>
-  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; }
-  .header { background: #1b5e20; color: #fff; text-align: center; padding: 20px 16px; border-radius: 0 0 25px 25px; }
+  /* Base y Reset */
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; user-select: none; }
   
-  /* Ajuste para que la imagen se vea centrada y bonita */
-  .header img { width: 90px; height: auto; margin-bottom: 10px; display: inline-block; }
+  /* ENCABEZADO */
+  .header { background: #1b5e20; color: #fff; text-align: center; padding: 20px 16px 35px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .header img { width: 90px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); display: inline-block; }
+  .header h2 { margin: 5px 0; font-size: 22px; letter-spacing: -0.5px; }
+  .header h4 { margin: 5px 0; font-weight: 500; opacity: 0.9; font-size: 14px; }
+  .header strong { display: block; margin-top: 8px; font-size: 15px; color: #a5d6a7; }
+  .header p { margin: 5px 0 0; font-size: 13px; opacity: 0.8; }
+
+  /* MENÚ FLOTANTE */
+  .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 8px; margin: -25px auto 20px; width: 92%; border-radius: 999px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); position: relative; z-index: 10; }
+  .menu button { flex: 1; border: none; padding: 12px 14px; border-radius: 999px; font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.1); color: #fff; transition: all 0.2s; font-size: 14px; }
+  .menu button.active { background: #fff; color: #1b5e20; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+  /* CONTENEDOR PRINCIPAL */
+  .container { background: #fff; width: 92%; margin: 10px auto; padding: 20px 16px; border-radius: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
   
-  .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 10px; margin: 16px auto; width: 92%; border-radius: 999px; }
-  .menu button { flex: 1; border: none; padding: 12px 14px; border-radius: 999px; font-weight: 900; cursor: pointer; background: #fff; color: #1b5e20; }
-  .menu button.active { background: #1b5e20; color: #fff; }
-  .container { background: #fff; width: 92%; margin: 10px auto; padding: 16px; border-radius: 18px; box-shadow: 0 6px 14px rgba(0, 0, 0, .18); }
-  input, textarea, select { width: 100%; padding: 12px; margin-top: 10px; border-radius: 12px; border: 1px solid #aaa; font-size: 15px; box-sizing: border-box; }
+  /* FORMULARIOS */
+  h3 { color: #1b5e20; margin-top: 0; font-size: 16px; }
+  .input-label { font-weight: 700; color: #1b5e20; font-size: 13px; margin-left: 4px; margin-bottom: 4px; display: block; }
+  input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; transition: border 0.3s; appearance: none; -webkit-appearance: none; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: #1b5e20; background: #fff; }
   textarea { min-height: 110px; resize: none; }
-  .btn { width: 100%; padding: 14px; margin-top: 15px; background: #1b5e20; color: #fff; font-weight: 900; border: none; border-radius: 14px; cursor: pointer; }
-  .btn.sec { background: #444; }
-  .btn:disabled { opacity: .6; cursor: not-allowed; }
-  .info { margin-top: 8px; color: #4b5563; font-size: 14px; line-height: 1.35; }
-  .card { margin-top: 14px; border-radius: 16px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
-  .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-  .badge { padding: 6px 10px; border-radius: 999px; background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .25); font-size: 12px; font-weight: 900; white-space: nowrap; }
-  .card .body { padding: 12px; color: #0b1f12; font-size: 14px; line-height: 1.35; }
+
+  /* BOTONES */
+  .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; active: translateY(2px); box-shadow: 0 2px 0 #145018; }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #145018; }
+  .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
+  .btn:disabled { opacity: 0.6; cursor: wait; }
+
+  /* TARJETAS */
+  .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
+  .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+  .badge { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.2); font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
+  .card .body { padding: 15px; color: #333; font-size: 14px; line-height: 1.5; }
+  
   .row { margin-top: 10px; }
-  .row b { display: block; margin-bottom: 4px; }
-  .muted { color: #64748b; }
-  .sig-wrap { margin-top: 10px; padding: 10px; border-radius: 14px; background: #f3f5f4; border: 1px dashed #b7c0b9; }
-  canvas { width: 100%; height: 190px; border: 2px solid #999; border-radius: 12px; background: #fff; touch-action: none; display: block; }
-  .sig-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-  .sig-actions button { flex: 1; min-width: 140px; }
-  .footer { margin: 28px 18px 10px; text-align: center; font-size: 14px; font-weight: 650; color: #145018; }
+  .row b { display: block; margin-bottom: 3px; color: #1b5e20; font-size: 12px; text-transform: uppercase; }
+  .muted { color: #555; }
+
+  /* FIRMA */
+  .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
+  canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
+  .sig-actions { display: flex; gap: 10px; margin-top: 10px; }
+  .sig-actions button { flex: 1; padding: 10px; font-size: 13px; min-width: 0; box-shadow: none !important; margin-top: 0; }
+  .sig-actions button.primary { background: #1b5e20; color: #fff; }
+
+  /* ESTILO PARA NUEVO ITEM */
+  .new-item { border: 2px solid #d32f2f; animation: pulse 2s infinite; }
+  .new-tag { background: #d32f2f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
+
+  .footer { margin: 30px 18px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #145018; opacity: 0.8; padding-bottom: 20px; }
+  
+  /* TOAST NOTIFICACIÓN */
+  #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+  #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4.5s; }
+  @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+  @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -51,17 +88,9 @@
 </head>
 
 <body>
+
   <div class="header">
-    <!-- 
-      NOTA: El atributo 'onerror' es solo para esta vista previa. 
-      Cuando pongas este código en GitHub junto con tu archivo 'escudo.png', 
-      se verá tu imagen real. 
-    -->
-    <img 
-      src="escudo.png" 
-      alt="Escudo I.E. De María" 
-      onerror="this.onerror=null; this.src='https://placehold.co/100x100/1b5e20/ffffff?text=Escudo+IE';"
-    >
+    <img src="escudo.png" alt="Escudo I.E. De María" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1b5e20/ffffff?text=IE+De+Maria';">
     <h2>Institución Educativa de María</h2>
     <h4>Sede Rural Santa Juana · Primaria 2026</h4>
     <strong>Docente: Oscar Barrientos</strong>
@@ -69,54 +98,66 @@
   </div>
 
   <div class="menu">
-    <button id="btnObs" class="active" type="button" onclick="verObs()">Observaciones</button>
-    <button id="btnExc" type="button" onclick="verExc()">Excusas</button>
+    <button id="btnObs" class="active" onclick="verObs()">Observaciones</button>
+    <button id="btnExc" onclick="verExc()">Excusas</button>
   </div>
 
-  <!-- OBSERVACIONES -->
+  <!-- SECCIÓN OBSERVACIONES -->
   <div id="obs" class="container">
-    <h3 style="margin:0 0 6px;">Documento del estudiante</h3>
-    <input id="docObs" type="number" placeholder="Digite documento del estudiante" inputmode="numeric">
-    <div class="info">Digite el documento para consultar observaciones y firmar cada registro como recibido.</div>
-    <button id="btnBuscar" class="btn" type="button" onclick="buscarObservaciones()">Buscar observaciones</button>
-    <div id="resultadoObs" style="margin-top:12px;"></div>
+    <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
+    <input id="docObs" type="number" placeholder="Digite documento aquí..." inputmode="numeric">
+    
+    <div style="font-size:13px; color:#666; margin-bottom:10px; background:#f1f8e9; padding:10px; border-radius:8px;">
+      🔔 <b>Sistema Inteligente:</b> Si deja esta app instalada, al entrar le avisaremos si hay nuevas observaciones desde su última visita.
+    </div>
+
+    <button id="btnBuscar" class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
+    <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
 
-  <!-- EXCUSAS -->
+  <!-- SECCIÓN EXCUSAS (AHORA CON 2 PASOS) -->
   <div id="exc" class="container" style="display:none;">
-    <h3 style="margin:0 0 6px;">Documento del estudiante</h3>
-    <input id="docExc" type="number" placeholder="Documento del estudiante" inputmode="numeric">
-    <div class="info">Primero digite el documento. Luego se habilita el formulario.</div>
-    <button class="btn" type="button" onclick="mostrarFormularioExc()">Continuar</button>
+    
+    <!-- PASO 1: SOLO DOCUMENTO -->
+    <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
+    <input id="docExc" type="number" placeholder="Primero digite el documento..." inputmode="numeric">
+    
+    <!-- Este botón activa el formulario -->
+    <button id="btnInitExc" class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
 
-    <div id="formExc" style="display:none; margin-top:16px;">
-      <div id="nombreExc" style="font-weight:900; margin-bottom:6px;"></div>
+    <!-- PASO 2: FORMULARIO OCULTO INICIALMENTE -->
+    <div id="contenedorFormExc" style="display:none; border-top:1px solid #eee; padding-top:20px; margin-top:20px;">
+        <div id="nombreExc" style="font-weight:bold; color:#1b5e20; margin-bottom:15px; font-size:15px; text-align:center; background:#e8f5e9; padding:10px; border-radius:8px;">
+            Buscando estudiante...
+        </div>
 
-      <h3 style="margin:10px 0 6px;">Fecha de inasistencia</h3>
-      <input id="fechaExc" type="date">
+        <span class="input-label">FECHA DE INASISTENCIA</span>
+        <input id="fechaExc" type="date">
 
-      <h3 style="margin:10px 0 6px;">Motivo</h3>
-      <select id="motivoExc">
+        <span class="input-label">MOTIVO</span>
+        <select id="motivoExc">
         <option value="Enfermedad">Enfermedad</option>
         <option value="Cita médica">Cita médica</option>
         <option value="Calamidad">Calamidad</option>
         <option value="Otro">Otro</option>
-      </select>
+        </select>
 
-      <textarea id="detalleExc" placeholder="Detalle del motivo"></textarea>
+        <span class="input-label">DETALLES</span>
+        <textarea id="detalleExc" placeholder="Escriba el detalle del motivo..."></textarea>
 
-      <h3 style="margin:10px 0 6px;">Firma del acudiente</h3>
-      <div class="sig-wrap">
+        <span class="input-label">FIRMA DEL ACUDIENTE</span>
+        <div class="sig-wrap">
         <canvas id="sigExc"></canvas>
         <div class="sig-actions">
-          <button class="btn sec" type="button" onclick="limpiarPad('sigExc')">Limpiar firma</button>
+            <button class="btn sec" onclick="limpiarPad('sigExc')">Borrar Firma</button>
         </div>
-      </div>
+        </div>
 
-      <button id="btnEnviarExc" class="btn" type="button" onclick="enviarExcusa()">Enviar excusa</button>
-      <div class="info" style="margin-top:10px;">
-        Nota: el estudiante debe ponerse al día con las actividades realizadas durante su ausencia.
-      </div>
+        <button id="btnEnviarExc" class="btn" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
+        
+        <div style="margin-top:15px; font-size:13px; color:#555; text-align:center;">
+        Nota: el estudiante debe ponerse al día con las actividades.
+        </div>
     </div>
   </div>
 
@@ -125,314 +166,253 @@
     construimos el mejor camino para el bienestar y aprendizaje de nuestros hijos.”
   </div>
 
+  <div id="toast">🔔 ¡Atención! Tienes nuevas observaciones recientes.</div>
+
 <script>
-  // Tabs
+  // --- NAVEGACIÓN ---
   function verObs(){
     document.getElementById("obs").style.display="block";
     document.getElementById("exc").style.display="none";
     document.getElementById("btnObs").classList.add("active");
     document.getElementById("btnExc").classList.remove("active");
   }
+  
   function verExc(){
     document.getElementById("obs").style.display="none";
     document.getElementById("exc").style.display="block";
     document.getElementById("btnExc").classList.add("active");
     document.getElementById("btnObs").classList.remove("active");
+    
+    // Al cambiar de pestaña, ocultamos el formulario para obligar a poner documento de nuevo
+    // Opcional: si quieres que se mantenga abierto si ya ingresó, borra la linea de abajo.
+    resetFormularioExcusa();
   }
 
-  // Helpers
-  function esc(s){
-    return String(s ?? "").replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-  function colorRegistro(n){ return n===1 ? "#16a34a" : (n===2 ? "#f59e0b" : "#dc2626"); }
-  function mensajeRegistro(n){
-    if(n>=3) return "⚠️ Por favor póngase en contacto con el docente para realizar una entrevista de seguimiento.";
-    return "✅ Recuerde: si llega a presentarse una anotación número 3, como acudiente será llamado para una entrevista directamente con el docente.";
+  function resetFormularioExcusa() {
+    document.getElementById("contenedorFormExc").style.display = "none";
+    document.getElementById("btnInitExc").style.display = "block";
+    document.getElementById("docExc").value = "";
   }
 
-  // Signature pads
-  const pads = new Map(); // canvasId -> {ctx, drew, clear, toDataURL}
-  function initPad(canvasId){
-    const c = document.getElementById(canvasId);
-    if(!c) return;
+  // --- LÓGICA DE APERTURA DE EXCUSAS ---
+  async function activarFormularioExcusa() {
+      const doc = document.getElementById("docExc").value.trim();
+      if(!doc) { alert("Por favor digite el documento del estudiante."); return; }
 
-    const ctx = c.getContext("2d");
-    let drawing=false, lastX=0, lastY=0, drew=false;
-
-    function getPos(e){
-      const r = c.getBoundingClientRect();
-      if(e.touches && e.touches[0]){
-        return {x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top};
+      // 1. Ocultar botón continuar
+      document.getElementById("btnInitExc").style.display = "none";
+      // 2. Mostrar formulario
+      document.getElementById("contenedorFormExc").style.display = "block";
+      
+      // 3. Buscar nombre del estudiante
+      const divNom = document.getElementById("nombreExc");
+      divNom.innerHTML = "🔍 Verificando estudiante...";
+      
+      try {
+        const snap = await db.collection("registrosComportamentales").where("documentoEstudiante","==",doc).limit(1).get();
+        if(!snap.empty) {
+            const data = snap.docs[0].data();
+            divNom.innerText = "Estudiante: " + (data.nombreEstudiante || "Registrado en sistema");
+        } else {
+            divNom.innerText = "Estudiante: No encontrado (Verifique el documento o continúe)";
+        }
+      } catch(e) {
+          divNom.innerText = "Estudiante: ...";
       }
-      return {x: (e.clientX - r.left), y: (e.clientY - r.top)};
-    }
 
-    function start(e){
-      e.preventDefault();
-      drawing=true;
-      const p=getPos(e);
-      lastX=p.x; lastY=p.y;
-    }
-    function move(e){
-      if(!drawing) return;
-      e.preventDefault();
-      const p=getPos(e);
-      ctx.strokeStyle="#0b1f12";
-      ctx.lineWidth=2.3;
-      ctx.lineCap="round";
-      ctx.beginPath();
-      ctx.moveTo(lastX,lastY);
-      ctx.lineTo(p.x,p.y);
-      ctx.stroke();
-      lastX=p.x; lastY=p.y;
-      drew=true;
-    }
-    function end(e){
-      e && e.preventDefault();
-      drawing=false;
-    }
-
-    // Mouse
-    c.addEventListener("mousedown", start);
-    c.addEventListener("mousemove", move);
-    c.addEventListener("mouseup", end);
-    c.addEventListener("mouseleave", end);
-
-    // Touch
-    c.addEventListener("touchstart", start, {passive:false});
-    c.addEventListener("touchmove", move, {passive:false});
-    c.addEventListener("touchend", end, {passive:false});
-    c.addEventListener("touchcancel", end, {passive:false});
-
-    pads.set(canvasId, {
-      hasDraw: ()=>drew,
-      clear: ()=>{ ctx.clearRect(0,0,c.width,c.height); drew=false; },
-      toDataURL: ()=>c.toDataURL("image/png")
-    });
-
-    function resize(){
-      const rect = c.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      c.width = Math.max(1, Math.floor(rect.width * ratio));
-      c.height = Math.max(1, Math.floor(190 * ratio));
-      ctx.setTransform(ratio,0,0,ratio,0,0);
-    }
-    resize();
-    window.addEventListener("resize", resize);
+      // 4. Inicializar firma (IMPORTANTE: hacer esto después de que el div sea visible)
+      setTimeout(()=>initPad('sigExc'), 100);
   }
 
-  function limpiarPad(canvasId){
-    const p = pads.get(canvasId);
-    if(p) p.clear();
+  // --- SONIDO ALERTA ---
+  const audioNotif = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3');
+  function notificarNovedad() {
+    if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    audioNotif.play().catch(e => {});
+    const x = document.getElementById("toast");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
   }
 
-  // OBSERVACIONES
-  async function buscarObservaciones(){
+  // --- BUSCADOR OBSERVACIONES ---
+  let unsubscribe = null;
+  function buscarObservaciones(){
     const doc = document.getElementById("docObs").value.trim();
     const out = document.getElementById("resultadoObs");
     const btn = document.getElementById("btnBuscar");
 
-    if(!doc){ alert("Por favor, digite el documento del estudiante."); return; }
+    if(!doc){ alert("Por favor, digite el documento."); return; }
+    if(unsubscribe) unsubscribe();
 
     btn.disabled = true;
-    btn.textContent = "Buscando...";
-    out.innerHTML = "<em>Cargando observaciones...</em>";
+    btn.textContent = "CONECTANDO...";
+    out.innerHTML = "<div style='text-align:center; padding:20px; color:#666;'>Sincronizando observaciones...</div>";
 
-    try{
-      const q1 = db.collection("registrosComportamentales").where("documentoEstudiante","==",doc);
-      const q2 = db.collection("registrosComportamentales").where("documento","==",doc);
+    const storageKey = 'count_' + doc;
+    let lastCount = parseInt(localStorage.getItem(storageKey) || "0");
 
-      const [s1, s2] = await Promise.all([q1.get(), q2.get()]);
+    unsubscribe = db.collection("registrosComportamentales")
+      .where("documentoEstudiante","==",doc)
+      .onSnapshot(snapshot => {
+        btn.disabled = false;
+        btn.textContent = "ACTUALIZAR ESTADO";
 
-      const map = new Map();
-      // CORRECCIÓN ID: Usar ID real de Firestore
-      s1.forEach(d => map.set(d.id, { ...d.data(), id: d.id }));
-      s2.forEach(d => map.set(d.id, { ...d.data(), id: d.id }));
+        if(snapshot.empty){
+          out.innerHTML = "<div style='text-align:center; padding:20px;'><strong>No se encontraron registros.</strong></div>";
+          return;
+        }
 
-      const items = Array.from(map.values());
-      if(items.length === 0){
-        out.innerHTML = "<strong>No hay observaciones registradas para este documento.</strong>";
-        return;
-      }
+        const currentCount = snapshot.size;
+        if (currentCount > lastCount) {
+           notificarNovedad();
+           localStorage.setItem(storageKey, currentCount);
+        } else if (lastCount === 0) {
+           localStorage.setItem(storageKey, currentCount);
+        }
 
-      items.sort((a,b)=> String(a.fecha||"").localeCompare(String(b.fecha||"")));
+        let docs = [];
+        snapshot.forEach(d => docs.push({ id:d.id, ...d.data() }));
+        docs.sort((a,b)=> String(a.fecha||"") < String(b.fecha||"") ? 1 : -1);
 
-      let html = `<div style="font-weight:900;margin-bottom:8px;">Observaciones encontradas: ${items.length}</div>`;
+        renderizar(docs, currentCount > lastCount);
+      }, err => {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = "REINTENTAR";
+        out.innerHTML = "Error de conexión.";
+      });
+  }
 
-      items.forEach((r, idx)=>{
-        const n = idx + 1;
-        const color = colorRegistro(n);
+  function renderizar(items, hayNovedad){
+    let html = "";
+    const total = items.length;
+    items.forEach((r, idx)=>{
+      const n = total - idx;
+      const color = n===1 ? "#4caf50" : (n===2 ? "#ff9800" : "#f44336");
+      const firmado = !!r.firmaAcudiente;
+      const esNuevo = (idx === 0 && hayNovedad && !firmado); 
 
-        const fecha = r.fecha || "";
-        const comportamiento = r.comportamiento || "";
-        const descargos = r.descargos || "";
-        const procedimiento = r.procedimiento || "";
-
-        const firmaAcudiente = r.firmaAcudiente || "";
-        const yaFirmo = !!firmaAcudiente;
-
-        html += `
-          <div class="card">
-            <div class="top" style="background:${color}">
-              <div>Registro N° ${n}</div>
-              <div class="badge">${yaFirmo ? "FIRMADO ✅" : "PENDIENTE ✍️"}</div>
-            </div>
-
-            <div class="body">
-              <div class="row"><b>Fecha:</b> <span class="muted">${esc(fecha)}</span></div>
-              <div class="row"><b>Comportamiento:</b> ${esc(comportamiento)}</div>
-              <div class="row"><b>Descargos:</b> ${esc(descargos)}</div>
-              <div class="row"><b>Procedimiento:</b> ${esc(procedimiento)}</div>
-
-              <div class="row">
-                <b>Firma del acudiente (recibido)</b>
-                <div class="info">${mensajeRegistro(n)}</div>
-
-                ${yaFirmo ? `
-                  <div style="margin-top:10px;">
-                    <img src="${firmaAcudiente}" alt="Firma acudiente" style="width:100%;max-width:420px;border-radius:12px;border:1px solid #cbd5e1;background:#fff;">
-                    <div class="info">Este registro ya fue firmado. No se puede firmar nuevamente.</div>
+      html += `
+        <div class="card ${esNuevo ? 'new-item' : ''}">
+          <div class="top" style="background:${color}">
+            <div>REGISTRO N° ${n} ${esNuevo ? '<span class="new-tag">¡NUEVO!</span>' : ''}</div>
+            <div class="badge">${firmado ? "FIRMADO ✅" : "PENDIENTE ✍️"}</div>
+          </div>
+          <div class="body">
+            <div class="row"><b>Fecha:</b> <span class="muted">${r.fecha || '--'}</span></div>
+            <div class="row"><b>Comportamiento:</b> ${r.comportamiento || ''}</div>
+            <div class="row"><b>Descargos:</b> ${r.descargos || 'Ninguno'}</div>
+            <div class="row"><b>Procedimiento:</b> ${r.procedimiento || ''}</div>
+            <div class="row" style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
+              <b>Estado del seguimiento:</b>
+              ${firmado ? `
+                <div style="text-align:center; margin-top:10px;">
+                  <div style="color:#2e7d32; font-weight:bold; font-size:12px; margin-bottom:5px;">✓ Firmado por Acudiente</div>
+                  <img src="${r.firmaAcudiente}" style="max-height:80px; border:1px solid #ccc; border-radius:4px;">
+                </div>
+              ` : `
+                <div style="background:#fffde7; padding:10px; border-radius:8px; border:1px solid #fff9c4;">
+                  <div style="font-size:12px; color:#f57f17; text-align:center; font-weight:bold; margin-bottom:5px;">FALTA SU FIRMA</div>
+                  <div class="sig-wrap" style="background:#fff;">
+                    <canvas id="cv_${r.id}"></canvas>
                   </div>
-                ` : `
-                  <div class="sig-wrap">
-                    <canvas id="sig_${r.id}"></canvas>
-                    <div class="sig-actions">
-                      <button class="btn sec" type="button" onclick="limpiarPad('sig_${r.id}')">Limpiar firma</button>
-                      <button class="btn" type="button" onclick="firmarRegistro('${r.id}', ${n})">Firmar y enviar</button>
-                    </div>
+                  <div class="sig-actions">
+                    <button class="btn sec" onclick="limpiarPad('cv_${r.id}')">BORRAR</button>
+                    <button class="btn primary" onclick="firmarRegistro('${r.id}', ${n})">CONFIRMAR RECIBIDO</button>
                   </div>
-                `}
+                </div>
+              `}
+              <div style="margin-top:10px; font-size:12px; color:#666; font-style:italic;">
+                ${n >= 3 ? "⚠️ Alerta: Esta es la 3ra anotación. Se requiere entrevista presencial." : "Nota: A la 3ra anotación se citará a entrevista."}
               </div>
             </div>
           </div>
-        `;
-      });
-
-      out.innerHTML = html;
-
-      items.forEach(r=>{
-        if(r.firmaAcudiente) return;
-        initPad(`sig_${r.id}`);
-      });
-
-    }catch(err){
-      console.error(err);
-      out.innerHTML = "<strong>Ocurrió un error al buscar las observaciones.</strong>";
-      alert("Error al buscar observaciones.\n\nDetalle: " + (err?.message || err));
-    }finally{
-      btn.disabled = false;
-      btn.textContent = "Buscar observaciones";
-    }
+        </div>
+      `;
+    });
+    document.getElementById("resultadoObs").innerHTML = html;
+    setTimeout(()=>{
+      items.forEach(r => { if(!r.firmaAcudiente) initPad(`cv_${r.id}`); });
+    }, 100);
   }
 
-  async function firmarRegistro(docId, numRegistro){
-    const canvasId = `sig_${docId}`;
-    const pad = pads.get(canvasId);
-    if(!pad){
-      alert("No se encontró el espacio de firma. Recargue e intente nuevamente.");
-      return;
+  // --- CANVAS ---
+  const pads = new Map();
+  function initPad(id){
+    const c = document.getElementById(id);
+    if(!c) return;
+    if(pads.has(id) && pads.get(id).canvas === c) return;
+    const ctx = c.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    const rect = c.getBoundingClientRect();
+    c.width = rect.width * dpr;
+    c.height = 180 * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#000";
+    let drawing=false;
+    const getPos = (e) => {
+      const r = c.getBoundingClientRect();
+      const tx = e.touches ? e.touches[0].clientX : e.clientX;
+      const ty = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: tx - r.left, y: ty - r.top };
     }
-    if(!pad.hasDraw()){
-      alert("Por favor firme antes de enviar.");
-      return;
-    }
+    const start = (e) => { e.preventDefault(); drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); }
+    const move = (e) => { if(!drawing)return; e.preventDefault(); const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id, {ctx, c, hasData:true}); }
+    const end = () => { drawing=false; }
+    c.addEventListener("mousedown", start); c.addEventListener("mousemove", move); window.addEventListener("mouseup", end);
+    c.addEventListener("touchstart", start, {passive:false}); c.addEventListener("touchmove", move, {passive:false}); c.addEventListener("touchend", end);
+    pads.set(id, {ctx, c, hasData:false});
+  }
 
+  function limpiarPad(id){
+    const p = pads.get(id);
+    if(p){ p.ctx.clearRect(0,0, p.c.width, p.c.height); p.hasData = false; }
+  }
+
+  // --- ENVÍOS ---
+  async function firmarRegistro(id, n){
+    const p = pads.get("cv_"+id);
+    if(!p || !p.hasData){ alert("Por favor, firme en el recuadro blanco."); return; }
     try{
-      await db.collection("registrosComportamentales").doc(docId).update({
-        firmaAcudiente: pad.toDataURL(),
+      await db.collection("registrosComportamentales").doc(id).update({
+        firmaAcudiente: p.c.toDataURL(),
         fechaFirmaAcudiente: new Date().toISOString()
       });
-
-      if(numRegistro >= 3){
-        alert("✅ Firma registrada.\n\n⚠️ Importante: Por favor póngase en contacto con el docente para realizar una entrevista de seguimiento.");
-      } else {
-        alert("✅ Firma registrada.\n\nRecuerde: si llega a presentarse una anotación número 3, como acudiente será llamado para una entrevista directamente con el docente.");
-      }
-
-      buscarObservaciones();
-    }catch(err){
-      console.error(err);
-      alert("❌ No se pudo guardar la firma.\n\nDetalle: " + (err?.message || err));
-    }
-  }
-
-  // EXCUSAS
-  async function mostrarFormularioExc(){
-    const doc = document.getElementById("docExc").value.trim();
-    const form = document.getElementById("formExc");
-    const nombreDiv = document.getElementById("nombreExc");
-
-    if(!doc){ alert("Por favor, digite el documento del estudiante."); return; }
-
-    form.style.display = "block";
-    nombreDiv.textContent = "Estudiante: (verificando...)";
-
-    try{
-      const q1 = db.collection("registrosComportamentales").where("documentoEstudiante","==",doc).limit(1);
-      const q2 = db.collection("registrosComportamentales").where("documento","==",doc).limit(1);
-      const [s1, s2] = await Promise.all([q1.get(), q2.get()]);
-
-      let datos = null;
-      if(!s1.empty) datos = s1.docs[0].data();
-      else if(!s2.empty) datos = s2.docs[0].data();
-
-      nombreDiv.textContent = "Estudiante: " + (datos?.nombreEstudiante || "(sin nombre registrado)");
-    }catch(e){
-      console.error(e);
-      nombreDiv.textContent = "Estudiante: (no se pudo verificar, pero puede enviar la excusa)";
-    }
-
-    setTimeout(()=>initPad("sigExc"), 50);
+      alert("✅ Firma guardada correctamente.");
+    }catch(e){ alert("Error al guardar: " + e.message); }
   }
 
   async function enviarExcusa(){
-    const doc = document.getElementById("docExc").value.trim();
+    const doc = document.getElementById("docExc").value;
     const fecha = document.getElementById("fechaExc").value;
     const motivo = document.getElementById("motivoExc").value;
-    const detalle = document.getElementById("detalleExc").value.trim();
+    const detalle = document.getElementById("detalleExc").value;
+    const p = pads.get("sigExc");
+    if(!doc || !fecha || !detalle){ alert("Complete todos los campos."); return; }
+    if(!p || !p.hasData){ alert("Debe firmar la excusa."); return; }
     const btn = document.getElementById("btnEnviarExc");
-    const pad = pads.get("sigExc");
-
-    if(!doc || !fecha || !motivo || !detalle){
-      alert("Complete todos los campos de la excusa.");
-      return;
-    }
-    if(!pad || !pad.hasDraw()){
-      alert("Por favor firme antes de enviar la excusa.");
-      return;
-    }
-
     btn.disabled = true;
-    btn.textContent = "Enviando...";
-
+    btn.innerText = "ENVIANDO...";
     try{
       await db.collection("excusasInasistencia").add({
         documentoEstudiante: doc,
         fechaInasistencia: fecha,
         motivoTipo: motivo,
         motivoDetalle: detalle,
-        firmaAcudiente: pad.toDataURL(),
+        firmaAcudiente: p.c.toDataURL(),
         fechaEnvio: new Date().toISOString()
       });
-
-      alert("✅ Excusa enviada correctamente.");
-
-      document.getElementById("fechaExc").value = "";
-      document.getElementById("motivoExc").value = "Enfermedad";
-      document.getElementById("detalleExc").value = "";
-      limpiarPad("sigExc");
-    }catch(err){
-      console.error(err);
-      alert("❌ Error al enviar la excusa.\n\nDetalle: " + (err?.message || err));
-    }finally{
+      alert("✅ Excusa enviada al docente.");
+      location.reload();
+    }catch(e){
+      alert("Error: " + e.message);
       btn.disabled = false;
-      btn.textContent = "Enviar excusa";
+      btn.innerText = "ENVIAR EXCUSA";
     }
   }
 </script>
 </body>
 </html>
-
-
