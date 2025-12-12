@@ -628,3 +628,112 @@
     // =========================
     const canvasExc = document.getElementById("firmaPadExc");
     const ctxExc = canvasExc.getContext("2d");
+let excPad = null;
+
+    function initPadExc(){
+      excPad = initPad(canvasExc);
+    }
+    function limpiarFirmaExc(){
+      if(excPad) excPad.clear();
+    }
+
+    // placeholder date
+    const fechaExc = document.getElementById("fechaExc");
+    function syncDatePlaceholder(){
+      if(fechaExc.value) fechaExc.classList.add("has-value");
+      else fechaExc.classList.remove("has-value");
+    }
+    fechaExc.addEventListener("change", syncDatePlaceholder);
+    syncDatePlaceholder();
+
+    async function mostrarFormularioExcusa(){
+      const doc = document.getElementById("docExc").value.trim();
+      const nombreDiv = document.getElementById("nombreEstudiante");
+      const form = document.getElementById("formExcusa");
+
+      if(!doc){
+        alert("Por favor, digite el documento del estudiante.");
+        return;
+      }
+
+      form.style.display = "block";
+      nombreDiv.textContent = "Estudiante: (verificando...)";
+
+      try{
+        // Buscar nombre desde registros (compat: documentoEstudiante o documento)
+        const q1 = db.collection("registrosComportamentales").where("documentoEstudiante","==",doc).limit(1);
+        const q2 = db.collection("registrosComportamentales").where("documento","==",doc).limit(1);
+        const [s1,s2] = await Promise.all([q1.get(), q2.get()]);
+        let datos = null;
+
+        if(!s1.empty) datos = s1.docs[0].data();
+        else if(!s2.empty) datos = s2.docs[0].data();
+
+        if(datos){
+          nombreDiv.textContent = "Estudiante: " + (datos.nombreEstudiante || "(sin nombre registrado)");
+        }else{
+          nombreDiv.textContent = "Estudiante: (no encontrado en registros, pero puede enviar la excusa)";
+        }
+      }catch(err){
+        console.error(err);
+        nombreDiv.textContent = "Estudiante: (no se pudo verificar el nombre, pero puede enviar la excusa)";
+      }
+
+      // Inicializar firma cuando ya está visible
+      setTimeout(()=> {
+        initPadExc();
+      }, 50);
+    }
+
+    async function enviarExcusa(){
+      const doc = document.getElementById("docExc").value.trim();
+      const fecha = document.getElementById("fechaExc").value;
+      const motivo = document.getElementById("motivo").value;
+      const detalle = document.getElementById("detalleMotivo").value.trim();
+      const btn = document.getElementById("btnEnviarExc");
+
+      if(!doc || !fecha || !motivo || !detalle){
+        alert("Por favor, complete todos los campos de la excusa.");
+        return;
+      }
+      if(!excPad || !excPad.hasDraw()){
+        alert("Por favor firme antes de enviar la excusa.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Enviando...";
+
+      try{
+        await db.collection("excusasInasistencia").add({
+          documentoEstudiante: doc,  // ✅ coincide con el docente
+          fechaInasistencia: fecha,  // ✅ coincide con el docente
+          motivoTipo: motivo,
+          motivoDetalle: detalle,
+          firmaAcudiente: excPad.toDataURL(),
+          fechaEnvio: new Date().toISOString()
+        });
+
+        alert(
+          "✅ Excusa enviada correctamente.\n\n" +
+          "Recuerde que es obligación del estudiante ponerse al día con las actividades delegadas durante su ausencia."
+        );
+
+        // Limpiar
+        document.getElementById("fechaExc").value = "";
+        syncDatePlaceholder();
+        document.getElementById("motivo").value = "Enfermedad";
+        document.getElementById("detalleMotivo").value = "";
+        limpiarFirmaExc();
+
+      }catch(err){
+        console.error(err);
+        alert("❌ Ocurrió un error al enviar la excusa.\n\nDetalle: " + (err?.message || err));
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Enviar excusa";
+      }
+    }
+  </script>
+</body>
+</html>
