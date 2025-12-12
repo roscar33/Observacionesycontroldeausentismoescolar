@@ -31,19 +31,18 @@
   .container { background: #fff; width: 92%; margin: 10px auto; padding: 20px 16px; border-radius: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
   
   /* FORMULARIOS */
-  h3 { color: #1b5e20; margin-top: 0; font-size: 16px; }
   .input-label { font-weight: 700; color: #1b5e20; font-size: 13px; margin-left: 4px; margin-bottom: 4px; display: block; }
   input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; transition: border 0.3s; appearance: none; -webkit-appearance: none; }
   input:focus, textarea:focus, select:focus { outline: none; border-color: #1b5e20; background: #fff; }
   textarea { min-height: 110px; resize: none; }
 
   /* BOTONES */
-  .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; active: translateY(2px); box-shadow: 0 2px 0 #145018; }
+  .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; }
   .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #145018; }
   .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
   .btn:disabled { opacity: 0.6; cursor: wait; }
 
-  /* TARJETAS */
+  /* TARJETAS OBSERVACIONES */
   .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
   .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; align-items: center; }
   .badge { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.2); font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
@@ -51,7 +50,21 @@
   
   .row { margin-top: 10px; }
   .row b { display: block; margin-bottom: 3px; color: #1b5e20; font-size: 12px; text-transform: uppercase; }
-  .muted { color: #555; }
+  
+  /* TARJETA ASISTENCIA */
+  .att-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+  .att-summary { display: flex; gap: 10px; margin-bottom: 10px; }
+  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 10px; color: #fff; }
+  .att-red { background: #ef4444; }
+  .att-orange { background: #f97316; }
+  .att-green { background: #22c55e; }
+  .att-num { font-size: 20px; font-weight: 800; display: block; }
+  .att-lbl { font-size: 10px; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
+  
+  .att-list { font-size: 13px; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
+  .att-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .badge-fail { color: #dc2626; background: #fee2e2; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+  .badge-exc { color: #ea580c; background: #ffedd5; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
 
   /* FIRMA */
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
@@ -60,14 +73,13 @@
   .sig-actions button { flex: 1; padding: 10px; font-size: 13px; min-width: 0; box-shadow: none !important; margin-top: 0; }
   .sig-actions button.primary { background: #1b5e20; color: #fff; }
 
+  .footer { margin: 30px 18px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #145018; opacity: 0.8; padding-bottom: 20px; }
+  
   /* ESTILO PARA NUEVO ITEM */
   .new-item { border: 2px solid #d32f2f; animation: pulse 2s infinite; }
   .new-tag { background: #d32f2f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
 
-  .footer { margin: 30px 18px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #145018; opacity: 0.8; padding-bottom: 20px; }
-  
-  /* TOAST NOTIFICACIÓN */
   #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
   #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4.5s; }
   @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
@@ -99,7 +111,7 @@
 
   <div class="menu">
     <button id="btnObs" class="active" onclick="verObs()">Observaciones</button>
-    <button id="btnExc" onclick="verExc()">Excusas</button>
+    <button id="btnExc" onclick="verExc()">Excusas / Asistencia</button>
   </div>
 
   <!-- SECCIÓN OBSERVACIONES -->
@@ -115,21 +127,49 @@
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
 
-  <!-- SECCIÓN EXCUSAS (AHORA CON 2 PASOS) -->
+  <!-- SECCIÓN EXCUSAS Y ASISTENCIA -->
   <div id="exc" class="container" style="display:none;">
     
     <!-- PASO 1: SOLO DOCUMENTO -->
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docExc" type="number" placeholder="Primero digite el documento..." inputmode="numeric">
     
-    <!-- Este botón activa el formulario -->
     <button id="btnInitExc" class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
 
-    <!-- PASO 2: FORMULARIO OCULTO INICIALMENTE -->
+    <!-- PASO 2: CONTENIDO OCULTO -->
     <div id="contenedorFormExc" style="display:none; border-top:1px solid #eee; padding-top:20px; margin-top:20px;">
+        
         <div id="nombreExc" style="font-weight:bold; color:#1b5e20; margin-bottom:15px; font-size:15px; text-align:center; background:#e8f5e9; padding:10px; border-radius:8px;">
-            Buscando estudiante...
+            Verificando estudiante...
         </div>
+
+        <!-- MÓDULO NUEVO: REPORTE DE ASISTENCIA -->
+        <div class="att-card">
+            <div style="font-weight:700; color:#334155; margin-bottom:10px; font-size:14px;">📊 Reporte de Asistencia</div>
+            <div id="loadingAtt" style="text-align:center; font-size:12px; color:#666;">Consultando registros...</div>
+            
+            <div id="attContent" style="display:none;">
+                <div class="att-summary">
+                    <div class="att-box att-red">
+                        <span class="att-num" id="countI">0</span>
+                        <span class="att-lbl">Fallas</span>
+                    </div>
+                    <div class="att-box att-orange">
+                        <span class="att-num" id="countE">0</span>
+                        <span class="att-lbl">Excusas</span>
+                    </div>
+                    <div class="att-box att-green">
+                        <span class="att-num">OK</span>
+                        <span class="att-lbl">Estado</span>
+                    </div>
+                </div>
+                <div class="att-list" id="attListDetails">
+                    <!-- Detalles aquí -->
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom:10px; border-bottom:2px solid #eee; padding-bottom:5px;">Enviar Excusa</h3>
 
         <span class="input-label">FECHA DE INASISTENCIA</span>
         <input id="fechaExc" type="date">
@@ -154,10 +194,6 @@
         </div>
 
         <button id="btnEnviarExc" class="btn" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
-        
-        <div style="margin-top:15px; font-size:13px; color:#555; text-align:center;">
-        Nota: el estudiante debe ponerse al día con las actividades.
-        </div>
     </div>
   </div>
 
@@ -169,6 +205,15 @@
   <div id="toast">🔔 ¡Atención! Tienes nuevas observaciones recientes.</div>
 
 <script>
+  // --- LISTA DE ESTUDIANTES VÁLIDOS ---
+  const estudiantesValidos = [
+    { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" },
+    { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" },
+    { doc: "1072263423", nombre: "MEDINA POLO JESUS DAVID" },
+    { doc: "1041636093", nombre: "MEJIA VALLEJO TOMAS" },
+    { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" }
+  ];
+
   // --- NAVEGACIÓN ---
   function verObs(){
     document.getElementById("obs").style.display="block";
@@ -182,9 +227,6 @@
     document.getElementById("exc").style.display="block";
     document.getElementById("btnExc").classList.add("active");
     document.getElementById("btnObs").classList.remove("active");
-    
-    // Al cambiar de pestaña, ocultamos el formulario para obligar a poner documento de nuevo
-    // Opcional: si quieres que se mantenga abierto si ya ingresó, borra la linea de abajo.
     resetFormularioExcusa();
   }
 
@@ -194,34 +236,94 @@
     document.getElementById("docExc").value = "";
   }
 
-  // --- LÓGICA DE APERTURA DE EXCUSAS ---
+  // --- LÓGICA DE APERTURA Y VALIDACIÓN ESTRICTA ---
   async function activarFormularioExcusa() {
       const doc = document.getElementById("docExc").value.trim();
       if(!doc) { alert("Por favor digite el documento del estudiante."); return; }
 
-      // 1. Ocultar botón continuar
-      document.getElementById("btnInitExc").style.display = "none";
-      // 2. Mostrar formulario
-      document.getElementById("contenedorFormExc").style.display = "block";
+      // 1. VALIDACIÓN LOCAL ESTRICTA
+      const estudiante = estudiantesValidos.find(e => e.doc === doc);
       
-      // 3. Buscar nombre del estudiante
-      const divNom = document.getElementById("nombreExc");
-      divNom.innerHTML = "🔍 Verificando estudiante...";
-      
-      try {
-        const snap = await db.collection("registrosComportamentales").where("documentoEstudiante","==",doc).limit(1).get();
-        if(!snap.empty) {
-            const data = snap.docs[0].data();
-            divNom.innerText = "Estudiante: " + (data.nombreEstudiante || "Registrado en sistema");
-        } else {
-            divNom.innerText = "Estudiante: No encontrado (Verifique el documento o continúe)";
-        }
-      } catch(e) {
-          divNom.innerText = "Estudiante: ...";
+      if (!estudiante) {
+          alert("❌ Documento no encontrado.\n\nVerifique que el número esté bien escrito. Solo estudiantes matriculados pueden acceder.");
+          return; // Bloquea el acceso si no está en la lista
       }
 
-      // 4. Inicializar firma (IMPORTANTE: hacer esto después de que el div sea visible)
+      // Si pasa la validación:
+      document.getElementById("btnInitExc").style.display = "none";
+      document.getElementById("contenedorFormExc").style.display = "block";
+      
+      const divNom = document.getElementById("nombreExc");
+      divNom.innerText = "Estudiante: " + estudiante.nombre;
+
+      // 2. Consultar Asistencia (SOLO DE ESTE ESTUDIANTE)
+      consultarHistorialAsistencia(doc);
+
+      // 3. Init firma
       setTimeout(()=>initPad('sigExc'), 100);
+  }
+
+  async function consultarHistorialAsistencia(docEst) {
+      const listDiv = document.getElementById("attListDetails");
+      const loading = document.getElementById("loadingAtt");
+      const content = document.getElementById("attContent");
+      
+      loading.style.display = "block";
+      content.style.display = "none";
+      listDiv.innerHTML = "";
+
+      let countI = 0;
+      let countE = 0;
+      
+      try {
+          const snap = await db.collection("controlAsistencia").get(); 
+          
+          let registrosEncontrados = [];
+
+          snap.forEach(diaDoc => {
+              const data = diaDoc.data();
+              if(data.detalles) {
+                  const registroEst = data.detalles.find(d => d.doc === docEst);
+                  if(registroEst && (registroEst.estado === 'I' || registroEst.estado === 'E')) {
+                      registrosEncontrados.push({
+                          fecha: data.fecha,
+                          estado: registroEst.estado
+                      });
+                  }
+              }
+          });
+
+          registrosEncontrados.sort((a,b) => a.fecha < b.fecha ? 1 : -1);
+
+          if(registrosEncontrados.length === 0) {
+              listDiv.innerHTML = "<div style='text-align:center; padding:10px;'>👏 ¡Excelente! No hay fallas registradas.</div>";
+          } else {
+              registrosEncontrados.forEach(reg => {
+                  if(reg.estado === 'I') countI++;
+                  if(reg.estado === 'E') countE++;
+                  
+                  const label = reg.estado === 'I' ? 'Falla Injustificada' : 'Excusa Médica/Calam.';
+                  const badgeClass = reg.estado === 'I' ? 'badge-fail' : 'badge-exc';
+                  
+                  listDiv.innerHTML += `
+                    <div class="att-item">
+                        <span>📅 ${reg.fecha}</span>
+                        <span class="${badgeClass}">${label}</span>
+                    </div>
+                  `;
+              });
+          }
+
+          document.getElementById("countI").innerText = countI;
+          document.getElementById("countE").innerText = countE;
+          
+          loading.style.display = "none";
+          content.style.display = "block";
+
+      } catch(e) {
+          console.error(e);
+          loading.innerText = "No se pudo cargar la asistencia.";
+      }
   }
 
   // --- SONIDO ALERTA ---
@@ -291,6 +393,8 @@
       const color = n===1 ? "#4caf50" : (n===2 ? "#ff9800" : "#f44336");
       const firmado = !!r.firmaAcudiente;
       const esNuevo = (idx === 0 && hayNovedad && !firmado); 
+      
+      const tipo = r.tipoRegistro || "Comportamental";
 
       html += `
         <div class="card ${esNuevo ? 'new-item' : ''}">
@@ -299,7 +403,10 @@
             <div class="badge">${firmado ? "FIRMADO ✅" : "PENDIENTE ✍️"}</div>
           </div>
           <div class="body">
-            <div class="row"><b>Fecha:</b> <span class="muted">${r.fecha || '--'}</span></div>
+            <div class="row">
+                <b>Fecha:</b> <span class="muted">${r.fecha || '--'}</span>
+                <span style="float:right; font-size:10px; background:#eee; padding:2px 6px; border-radius:4px;">${tipo}</span>
+            </div>
             <div class="row"><b>Comportamiento:</b> ${r.comportamiento || ''}</div>
             <div class="row"><b>Descargos:</b> ${r.descargos || 'Ninguno'}</div>
             <div class="row"><b>Procedimiento:</b> ${r.procedimiento || ''}</div>
@@ -416,3 +523,5 @@
 </script>
 </body>
 </html>
+
+
