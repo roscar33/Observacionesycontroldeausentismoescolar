@@ -325,7 +325,35 @@
 
         let docs = [];
         snapshot.forEach(d => docs.push({ id:d.id, ...d.data() }));
-        docs.sort((a,b)=> String(a.fecha||"") < String(b.fecha||"") ? 1 : -1);
+        
+        // ----------------------------------------------------
+        // LÓGICA CORREGIDA DE ORDENAMIENTO (TIMESTAMPS)
+        // ----------------------------------------------------
+        
+        // Ordenamos por TIMESTAMP si existe, o por fecha como respaldo.
+        // Esto evita el error cuando hay varias notas el mismo día.
+        docs.sort((a,b) => {
+            // Preferencia 1: Timestamp (Hora exacta)
+            if(a.timestamp && b.timestamp) {
+                return a.timestamp.localeCompare(b.timestamp);
+            }
+            // Preferencia 2: Fecha simple (si no hay timestamp, aunque el archivo docente sí lo guarda)
+            return (a.fecha || "").localeCompare(b.fecha || "");
+        });
+
+        // 2. Asignar los números y colores en orden CRONOLÓGICO (1=Viejo/Verde ... 3=Nuevo/Rojo)
+        docs = docs.map((r, index) => {
+            const num = index + 1;
+            let colorCode = "#4caf50"; // Verde (Registro #1)
+            
+            if(num === 2) colorCode = "#ff9800"; // Naranja (Registro #2)
+            else if(num >= 3) colorCode = "#f44336"; // Rojo (Registro #3+)
+
+            return { ...r, numSecuencial: num, colorTema: colorCode };
+        });
+
+        // 3. INVERTIR para visualización (El más nuevo queda ARRIBA)
+        docs.reverse();
 
         renderizar(docs, currentCount > lastCount);
       }, err => {
@@ -338,11 +366,12 @@
 
   function renderizar(items, hayNovedad){
     let html = "";
-    const total = items.length;
+    
     items.forEach((r, idx)=>{
-      const n = total - idx;
-      const color = n===1 ? "#4caf50" : (n===2 ? "#ff9800" : "#f44336");
+      const n = r.numSecuencial; // Usamos el número calculado cronológicamente
+      const color = r.colorTema;
       const firmado = !!r.firmaAcudiente;
+      // Es nuevo si es el primero de la lista VISUAL (o sea, el último cronológico)
       const esNuevo = (idx === 0 && hayNovedad && !firmado); 
       const tipo = r.tipoRegistro || "Comportamental";
 
@@ -369,7 +398,6 @@
                 </div>
               ` : `
                 <div style="background:#fffde7; padding:10px; border-radius:8px; border:1px solid #fff9c4;">
-                  <!-- MENSAJE PEDAGÓGICO SOLICITADO -->
                   <div style="font-size:12px; color:#f57f17; text-align:center; font-weight:bold; margin-bottom:5px;">
                     📝 Recuerda que debes firmar para notificar al docente el recibido.
                   </div>
