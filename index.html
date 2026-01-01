@@ -422,18 +422,48 @@
     document.getElementById("statEstado").parentElement.style.background = f >= 3 ? "#d32f2f" : "#22c55e";
   }
 
-  async function enviarExcusa() {
+  // ✅ VALIDACIÓN ESTRICTA: OBLIGA A LLENAR TODO (incluida firma)
+  function validarCamposExcusa() {
+    const doc = document.getElementById("docExc").value.trim();
+    const fecha = document.getElementById("fechaExc").value;
+    const motivo = document.getElementById("motivoExc").value;
+    const detalle = document.getElementById("detalleExc").value.trim();
     const p = pads.get("sigExc");
-    if(!p?.hasData) return alert("Firma obligatoria.");
-    await db.collection("excusasInasistencia").add({
-      documentoEstudiante: document.getElementById("docExc").value,
-      fechaInasistencia: document.getElementById("fechaExc").value,
-      motivoTipo: document.getElementById("motivoExc").value,
-      motivoDetalle: document.getElementById("detalleExc").value,
-      firmaAcudiente: p.c.toDataURL(),
-      timestamp: new Date().toISOString()
-    });
-    document.getElementById("successAsistencia").style.display = "flex";
+
+    if(!doc) return "Digite el documento del estudiante.";
+    if(!fecha) return "Seleccione la fecha de inasistencia.";
+    if(!motivo) return "Seleccione el motivo.";
+    if(!detalle) return "Escriba los detalles del motivo.";
+    if(detalle.length < 10) return "Los detalles están muy cortos. Escriba un poquito más (mínimo 10 caracteres).";
+    if(!p?.hasData) return "La firma es obligatoria.";
+
+    return null;
+  }
+
+  async function enviarExcusa() {
+    const error = validarCamposExcusa();
+    if(error) return alert("⚠️ " + error);
+
+    const btn = document.getElementById("btnEnviarExc");
+    btn.disabled = true;
+    btn.textContent = "ENVIANDO...";
+
+    try {
+      const p = pads.get("sigExc");
+      await db.collection("excusasInasistencia").add({
+        documentoEstudiante: document.getElementById("docExc").value.trim(),
+        fechaInasistencia: document.getElementById("fechaExc").value,
+        motivoTipo: document.getElementById("motivoExc").value,
+        motivoDetalle: document.getElementById("detalleExc").value.trim(),
+        firmaAcudiente: p.c.toDataURL(),
+        timestamp: new Date().toISOString()
+      });
+      document.getElementById("successAsistencia").style.display = "flex";
+    } catch(e) {
+      alert("❌ Error enviando la excusa. Intente de nuevo.");
+      btn.disabled = false;
+      btn.textContent = "ENVIAR EXCUSA";
+    }
   }
 
   // --- SOPORTE Y COMUNICACIÓN ---
@@ -522,3 +552,4 @@
 </script>
 </body>
 </html>
+
