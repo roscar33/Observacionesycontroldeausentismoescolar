@@ -1,7 +1,7 @@
 {
   "name": "RuralApp",
   "short_name": "RuralApp",
-  "description": "Aplicación de comunicación y seguimiento escolar para la comunidad educativa rural",
+  "description": "Aplicación de comunicación y seguimiento escolar",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -19,6 +19,20 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
 }
