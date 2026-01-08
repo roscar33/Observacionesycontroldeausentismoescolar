@@ -6,8 +6,10 @@
 <title>Seguimiento de Procesos Escolares · Primaria 2026</title>
 <meta name="theme-color" content="#1b5e20" />
 
-<!-- Optimización para APK -->
 <meta name="mobile-web-app-capable" content="yes">
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <style>
   /* Base y Reset */
@@ -129,7 +131,6 @@
     <button id="btnExc" onclick="verExc()">Excusas / Asistencia</button>
   </div>
 
-  <!-- SECCIÓN 1: OBSERVACIONES -->
   <div id="obs" class="container">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
@@ -143,7 +144,6 @@
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
 
-  <!-- SECCIÓN 2: ASISTENCIA Y EXCUSAS -->
   <div id="exc" class="container" style="display:none;">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
@@ -182,18 +182,15 @@
     </div>
   </div>
 
-  <!-- PORTAL DE SOPORTE -->
   <div id="modalSoporte">
     <div class="modal-header"><button class="close" onclick="cerrarSoporte()">✕</button>Soporte y Comunicación</div>
     <div class="modal-body">
-      <!-- PASO A: LOGIN -->
       <div id="sop_step_auth">
         <h3 style="text-align:center">Autenticación</h3>
         <input id="docSoporte" type="number" placeholder="Documento del estudiante..." inputmode="numeric">
         <button class="btn" onclick="autenticarSoporte()">INGRESAR</button>
       </div>
 
-      <!-- PASO B: MENÚ SOPORTE -->
       <div id="sop_step_menu" style="display:none">
         <div id="sop_nombre_est" style="font-weight:800; color:#1b5e20; text-align:center; margin-bottom:20px;"></div>
         <button class="btn blue" style="margin-bottom:12px" onclick="alert('Descargando Horario Escolar...')">📅 HORARIO ESCOLAR</button>
@@ -202,7 +199,6 @@
         <button class="btn sec" style="background:#6a1b9a;" onclick="irAHistorialMensajes()">📬 VER RESPUESTAS DEL DOCENTE</button>
       </div>
 
-      <!-- PASO C: PANTALLAZO DE ENTRADA (BIENVENIDA) -->
       <div id="sop_step_info" style="display:none">
         <div class="welcome-soporte">
             <strong>Bienvenido, padre de familia.</strong><br><br>
@@ -213,7 +209,6 @@
         <button class="btn" onclick="irAFormularioMsg()">ENTENDIDO</button>
       </div>
 
-      <!-- PASO D: FORMULARIO MENSAJE -->
       <div id="sop_step_form" style="display:none">
         <h3 style="border-bottom:2px solid #263238; padding-bottom:10px; margin-bottom:15px;">Nuevo Mensaje</h3>
         
@@ -231,7 +226,6 @@
         <button class="btn" id="btnEnviarSop" onclick="enviarMensajeSoporte()">ENVIAR AL DOCENTE</button>
       </div>
 
-      <!-- PASO E: VER RESPUESTAS (HISTORIAL) -->
       <div id="sop_step_history" style="display:none">
         <h3 style="color:#6a1b9a;">Mis Mensajes y Respuestas</h3>
         <button class="btn sec" style="margin-bottom:15px; font-size:12px; padding:8px;" onclick="document.getElementById('sop_step_history').style.display='none'; document.getElementById('sop_step_menu').style.display='block';">← VOLVER</button>
@@ -242,7 +236,6 @@
 
   <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
 
-  <!-- PANTALLAZOS ÉXITO -->
   <div id="successAsistencia" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
     <h2>✅ ¡Envío Exitoso!</h2>
     <p>“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes a la jornada que No asistió.”</p>
@@ -552,4 +545,3 @@
 </script>
 </body>
 </html>
-
