@@ -1,13 +1,13 @@
 {
-  "name": "RuralApp",
-  "short_name": "RuralApp",
-  "description": "Aplicación de comunicación y seguimiento escolar",
+  "name": "MaríaJuana",
+  "short_name": "MaríaJuana",
+  "description": "Seguimiento escolar - Sede Santa Juana",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#2e7d32",
+  "background_color": "#dff5e1",
+  "theme_color": "#1b5e20",
   "icons": [
     {
       "src": "icons/icon-192.png",
