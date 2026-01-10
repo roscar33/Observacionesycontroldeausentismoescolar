@@ -58,7 +58,13 @@
 
   /* CUADROS ESTADÍSTICOS ASISTENCIA */
   .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
-  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); position: relative; overflow: hidden; transition: transform 0.2s; }
+  .att-box:active { transform: scale(0.98); }
+  
+  /* Clases para cursor pointer en las cajas interactivas */
+  .clickable-box { cursor: pointer; }
+  .clickable-box::after { content: "VER 🔍"; display: block; font-size: 9px; margin-top: 4px; opacity: 0.8; }
+
   .att-red { background: #ef4444; }
   .att-orange { background: #f97316; }
   .att-green { background: #22c55e; }
@@ -76,8 +82,23 @@
   .new-tag { background: #d32f2f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
 
-  /* MODAL SOPORTE */
-  #modalSoporte { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; display: none; overflow-y: auto; }
+  /* MODAL SOPORTE Y MODAL FECHAS */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+  
+  /* Modal de Soporte (Estilo Completo) */
+  #modalSoporte { display: none; background: #fff; overflow-y: auto; display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
+  
+  /* Modal Pequeño para Fechas */
+  .modal-mini-content { background: #fff; width: 85%; max-width: 350px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: popIn 0.3s; }
+  .modal-mini-header { padding: 15px; color: white; text-align: center; font-weight: bold; position: relative; }
+  .modal-mini-body { padding: 0; max-height: 300px; overflow-y: auto; }
+  .list-dates { list-style: none; padding: 0; margin: 0; }
+  .list-dates li { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; display: flex; justify-content: space-between; }
+  .list-dates li:last-child { border-bottom: none; }
+  .close-mini { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+
+  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
   .modal-header { background: #263238; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
   .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
   .modal-body { padding: 20px; max-width: 500px; margin: 0 auto; }
@@ -159,9 +180,18 @@
         <div id="nombreExc" style="font-weight:bold; color:#1b5e20; margin-bottom:15px; text-align:center; background:#e8f5e9; padding:10px; border-radius:8px;"></div>
         
         <div class="att-summary">
-            <div class="att-box att-red"><span class="att-num" id="statFallas">0</span><span class="att-lbl">Fallas</span></div>
-            <div class="att-box att-orange"><span class="att-num" id="statExcusas">0</span><span class="att-lbl">Excusas</span></div>
-            <div class="att-box att-green"><span class="att-num" id="statEstado">OK</span><span class="att-lbl">Estado</span></div>
+            <div class="att-box att-red clickable-box" onclick="verModalFechas('Fallas')">
+                <span class="att-num" id="statFallas">0</span>
+                <span class="att-lbl">Fallas</span>
+            </div>
+            <div class="att-box att-orange clickable-box" onclick="verModalFechas('Excusas')">
+                <span class="att-num" id="statExcusas">0</span>
+                <span class="att-lbl">Excusas</span>
+            </div>
+            <div class="att-box att-green">
+                <span class="att-num" id="statEstado">OK</span>
+                <span class="att-lbl">Estado</span>
+            </div>
         </div>
 
         <h3 style="margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Enviar Excusa</h3>
@@ -246,6 +276,22 @@
     <h2>✅ Mensaje Enviado</h2>
     <p>“Apreciado Padre de familia, gracias por comunicarse, procuraré responder a su solicitud lo más pronto posible.”</p>
     <button class="btn" style="background:white; color:#0277bd; width:200px" onclick="location.reload()">ENTENDIDO</button>
+  </div>
+  
+  <div id="modalFechas" class="modal-overlay" onclick="cerrarModalFechas(event)">
+    <div class="modal-mini-content">
+        <div class="modal-mini-header" id="headerModalFechas" style="background: #333;">
+            <span id="tituloModalFechas">Fechas</span>
+            <button class="close-mini" onclick="document.getElementById('modalFechas').style.display='none'">✕</button>
+        </div>
+        <div class="modal-mini-body">
+            <ul id="listaFechas" class="list-dates">
+                </ul>
+        </div>
+        <div style="padding:15px; text-align:center; background:#f9f9f9;">
+            <button class="btn" style="padding:8px; margin:0; font-size:13px;" onclick="document.getElementById('modalFechas').style.display='none'">CERRAR</button>
+        </div>
+    </div>
   </div>
 
   <div class="footer">“Familia y escuela caminamos juntos”</div>
@@ -389,6 +435,10 @@
   }
 
   // --- ASISTENCIA Y ESTADÍSTICAS ---
+  // VARIABLES GLOBALES PARA GUARDAR LAS FECHAS
+  let listadoFallas = [];
+  let listadoExcusas = [];
+
   async function activarFormularioExcusa() {
     const docInput = document.getElementById("docExc").value.trim();
     const est = estudiantesValidos.find(e => e.doc === docInput);
@@ -402,17 +452,76 @@
   }
 
   async function consultarEstadisticas(docId) {
+    // Reseteamos las listas
+    listadoFallas = [];
+    listadoExcusas = [];
+    
     const snap = await db.collection("controlAsistencia").get();
     let f = 0, e = 0;
+    
     snap.forEach(d => {
-        const reg = d.data().detalles?.find(x => x.doc === docId);
-        if(reg?.estado === 'I') f++;
-        if(reg?.estado === 'E') e++;
+        const data = d.data();
+        const reg = data.detalles?.find(x => x.doc === docId);
+        // Asumimos que la fecha está en data.fecha o data.id si no existe
+        const fechaRegistro = data.fecha || d.id || "Fecha desconocida";
+
+        if(reg?.estado === 'I') {
+            f++;
+            listadoFallas.push(fechaRegistro);
+        }
+        if(reg?.estado === 'E') {
+            e++;
+            listadoExcusas.push(fechaRegistro);
+        }
     });
+
     document.getElementById("statFallas").innerText = f;
     document.getElementById("statExcusas").innerText = e;
     document.getElementById("statEstado").innerText = f >= 3 ? "ALERTA" : "OK";
     document.getElementById("statEstado").parentElement.style.background = f >= 3 ? "#d32f2f" : "#22c55e";
+  }
+
+  // NUEVA FUNCIÓN PARA MOSTRAR LAS FECHAS AL HACER CLIC
+  function verModalFechas(tipo) {
+      const modal = document.getElementById('modalFechas');
+      const header = document.getElementById('headerModalFechas');
+      const titulo = document.getElementById('tituloModalFechas');
+      const lista = document.getElementById('listaFechas');
+      
+      let fechasMostrables = [];
+      let colorFondo = "";
+
+      if(tipo === 'Fallas') {
+          fechasMostrables = listadoFallas;
+          colorFondo = "#ef4444"; // Rojo
+      } else {
+          fechasMostrables = listadoExcusas;
+          colorFondo = "#f97316"; // Naranja
+      }
+
+      header.style.background = colorFondo;
+      titulo.innerText = tipo === 'Fallas' ? "📅 Fechas de Inasistencia" : "📅 Fechas con Excusa";
+      
+      lista.innerHTML = "";
+      if(fechasMostrables.length === 0) {
+          lista.innerHTML = "<li style='text-align:center; padding:20px; color:#888;'>No hay registros.</li>";
+      } else {
+          // Ordenar fechas (asumiendo formato YYYY-MM-DD o similar string ordenable)
+          fechasMostrables.sort().reverse(); 
+          fechasMostrables.forEach(fecha => {
+              const li = document.createElement("li");
+              li.innerHTML = `<span>${fecha}</span> <span>👁️</span>`;
+              lista.appendChild(li);
+          });
+      }
+
+      modal.style.display = "flex";
+  }
+
+  function cerrarModalFechas(e) {
+      if(e.target.id === 'modalFechas') {
+          document.getElementById('modalFechas').style.display = 'none';
+      }
   }
 
   // ✅ VALIDACIÓN ESTRICTA: OBLIGA A LLENAR TODO (incluida firma)
@@ -545,4 +654,3 @@
 </script>
 </body>
 </html>
-
