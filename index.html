@@ -365,20 +365,30 @@
            localStorage.setItem(storageKey, currentCount);
         }
 
-        let docs = [];
-        snapshot.forEach(d => docs.push({ id:d.id, ...d.data() }));
-        docs.sort((a,b) => (a.timestamp || a.fecha).localeCompare(b.timestamp || b.fecha));
+        let allDocs = [];
+        snapshot.forEach(d => allDocs.push({ id:d.id, ...d.data() }));
+        
+        // Ordenar por fecha/timestamp para mantener secuencia histórica
+        allDocs.sort((a,b) => (a.timestamp || a.fecha).localeCompare(b.timestamp || b.fecha));
 
-        docs = docs.map((r, index) => {
-            const num = index + 1;
-            let color = "#4caf50"; 
-            if(num === 2) color = "#ff9800"; 
-            else if(num >= 3) color = "#d32f2f"; 
-            return { ...r, numSec: num, colorTema: color };
+        // Calcular posición dentro del ciclo para cada observación
+        const cycleCounters = {};
+        let processedDocs = allDocs.map((r) => {
+            const c = r.ciclo || 1;
+            if(!cycleCounters[c]) cycleCounters[c] = 0;
+            cycleCounters[c]++;
+            
+            const relNum = cycleCounters[c]; // 1, 2, 3...
+            let color = "#4caf50"; // Verde (1)
+            if(relNum === 2) color = "#ff9800"; // Naranja (2)
+            else if(relNum >= 3) color = "#d32f2f"; // Rojo (3+)
+
+            return { ...r, numSec: relNum, colorTema: color };
         });
 
-        docs.reverse();
-        renderizarObs(docs, currentCount > lastCount);
+        // Invertir para mostrar las más recientes arriba
+        processedDocs.reverse();
+        renderizarObs(processedDocs, currentCount > lastCount);
       });
   }
 
@@ -388,25 +398,27 @@
         const firmado = !!r.firmaAcudiente;
         const esNuevo = (idx === 0 && hayNovedad && !firmado);
         
-        // Determinar si es la tercera observación
+        // Alerta roja para la tercera observación del ciclo
         const esTercera = r.numSec === 3;
         const claseAlerta = esTercera ? 'alert-mode' : '';
 
         html += `
             <div class="card ${claseAlerta} ${esNuevo ? 'new-item' : ''}">
                 <div class="top" style="background:${r.colorTema}">
-                    <div>REGISTRO N° ${r.numSec} ${esNuevo ? '<span class="new-tag">¡NUEVO!</span>' : ''}</div>
+                    <div>ANOTACIÓN NÚMERO ${r.numSec} ${esNuevo ? '<span class="new-tag">¡NUEVO!</span>' : ''}</div>
                     <div class="badge">${firmado ? "FIRMADO ✅" : "PENDIENTE ✍️"}</div>
                 </div>
                 <div class="body">
+                    <div style="font-size: 11px; color: #666; margin-bottom: 10px; font-weight: bold; text-align: right;">CICLO #${r.ciclo || 1}</div>
+                    
                     ${esTercera && !firmado ? `
                         <div class="alert-banner">
-                            ⚠️ ATENCIÓN: Esta es la tercera observación acumulada.
+                            ⚠️ ATENCIÓN: Esta es la tercera observación acumulada en el ciclo actual.
                         </div>
                     ` : ''}
                     
                     <div class="row"><b>Fecha:</b> ${r.fecha}</div>
-                    <div class="row"><b>Comportamiento:</b> ${r.comportamiento}</div>
+                    <div class="row"><b>Descripción:</b> ${r.comportamiento}</div>
                     <div class="row"><b>Descargos:</b> ${r.descargos || 'Ninguno'}</div>
                     <div class="row"><b>Procedimiento:</b> ${r.procedimiento || ''}</div>
 
@@ -417,7 +429,7 @@
                                 <img src="${r.firmaAcudiente}" style="max-height:70px;">
                             </div>
                         ` : `
-                            <div class="sig-wrap" style="background:${esTercera ? '#ffebee' : '#fff9c4'};">
+                            <div class="sig-wrap" style="background:${esTercera ? '#ffebee' : '#f1f5f9'};">
                                 <div style="font-size:11px; text-align:center; font-weight:bold; margin-bottom:5px;">✍️ FIRMA RECIBIDO</div>
                                 <canvas id="cv_${r.id}"></canvas>
                                 <div class="sig-actions">
@@ -450,11 +462,11 @@
             fechaFirmaAcudiente: new Date().toISOString()
         });
 
-        // --- LÓGICA DE MENSAJES SEGÚN EL NÚMERO DE OBSERVACIÓN ---
+        // --- MENSAJES SEGÚN POSICIÓN EN EL CICLO (1, 2 o 3) ---
         if (numero < 3) {
-            alert("Apreciado padre de familia:\n\nLe recordamos que, si su hijo acumula tres observaciones, usted será citado(a) a una entrevista personal con el docente, con el fin de dialogar y buscar soluciones que favorezcan su proceso formativo.");
+            alert("Apreciado padre de familia:\n\nLe recordamos que, si su hijo ajusta una tercera anotación, será citado directamente a una entrevista con el docente para el acta de compromiso.");
         } else {
-            alert("Padre de familia:\n\nLe informamos que su hijo(a) ya ha acumulado tres observaciones, por lo cual es importante realizar un encuentro personal con el docente para dialogar y establecer compromisos que permitan mejorar su proceso formativo y de convivencia.\n\nAgradecemos su disposición y acompañamiento.");
+            alert("Padre de familia:\n\nLe informamos que su hijo(a) ya ha acumulado las tres anotaciones del ciclo, por lo cual es IMPORTANTE realizar un encuentro personal con el docente para dialogar y establecer compromisos.\n\nAgradecemos su disposición.");
         }
         
         buscarObservaciones();
