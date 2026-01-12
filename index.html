@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
-<title>MaríaJuana</title>
+<title>MaríaJuana · Padres de Familia</title>
 <meta name="theme-color" content="#1b5e20" />
-
 <meta name="mobile-web-app-capable" content="yes">
 
 <link rel="manifest" href="./manifest.json?v=2">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <style>
-  /* Base y Reset */
+  /* BASE Y RESET */
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; user-select: none; }
+  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; user-select: none; overflow-x: hidden; }
   
   /* ENCABEZADO */
   .header { background: #1b5e20; color: #fff; text-align: center; padding: 20px 16px 35px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
@@ -22,104 +21,64 @@
   .header h2 { margin: 5px 0; font-size: 22px; letter-spacing: -0.5px; }
   .header h4 { margin: 5px 0; font-weight: 500; opacity: 0.9; font-size: 14px; }
   .header strong { display: block; margin-top: 8px; font-size: 15px; color: #a5d6a7; }
-  .header p { margin: 5px 0 0; font-size: 13px; opacity: 0.8; }
 
   /* MENÚ FLOTANTE */
   .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 8px; margin: -25px auto 20px; width: 92%; border-radius: 999px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); position: relative; z-index: 10; }
-  .menu button { flex: 1; border: none; padding: 12px 14px; border-radius: 999px; font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.1); color: #fff; transition: all 0.2s; font-size: 14px; }
+  .menu button { flex: 1; border: none; padding: 12px 14px; border-radius: 999px; font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.1); color: #fff; transition: all 0.2s; font-size: 13px; }
   .menu button.active { background: #fff; color: #1b5e20; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-  /* CONTENEDOR PRINCIPAL */
+  /* CONTENEDORES */
   .container { background: #fff; width: 92%; margin: 10px auto; padding: 20px 16px; border-radius: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
   
   /* FORMULARIOS */
   .input-label { font-weight: 700; color: #1b5e20; font-size: 13px; margin-left: 4px; margin-bottom: 4px; display: block; }
-  input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; transition: border 0.3s; appearance: none; -webkit-appearance: none; }
+  input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; transition: all 0.3s; appearance: none; }
   input:focus, textarea:focus, select:focus { outline: none; border-color: #1b5e20; background: #fff; }
-  textarea { min-height: 110px; resize: none; }
-
-  /* RECORDAR DOCUMENTO */
-  .remember-box { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 14px; color: #555; }
-  .remember-box input { width: auto; margin: 0; }
 
   /* BOTONES */
   .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; }
   .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #145018; }
-  .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
   .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
+  .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
 
-  /* TARJETAS OBSERVACIONES */
-  .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
-  .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; align-items: center; }
-  .badge { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.2); font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
-  .card .body { padding: 15px; color: #333; font-size: 14px; line-height: 1.5; }
-  .row { margin-top: 10px; }
-  .row b { display: block; margin-bottom: 3px; color: #1b5e20; font-size: 12px; text-transform: uppercase; }
-
-  /* ESTILOS ALERTA ROJA (OBSERVACIONES) */
-  .card.alert-mode { border: 2px solid #d32f2f; box-shadow: 0 0 15px rgba(211, 47, 47, 0.2); }
-  .alert-banner { background: #ffebee; color: #b71c1c; padding: 12px; margin-bottom: 15px; border-radius: 8px; font-size: 13px; font-weight: bold; border-left: 5px solid #d32f2f; }
-
-  /* CUADROS ESTADÍSTICOS ASISTENCIA */
+  /* CUADROS ASISTENCIA */
   .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
-  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); position: relative; overflow: hidden; transition: transform 0.2s; }
-  .att-box:active { transform: scale(0.98); }
-  
-  .clickable-box { cursor: pointer; }
-  .clickable-box::after { content: "VER 🔍"; display: block; font-size: 9px; margin-top: 4px; opacity: 0.8; }
-
-  .att-red { background: #ef4444; }
-  .att-orange { background: #f97316; }
-  .att-green { background: #22c55e; }
+  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+  .att-red { background: #ef4444; } .att-orange { background: #f97316; } .att-green { background: #22c55e; }
   .att-num { font-size: 22px; font-weight: 900; display: block; }
   .att-lbl { font-size: 10px; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
 
-  /* FIRMA */
-  .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
-  canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
-  .sig-actions { display: flex; gap: 10px; margin-top: 10px; }
-  .sig-actions button { flex: 1; padding: 10px; font-size: 13px; margin-top: 0; box-shadow: none !important; }
+  /* OPTIMIZACIÓN DEL CAMPO DE FIRMA */
+  .sig-wrap { 
+    margin-top: 15px; padding: 5px; border-radius: 14px; background: #ffffff; border: 2px solid #1b5e20; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  }
+  canvas { width: 100%; height: 180px; border-radius: 10px; background: transparent; touch-action: none; display: block; cursor: crosshair; }
+  .sig-placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #bdbdbd; font-size: 14px; font-weight: 500; pointer-events: none; text-transform: uppercase; z-index: 1; }
+  .sig-line { position: absolute; bottom: 40px; left: 10%; right: 10%; height: 1px; background: #e0e0e0; pointer-events: none; }
+  .sig-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-clear { background: #eceff1; color: #455a64; border: 1px solid #cfd8dc; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; flex: 0.4; border: none; cursor: pointer; }
 
-  /* ESTILO PARA NUEVO ITEM */
-  .new-item { border: 2px solid #d32f2f; animation: pulse 2s infinite; }
-  .new-tag { background: #d32f2f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
+  /* OBSERVACIONES */
+  .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; }
+  .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; }
+  .card .body { padding: 15px; font-size: 14px; }
+  .row b { display: block; color: #1b5e20; font-size: 11px; text-transform: uppercase; margin-top: 8px; }
 
-  /* MODALES */
-  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-  
-  #modalSoporte { display: none; background: #fff; overflow-y: auto; display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
-  
-  .modal-mini-content { background: #fff; width: 85%; max-width: 350px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: popIn 0.3s; }
-  .modal-mini-header { padding: 15px; color: white; text-align: center; font-weight: bold; position: relative; }
-  .modal-mini-body { padding: 0; max-height: 300px; overflow-y: auto; }
-  .list-dates { list-style: none; padding: 0; margin: 0; }
-  .list-dates li { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; display: flex; justify-content: space-between; }
-  .list-dates li:last-child { border-bottom: none; }
-  .close-mini { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
-
-  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-  .modal-header { background: #263238; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
-  .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
+  /* MODAL SOPORTE */
+  #modalSoporte { display: none; background: #fff; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; overflow-y: auto; }
+  .modal-header { background: #1b5e20; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; font-weight: bold; }
+  .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; cursor: pointer; }
   .modal-body { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-  .welcome-soporte { background: #e3f2fd; border-left: 5px solid #0288d1; padding: 20px; border-radius: 12px; margin-bottom: 20px; color: #01579b; line-height: 1.6; font-size: 15px; }
-
-  .history-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid #455a64; }
-  .history-header { display: flex; justify-content: space-between; font-size: 11px; color: #666; margin-bottom: 8px; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px; }
-  .history-body { font-size: 14px; color: #333; line-height: 1.4; }
+  .history-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #455a64; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
   .teacher-reply { background: #f3e5f5; border-left: 5px solid #6a1b9a; padding: 12px; border-radius: 8px; margin-top: 12px; color: #4a148c; font-size: 13px; }
 
+  /* BOTÓN FLOTANTE SOPORTE */
+  .btn-support-trigger { display: block; width: 85%; max-width: 300px; padding: 15px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; margin: 20px auto; text-align: center; }
+
+  /* OVERLAYS */
   .success-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; color: white; text-align: center; padding: 40px 20px; justify-content: center; align-items: center; flex-direction: column; }
-
-  #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-  #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4.5s; }
-  @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-  @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-
-  .footer { margin: 30px 18px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #145018; opacity: 0.8; padding-bottom: 20px; line-height: 1.4; }
-  .btn-support-trigger { display: block; width: auto; min-width: 240px; padding: 15px 25px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; margin: 20px auto; }
+  .footer { margin: 20px; text-align: center; font-size: 12px; color: #1b5e20; opacity: 0.7; }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -138,38 +97,32 @@
 <body>
 
   <div class="header">
-    <img src="escudo.png" alt="Escudo I.E. De María" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1b5e20/ffffff?text=IE+De+Maria';">
+    <img src="escudo.png" alt="Escudo">
     <h2>Institución Educativa de María</h2>
     <h4>Sede Rural Santa Juana · Primaria 2026</h4>
     <strong>Docente: Oscar Barrientos</strong>
-    <p>Seguimiento de Procesos Escolares</p>
   </div>
 
   <div class="menu">
-    <button id="btnExc" class="active" onclick="verExc()">Excusas / Asistencia</button>
+    <button id="btnExc" class="active" onclick="verExc()">Asistencia</button>
     <button id="btnObs" onclick="verObs()">Observaciones</button>
   </div>
 
   <div id="exc" class="container">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
-    
-    <div class="remember-box">
-        <input type="checkbox" id="chkRemExc">
-        <label for="chkRemExc">Recordar documento en este dispositivo</label>
-    </div>
-
     <button id="btnInitExc" class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
     
-    <div id="contenedorFormExc" style="display:none; border-top:1px solid #eee; padding-top:20px; margin-top:20px;">
-        <div id="nombreExc" style="font-weight:bold; color:#1b5e20; margin-bottom:15px; text-align:center; background:#e8f5e9; padding:10px; border-radius:8px;"></div>
+    <div id="contenedorFormExc" style="display:none; margin-top:20px;">
+        <div id="nombreExc" style="font-weight:bold; color:#1b5e20; text-align:center; background:#e8f5e9; padding:10px; border-radius:12px 12px 0 0;"></div>
+        <div id="periodoLabelPadre" style="background:#1b5e20; color:white; font-size:10px; text-align:center; padding:5px; margin-bottom:15px; border-radius:0 0 12px 12px; font-weight:bold;">Periodo Actual: #1</div>
         
         <div class="att-summary">
-            <div class="att-box att-red clickable-box" onclick="verModalFechas('Fallas')">
+            <div class="att-box att-red" onclick="verModalFechas('Fallas')">
                 <span class="att-num" id="statFallas">0</span>
                 <span class="att-lbl">Fallas</span>
             </div>
-            <div class="att-box att-orange clickable-box" onclick="verModalFechas('Excusas')">
+            <div class="att-box att-orange" onclick="verModalFechas('Excusas')">
                 <span class="att-num" id="statExcusas">0</span>
                 <span class="att-lbl">Excusas</span>
             </div>
@@ -179,7 +132,7 @@
             </div>
         </div>
 
-        <h3 style="margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Enviar Excusa</h3>
+        <h3 style="margin: 20px 0 10px; font-size: 16px;">Enviar Excusa por Inasistencia</h3>
         <span class="input-label">FECHA DE INASISTENCIA</span>
         <input id="fechaExc" type="date">
         <span class="input-label">MOTIVO</span>
@@ -189,23 +142,25 @@
             <option value="Calamidad">Calamidad</option>
             <option value="Otro">Otro</option>
         </select>
-        <span class="input-label">DETALLES</span>
-        <textarea id="detalleExc" placeholder="Describa el motivo detalladamente..."></textarea>
+        <span class="input-label">DETALLES DE LA JUSTIFICACIÓN</span>
+        <textarea id="detalleExc" placeholder="Escriba los detalles aquí..."></textarea>
+        
         <span class="input-label">FIRMA DEL ACUDIENTE (OBLIGATORIA)</span>
-        <div class="sig-wrap"><canvas id="sigExc"></canvas><button class="btn sec" style="margin-top:10px" onclick="limpiarPad('sigExc')">Borrar Firma</button></div>
-        <button id="btnEnviarExc" class="btn" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
+        <div class="sig-wrap">
+            <div id="placeholder_sigExc" class="sig-placeholder">Firme aquí</div>
+            <div class="sig-line"></div>
+            <canvas id="sigExc"></canvas>
+        </div>
+        <div class="sig-actions">
+            <button class="btn-clear" onclick="limpiarPad('sigExc')">🔄 LIMPIAR</button>
+        </div>
+        <button id="btnEnviarExc" class="btn" style="margin-top:20px" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
     </div>
   </div>
 
   <div id="obs" class="container" style="display:none;">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
-    
-    <div class="remember-box">
-        <input type="checkbox" id="chkRemObs">
-        <label for="chkRemObs">Recordar documento en este dispositivo</label>
-    </div>
-
     <button id="btnBuscar" class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
@@ -221,42 +176,29 @@
 
       <div id="sop_step_menu" style="display:none">
         <div id="sop_nombre_est" style="font-weight:800; color:#1b5e20; text-align:center; margin-bottom:20px;"></div>
-        <button class="btn blue" style="margin-bottom:12px" onclick="alert('Descargando Horario Escolar...')">📅 HORARIO ESCOLAR</button>
-        <button class="btn blue" style="margin-bottom:12px" onclick="alert('Lista de Útiles 2026...')">📚 ÚTILES ESCOLARES 2026</button>
-        <button class="btn" style="margin-bottom:12px" onclick="irAInfoComunicacion()">✉️ COMUNICARSE CON EL DOCENTE</button>
+        <button class="btn blue" style="margin-bottom:12px" onclick="irAFormularioMsg()">✉️ ENVIAR MENSAJE AL DOCENTE</button>
         <button class="btn sec" style="background:#6a1b9a;" onclick="irAHistorialMensajes()">📬 VER RESPUESTAS DEL DOCENTE</button>
-      </div>
-
-      <div id="sop_step_info" style="display:none">
-        <div class="welcome-soporte">
-            <strong>Bienvenido, padre de familia.</strong><br><br>
-            Este espacio le permite comunicarse directamente con el docente.<br>
-            Aquí puede escribir inquietudes, dudas, sugerencias o informar cualquier novedad relacionada con la vida escolar de su hijo.<br><br>
-            Le invitamos a expresarse con respeto y claridad.
-        </div>
-        <button class="btn" onclick="irAFormularioMsg()">ENTENDIDO</button>
       </div>
 
       <div id="sop_step_form" style="display:none">
         <h3 style="border-bottom:2px solid #263238; padding-bottom:10px; margin-bottom:15px;">Nuevo Mensaje</h3>
-        
-        <span class="input-label">FECHA</span>
-        <input id="msg_fecha" type="date">
-        
         <span class="input-label">ASUNTO</span>
-        <input id="msg_asunto" type="text" placeholder="Inquietud, duda, sugerencia...">
-        
-        <span class="input-label">CONTENIDO DEL MENSAJE</span>
-        <textarea id="msg_texto" placeholder="Escriba aquí su mensaje detallado..."></textarea>
-        
-        <span class="input-label">FIRMA (OBLIGATORIA)</span>
-        <div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" style="margin-top:10px" onclick="limpiarPad('sigSoporte')">Borrar Firma</button></div>
-        <button class="btn" id="btnEnviarSop" onclick="enviarMensajeSoporte()">ENVIAR AL DOCENTE</button>
+        <input id="msg_asunto" type="text" placeholder="Duda, inquietud, sugerencia...">
+        <span class="input-label">CONTENIDO</span>
+        <textarea id="msg_texto" placeholder="Escriba aquí su mensaje..."></textarea>
+        <span class="input-label">FIRMA ACUDIENTE</span>
+        <div class="sig-wrap">
+            <div id="placeholder_sigSop" class="sig-placeholder">Firme aquí</div>
+            <div class="sig-line"></div>
+            <canvas id="sigSoporte"></canvas>
+        </div>
+        <button class="btn sec" style="margin:10px 0" onclick="limpiarPad('sigSoporte')">LIMPIAR FIRMA</button>
+        <button class="btn" id="btnEnviarSop" onclick="enviarMensajeSoporte()">ENVIAR MENSAJE</button>
       </div>
 
       <div id="sop_step_history" style="display:none">
-        <h3 style="color:#6a1b9a;">Mis Mensajes y Respuestas</h3>
-        <button class="btn sec" style="margin-bottom:15px; font-size:12px; padding:8px;" onclick="document.getElementById('sop_step_history').style.display='none'; document.getElementById('sop_step_menu').style.display='block';">← VOLVER</button>
+        <h3 style="color:#6a1b9a;">Historial de Mensajes</h3>
+        <button class="btn sec" style="margin-bottom:15px; font-size:12px; padding:8px;" onclick="volverMenuSoporte()">← VOLVER</button>
         <div id="listaMensajesRespuestas"></div>
       </div>
     </div>
@@ -266,37 +208,13 @@
 
   <div id="successAsistencia" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
     <h2>✅ ¡Envío Exitoso!</h2>
-    <p>“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes a la jornada que No asistió.”</p>
+    <p style="padding:20px">“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades académicas.”</p>
     <button class="btn" style="background:white; color:#1b5e20; width:200px" onclick="location.reload()">ENTENDIDO</button>
   </div>
 
-  <div id="successMensaje" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
-    <h2>✅ Mensaje Enviado</h2>
-    <p>“Apreciado Padre de familia, gracias por comunicarse, procuraré responder a su solicitud lo más pronto posible.”</p>
-    <button class="btn" style="background:white; color:#0277bd; width:200px" onclick="location.reload()">ENTENDIDO</button>
-  </div>
-  
-  <div id="modalFechas" class="modal-overlay" onclick="cerrarModalFechas(event)">
-    <div class="modal-mini-content">
-        <div class="modal-mini-header" id="headerModalFechas" style="background: #333;">
-            <span id="tituloModalFechas">Fechas</span>
-            <button class="close-mini" onclick="document.getElementById('modalFechas').style.display='none'">✕</button>
-        </div>
-        <div class="modal-mini-body">
-            <ul id="listaFechas" class="list-dates">
-                </ul>
-        </div>
-        <div style="padding:15px; text-align:center; background:#f9f9f9;">
-            <button class="btn" style="padding:8px; margin:0; font-size:13px;" onclick="document.getElementById('modalFechas').style.display='none'">CERRAR</button>
-        </div>
-    </div>
-  </div>
-
   <div class="footer">“Familia y escuela caminamos juntos”</div>
-  <div id="toast">🔔 ¡Atención! Tienes nuevas observaciones recientes.</div>
 
 <script>
-  // ESTUDIANTES OFICIALES
   const estudiantesValidos = [
     { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" },
     { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" },
@@ -305,313 +223,131 @@
     { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" }
   ];
 
-  // CARGAR DOCUMENTO GUARDADO
-  window.onload = function() {
-    const savedDoc = localStorage.getItem("padres_doc_estudiante");
-    if(savedDoc) {
-        document.getElementById("docObs").value = savedDoc;
-        document.getElementById("docExc").value = savedDoc;
-        document.getElementById("docSoporte").value = savedDoc;
-        document.getElementById("chkRemObs").checked = true;
-        document.getElementById("chkRemExc").checked = true;
-    }
-  };
+  let periodoActualAsis = 1;
+  let estActualSoporte = null;
+  const pads = new Map();
 
-  // --- LÓGICA OBSERVACIONES ---
-  let unsubscribeObs = null;
-  const audioNotif = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3');
-
-  function notificarNovedad() {
-    if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    audioNotif.play().catch(e => {});
-    const x = document.getElementById("toast");
-    x.className = "show";
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+  // --- FIRMA OPTIMIZADA ---
+  function initPad(id) {
+    const c = document.getElementById(id);
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    const placeholder = document.getElementById('placeholder_' + id);
+    const ratio = window.devicePixelRatio || 1;
+    const rect = c.getBoundingClientRect();
+    c.width = rect.width * ratio; c.height = 180 * ratio; ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2.5; ctx.lineCap = "round"; ctx.strokeStyle = "#000b45";
+    let drawing = false;
+    const getPos = (e) => {
+      const r = c.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: clientX - r.left, y: clientY - r.top };
+    };
+    const start = (e) => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); if (placeholder) placeholder.style.display = 'none'; };
+    const move = (e) => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); pads.set(id, { ctx, c, hasData: true }); };
+    const stop = () => { drawing = false; };
+    c.addEventListener("mousedown", start); c.addEventListener("mousemove", move); window.addEventListener("mouseup", stop);
+    c.addEventListener("touchstart", (e) => { e.preventDefault(); start(e); }, { passive: false });
+    c.addEventListener("touchmove", (e) => { e.preventDefault(); move(e); }, { passive: false });
+    c.addEventListener("touchend", stop);
+    pads.set(id, { ctx, c, hasData: false });
   }
 
-  function buscarObservaciones() {
-    const docInput = document.getElementById("docObs").value.trim();
-    const remember = document.getElementById("chkRemObs").checked;
-    const out = document.getElementById("resultadoObs");
-    const btn = document.getElementById("btnBuscar");
-
-    if(!docInput) { alert("Digite documento."); return; }
-    
-    if(remember) localStorage.setItem("padres_doc_estudiante", docInput);
-    else localStorage.removeItem("padres_doc_estudiante");
-
-    if(unsubscribeObs) unsubscribeObs();
-
-    btn.disabled = true;
-    btn.textContent = "CONECTANDO...";
-    out.innerHTML = "<div style='text-align:center; padding:20px;'>Sincronizando...</div>";
-
-    const storageKey = 'count_' + docInput;
-    let lastCount = parseInt(localStorage.getItem(storageKey) || "0");
-
-    unsubscribeObs = db.collection("registrosComportamentales")
-      .where("documentoEstudiante", "==", docInput)
-      .onSnapshot(snapshot => {
-        btn.disabled = false;
-        btn.textContent = "ACTUALIZAR ESTADO";
-
-        if(snapshot.empty) { out.innerHTML = "<p style='text-align:center'>No hay registros.</p>"; return; }
-
-        const currentCount = snapshot.size;
-        if (currentCount > lastCount) {
-           notificarNovedad();
-           localStorage.setItem(storageKey, currentCount);
-        } else if (lastCount === 0) {
-           localStorage.setItem(storageKey, currentCount);
-        }
-
-        let allDocs = [];
-        snapshot.forEach(d => allDocs.push({ id:d.id, ...d.data() }));
-        
-        // Ordenar por fecha/timestamp para mantener secuencia histórica
-        allDocs.sort((a,b) => (a.timestamp || a.fecha).localeCompare(b.timestamp || b.fecha));
-
-        // Calcular posición dentro del ciclo para cada observación
-        const cycleCounters = {};
-        let processedDocs = allDocs.map((r) => {
-            const c = r.ciclo || 1;
-            if(!cycleCounters[c]) cycleCounters[c] = 0;
-            cycleCounters[c]++;
-            
-            const relNum = cycleCounters[c]; // 1, 2, 3...
-            let color = "#4caf50"; // Verde (1)
-            if(relNum === 2) color = "#ff9800"; // Naranja (2)
-            else if(relNum >= 3) color = "#d32f2f"; // Rojo (3+)
-
-            return { ...r, numSec: relNum, colorTema: color };
-        });
-
-        // Invertir para mostrar las más recientes arriba
-        processedDocs.reverse();
-        renderizarObs(processedDocs, currentCount > lastCount);
-      });
-  }
-
-  function renderizarObs(items, hayNovedad) {
-    let html = "";
-    items.forEach((r, idx) => {
-        const firmado = !!r.firmaAcudiente;
-        const esNuevo = (idx === 0 && hayNovedad && !firmado);
-        
-        // Alerta roja para la tercera observación del ciclo
-        const esTercera = r.numSec === 3;
-        const claseAlerta = esTercera ? 'alert-mode' : '';
-
-        html += `
-            <div class="card ${claseAlerta} ${esNuevo ? 'new-item' : ''}">
-                <div class="top" style="background:${r.colorTema}">
-                    <div>ANOTACIÓN NÚMERO ${r.numSec} ${esNuevo ? '<span class="new-tag">¡NUEVO!</span>' : ''}</div>
-                    <div class="badge">${firmado ? "FIRMADO ✅" : "PENDIENTE ✍️"}</div>
-                </div>
-                <div class="body">
-                    <div style="font-size: 11px; color: #666; margin-bottom: 10px; font-weight: bold; text-align: right;">CICLO #${r.ciclo || 1}</div>
-                    
-                    ${esTercera && !firmado ? `
-                        <div class="alert-banner">
-                            ⚠️ ATENCIÓN: Esta es la tercera observación acumulada en el ciclo actual.
-                        </div>
-                    ` : ''}
-                    
-                    <div class="row"><b>Fecha:</b> ${r.fecha}</div>
-                    <div class="row"><b>Descripción:</b> ${r.comportamiento}</div>
-                    <div class="row"><b>Descargos:</b> ${r.descargos || 'Ninguno'}</div>
-                    <div class="row"><b>Procedimiento:</b> ${r.procedimiento || ''}</div>
-
-                    <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
-                        ${firmado ? `
-                            <div style="text-align:center">
-                                <div style="color:#2e7d32; font-weight:bold; font-size:11px;">✓ Firmado por Acudiente</div>
-                                <img src="${r.firmaAcudiente}" style="max-height:70px;">
-                            </div>
-                        ` : `
-                            <div class="sig-wrap" style="background:${esTercera ? '#ffebee' : '#f1f5f9'};">
-                                <div style="font-size:11px; text-align:center; font-weight:bold; margin-bottom:5px;">✍️ FIRMA RECIBIDO</div>
-                                <canvas id="cv_${r.id}"></canvas>
-                                <div class="sig-actions">
-                                    <button class="btn sec" onclick="limpiarPad('cv_${r.id}')">BORRAR</button>
-                                    <button class="btn" style="${esTercera ? 'background:#d32f2f;' : ''}" onclick="firmarRegistro('${r.id}', ${r.numSec})">
-                                        ${esTercera ? 'CONFIRMAR CITACIÓN' : 'CONFIRMAR'}
-                                    </button>
-                                </div>
-                            </div>
-                        `}
-                    </div>
-                </div>
-            </div>`;
-    });
-    document.getElementById("resultadoObs").innerHTML = html;
-    setTimeout(() => { items.forEach(r => { if(!r.firmaAcudiente) initPad("cv_"+r.id); }); }, 200);
-  }
-
-  async function firmarRegistro(id, numero) {
-    const p = pads.get("cv_"+id);
-    if(!p?.hasData) return alert("Por favor, realice su firma en el recuadro antes de confirmar.");
-    
-    const btnConfirmar = event.target; 
-    btnConfirmar.disabled = true;
-    btnConfirmar.textContent = "GUARDANDO...";
-
-    try {
-        await db.collection("registrosComportamentales").doc(id).update({
-            firmaAcudiente: p.c.toDataURL(),
-            fechaFirmaAcudiente: new Date().toISOString()
-        });
-
-        // --- MENSAJES SEGÚN POSICIÓN EN EL CICLO (1, 2 o 3) ---
-        if (numero < 3) {
-            alert("Apreciado padre de familia:\n\nLe recordamos que, si su hijo ajusta una tercera anotación, será citado directamente a una entrevista con el docente para el acta de compromiso.");
-        } else {
-            alert("Padre de familia:\n\nLe informamos que su hijo(a) ya ha acumulado las tres anotaciones del ciclo, por lo cual es IMPORTANTE realizar un encuentro personal con el docente para dialogar y establecer compromisos.\n\nAgradecemos su disposición.");
-        }
-        
-        buscarObservaciones();
-
-    } catch (error) {
-        console.error(error);
-        alert("Hubo un error al guardar la firma. Intente nuevamente.");
-        btnConfirmar.disabled = false;
-        btnConfirmar.textContent = "CONFIRMAR";
+  function limpiarPad(id) {
+    const p = pads.get(id);
+    if (p) { p.ctx.clearRect(0, 0, p.c.width, p.c.height); p.hasData = false;
+      const ph = document.getElementById('placeholder_' + id); if (ph) ph.style.display = 'block';
     }
   }
 
-  // --- ASISTENCIA Y ESTADÍSTICAS ---
-  let listadoFallas = [];
-  let listadoExcusas = [];
-
+  // --- ASISTENCIA Y PERIODO ---
   async function activarFormularioExcusa() {
     const docInput = document.getElementById("docExc").value.trim();
     const est = estudiantesValidos.find(e => e.doc === docInput);
-    if(!est) return alert("No encontrado");
-    if(document.getElementById("chkRemExc").checked) localStorage.setItem("padres_doc_estudiante", docInput);
+    if(!est) return alert("Documento no válido.");
     document.getElementById("btnInitExc").style.display="none";
     document.getElementById("contenedorFormExc").style.display="block";
     document.getElementById("nombreExc").innerText = est.nombre;
+    const configSnap = await db.collection("configuracionGlobal").doc("asistencia").get();
+    if(configSnap.exists()){
+        periodoActualAsis = configSnap.data().periodoActual || 1;
+        document.getElementById("periodoLabelPadre").innerText = `Periodo Actual: #${periodoActualAsis}`;
+    }
     consultarEstadisticas(docInput);
-    setTimeout(() => initPad('sigExc'), 200);
+    setTimeout(() => initPad('sigExc'), 300);
   }
 
   async function consultarEstadisticas(docId) {
-    listadoFallas = [];
-    listadoExcusas = [];
-    
-    const snap = await db.collection("controlAsistencia").get();
+    const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoActualAsis).get();
     let f = 0, e = 0;
-    
     snap.forEach(d => {
-        const data = d.data();
-        const reg = data.detalles?.find(x => x.doc === docId);
-        const fechaRegistro = data.fecha || d.id || "Fecha desconocida";
-
-        if(reg?.estado === 'I') {
-            f++;
-            listadoFallas.push(fechaRegistro);
-        }
-        if(reg?.estado === 'E') {
-            e++;
-            listadoExcusas.push(fechaRegistro);
-        }
+        const reg = d.data().detalles?.find(x => x.doc === docId);
+        if(reg?.estado === 'I') f++; if(reg?.estado === 'E') e++;
     });
-
     document.getElementById("statFallas").innerText = f;
     document.getElementById("statExcusas").innerText = e;
     document.getElementById("statEstado").innerText = f >= 3 ? "ALERTA" : "OK";
     document.getElementById("statEstado").parentElement.style.background = f >= 3 ? "#d32f2f" : "#22c55e";
   }
 
-  function verModalFechas(tipo) {
-      const modal = document.getElementById('modalFechas');
-      const header = document.getElementById('headerModalFechas');
-      const titulo = document.getElementById('tituloModalFechas');
-      const lista = document.getElementById('listaFechas');
-      
-      let fechasMostrables = [];
-      let colorFondo = "";
-
-      if(tipo === 'Fallas') {
-          fechasMostrables = listadoFallas;
-          colorFondo = "#ef4444";
-      } else {
-          fechasMostrables = listadoExcusas;
-          colorFondo = "#f97316";
-      }
-
-      header.style.background = colorFondo;
-      titulo.innerText = tipo === 'Fallas' ? "📅 Fechas de Inasistencia" : "📅 Fechas con Excusa";
-      
-      lista.innerHTML = "";
-      if(fechasMostrables.length === 0) {
-          lista.innerHTML = "<li style='text-align:center; padding:20px; color:#888;'>No hay registros.</li>";
-      } else {
-          fechasMostrables.sort().reverse(); 
-          fechasMostrables.forEach(fecha => {
-              const li = document.createElement("li");
-              li.innerHTML = `<span>${fecha}</span> <span>👁️</span>`;
-              lista.appendChild(li);
-          });
-      }
-
-      modal.style.display = "flex";
-  }
-
-  function cerrarModalFechas(e) {
-      if(e.target.id === 'modalFechas') {
-          document.getElementById('modalFechas').style.display = 'none';
-      }
-  }
-
-  function validarCamposExcusa() {
-    const doc = document.getElementById("docExc").value.trim();
-    const fecha = document.getElementById("fechaExc").value;
-    const motivo = document.getElementById("motivoExc").value;
-    const detalle = document.getElementById("detalleExc").value.trim();
-    const p = pads.get("sigExc");
-
-    if(!doc) return "Digite el documento del estudiante.";
-    if(!fecha) return "Seleccione la fecha de inasistencia.";
-    if(!motivo) return "Seleccione el motivo.";
-    if(!detalle) return "Escriba los detalles del motivo.";
-    if(detalle.length < 10) return "Los detalles están muy cortos. Escriba un poquito más (mínimo 10 caracteres).";
-    if(!p?.hasData) return "La firma es obligatoria.";
-
-    return null;
-  }
-
   async function enviarExcusa() {
-    const error = validarCamposExcusa();
-    if(error) return alert("⚠️ " + error);
-
+    const p = pads.get("sigExc");
+    const fecha = document.getElementById("fechaExc").value;
+    if(!fecha || !p?.hasData) return alert("Complete la fecha y firme.");
     const btn = document.getElementById("btnEnviarExc");
-    btn.disabled = true;
-    btn.textContent = "ENVIANDO...";
-
+    btn.disabled = true; btn.textContent = "ENVIANDO...";
     try {
-      const p = pads.get("sigExc");
-      await db.collection("excusasInasistencia").add({
-        documentoEstudiante: document.getElementById("docExc").value.trim(),
-        fechaInasistencia: document.getElementById("fechaExc").value,
-        motivoTipo: document.getElementById("motivoExc").value,
-        motivoDetalle: document.getElementById("detalleExc").value.trim(),
-        firmaAcudiente: p.c.toDataURL(),
-        timestamp: new Date().toISOString()
-      });
-      document.getElementById("successAsistencia").style.display = "flex";
-    } catch(e) {
-      alert("❌ Error enviando la excusa. Intente de nuevo.");
-      btn.disabled = false;
-      btn.textContent = "ENVIAR EXCUSA";
-    }
+        await db.collection("excusasInasistencia").add({
+            documentoEstudiante: document.getElementById("docExc").value.trim(),
+            fechaInasistencia: fecha,
+            motivoTipo: document.getElementById("motivoExc").value,
+            motivoDetalle: document.getElementById("detalleExc").value.trim(),
+            firmaAcudiente: p.c.toDataURL(),
+            timestamp: new Date().toISOString()
+        });
+        document.getElementById("successAsistencia").style.display = "flex";
+    } catch(e) { btn.disabled = false; alert("Error al enviar."); }
+  }
+
+  // --- OBSERVACIONES ---
+  function buscarObservaciones() {
+    const docInput = document.getElementById("docObs").value.trim();
+    if(!docInput) return alert("Digite documento.");
+    const out = document.getElementById("resultadoObs");
+    out.innerHTML = "<p style='text-align:center'>Cargando...</p>";
+    db.collection("registrosComportamentales").where("documentoEstudiante", "==", docInput).onSnapshot(snap => {
+        if(snap.empty) { out.innerHTML = "<p style='text-align:center'>Sin registros.</p>"; return; }
+        let html = "";
+        snap.forEach(d => {
+            const r = d.data();
+            html += `<div class="card" style="border-left:5px solid #1b5e20">
+                <div class="top" style="background:#1b5e20"><span>ANOTACIÓN</span><span>${r.firmaAcudiente ? 'FIRMADO' : 'PENDIENTE'}</span></div>
+                <div class="body">
+                    <div class="row"><b>Fecha:</b> ${r.fecha}</div>
+                    <div class="row"><b>Descripción:</b> ${r.comportamiento}</div>
+                    ${!r.firmaAcudiente ? `
+                        <div class="sig-wrap"><canvas id="cv_${d.id}"></canvas></div>
+                        <button class="btn" onclick="firmarObsPadre('${d.id}')">FIRMAR RECIBIDO</button>
+                    ` : `<div style="text-align:center;margin-top:10px"><img src="${r.firmaAcudiente}" style="max-height:60px"></div>`}
+                </div>
+            </div>`;
+        });
+        out.innerHTML = html;
+        snap.forEach(d => { if(!d.data().firmaAcudiente) setTimeout(()=>initPad("cv_"+d.id), 500); });
+    });
+  }
+
+  async function firmarObsPadre(id) {
+    const p = pads.get("cv_"+id); if(!p?.hasData) return alert("Firme el cuadro.");
+    await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirmaAcudiente: new Date().toISOString() });
   }
 
   // --- SOPORTE Y COMUNICACIÓN ---
-  let estActualSoporte = null;
   function abrirSoporte() { document.getElementById("modalSoporte").style.display = "block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display = "none"; }
-  
+  function volverMenuSoporte() { document.getElementById("sop_step_history").style.display = "none"; document.getElementById("sop_step_form").style.display = "none"; document.getElementById("sop_step_menu").style.display = "block"; }
+
   function autenticarSoporte() {
     const doc = document.getElementById("docSoporte").value.trim();
     const est = estudiantesValidos.find(e => e.doc === doc);
@@ -620,40 +356,28 @@
       document.getElementById("sop_step_auth").style.display = "none";
       document.getElementById("sop_step_menu").style.display = "block";
       document.getElementById("sop_nombre_est").innerText = "Estudiante: " + est.nombre;
-    } else alert("Documento no encontrado.");
+    } else alert("No encontrado.");
   }
 
-  function irAInfoComunicacion() {
+  function irAFormularioMsg() {
     document.getElementById("sop_step_menu").style.display = "none";
-    document.getElementById("sop_step_info").style.display = "block";
-  }
-
-  function irAFormularioMsg() { 
-    document.getElementById("sop_step_info").style.display = "none"; 
-    document.getElementById("sop_step_form").style.display = "block"; 
-    document.getElementById("msg_fecha").valueAsDate = new Date();
-    setTimeout(() => initPad('sigSoporte'), 200);
+    document.getElementById("sop_step_form").style.display = "block";
+    setTimeout(() => initPad('sigSoporte'), 300);
   }
 
   async function enviarMensajeSoporte() {
     const p = pads.get("sigSoporte");
     const asunto = document.getElementById("msg_asunto").value.trim();
     const texto = document.getElementById("msg_texto").value.trim();
-    const fecha = document.getElementById("msg_fecha").value;
-
-    if(!asunto || !texto || !p?.hasData) return alert("⚠️ Por favor, complete la fecha, el asunto, el contenido y firme.");
-    
-    document.getElementById("btnEnviarSop").disabled = true;
+    if(!asunto || !texto || !p?.hasData) return alert("Complete los campos y firme.");
     await db.collection("comunicacionPadres").add({
       documentoEstudiante: estActualSoporte.doc,
       nombreEstudiante: estActualSoporte.nombre,
-      fechaMsg: fecha,
-      asunto: asunto,
-      mensaje: texto,
-      firma: p.c.toDataURL(),
-      timestamp: new Date().toISOString()
+      asunto: asunto, mensaje: texto,
+      firma: p.c.toDataURL(), timestamp: new Date().toISOString()
     });
-    document.getElementById("successMensaje").style.display = "flex";
+    alert("Mensaje enviado con éxito.");
+    volverMenuSoporte();
   }
 
   function irAHistorialMensajes() {
@@ -663,33 +387,14 @@
         let html = "";
         snap.forEach(d => {
             const m = d.data();
-            html += `<div class="history-card"><div class="history-header"><span>${m.asunto}</span><span>${m.fechaMsg}</span></div><div class="history-body">${m.mensaje}</div>${m.respuestaDocente ? `<div class="teacher-reply">${m.respuestaDocente}</div>` : ''}</div>`;
+            html += `<div class="history-card"><b>${m.asunto}</b><p>${m.mensaje}</p>${m.respuestaDocente ? `<div class="teacher-reply"><b>Docente:</b> ${m.respuestaDocente}</div>` : ''}</div>`;
         });
         document.getElementById("listaMensajesRespuestas").innerHTML = html || "Sin mensajes.";
     });
   }
 
-  // --- UTILS CANVAS ---
-  const pads = new Map();
-  function initPad(id){
-    const c = document.getElementById(id); if(!c) return;
-    const ctx = c.getContext("2d");
-    const ratio = window.devicePixelRatio || 1;
-    const rect = c.getBoundingClientRect();
-    c.width = rect.width * ratio; c.height = 180 * ratio; ctx.scale(ratio, ratio);
-    ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
-    let drawing=false;
-    const getPos = (e) => { const r = c.getBoundingClientRect(); return { x: (e.touches ? e.touches[0].clientX : e.clientX) - r.left, y: (e.touches ? e.touches[0].clientY : e.clientY) - r.top }; }
-    c.addEventListener("mousedown", (e) => { drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); });
-    c.addEventListener("mousemove", (e) => { if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id, {ctx, c, hasData:true}); });
-    window.addEventListener("mouseup", () => drawing=false);
-    c.addEventListener("touchstart", (e) => { e.preventDefault(); drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); }, {passive:false});
-    c.addEventListener("touchmove", (e) => { e.preventDefault(); if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id, {ctx, c, hasData:true}); }, {passive:false});
-    pads.set(id, {ctx, c, hasData:false});
-  }
-  function limpiarPad(id) { const p = pads.get(id); if(p) { p.ctx.clearRect(0,0,p.c.width,p.c.height); p.hasData=false; } }
-  function verObs(){ document.getElementById("obs").style.display="block"; document.getElementById("exc").style.display="none"; document.getElementById("btnObs").classList.add("active"); document.getElementById("btnExc").classList.remove("active"); }
-  function verExc(){ document.getElementById("obs").style.display="none"; document.getElementById("exc").style.display="block"; document.getElementById("btnExc").classList.add("active"); document.getElementById("btnObs").classList.remove("active"); }
+  function verObs(){ document.getElementById("obs").style.display="block"; document.getElementById("exc").style.display="none"; document.getElementById("btnObs").className="active"; document.getElementById("btnExc").className=""; }
+  function verExc(){ document.getElementById("obs").style.display="none"; document.getElementById("exc").style.display="block"; document.getElementById("btnExc").className="active"; document.getElementById("btnObs").className=""; }
 </script>
 </body>
 </html>
