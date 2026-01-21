@@ -180,6 +180,11 @@
       <div id="sop_auth">
         <h3 style="text-align:center">Autenticación</h3>
         <input id="docSoporte" type="number" placeholder="Documento del estudiante..." inputmode="numeric">
+        <!-- AGREGADA CASILLA DE RECORDAR DOCUMENTO EN SOPORTE -->
+        <div class="remember-box">
+            <input type="checkbox" id="chkRemSop">
+            <label for="chkRemSop">Recordar documento</label>
+        </div>
         <button class="btn" onclick="autenticarSoporte()">INGRESAR</button>
       </div>
 
@@ -241,6 +246,7 @@
         document.getElementById("docSoporte").value = saved;
         document.getElementById("chkRemExc").checked = true;
         document.getElementById("chkRemObs").checked = true;
+        document.getElementById("chkRemSop").checked = true; // Cargar estado en soporte
     }
   };
 
@@ -364,6 +370,10 @@
     const docS = document.getElementById("docSoporte").value.trim();
     const est = estudiantesValidos.find(e => e.doc === docS);
     if(!est) return alert("No encontrado.");
+    
+    // GUARDAR SI LA CASILLA ESTÁ MARCADA
+    if(document.getElementById("chkRemSop").checked) localStorage.setItem("padre_doc", docS);
+
     estSop = est;
     document.getElementById("sop_auth").style.display = "none";
     document.getElementById("sop_menu").style.display = "block";
