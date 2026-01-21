@@ -11,6 +11,7 @@
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; user-select: none; }
 
+  /* Estilos de Cabecera y Branding */
   .header { background: #1b5e20; color: #fff; text-align: center; padding: 20px 16px 35px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .header img { width: 90px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); display: inline-block; }
   .header h2 { margin: 5px 0; font-size: 22px; letter-spacing: -0.5px; }
@@ -18,17 +19,17 @@
   .header strong { display: block; margin-top: 8px; font-size: 15px; color: #a5d6a7; }
   .header p { margin: 5px 0 0; font-size: 13px; opacity: 0.8; }
 
+  /* Menú de Navegación */
   .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 8px; margin: -25px auto 20px; width: 92%; border-radius: 999px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); position: relative; z-index: 10; }
   .menu button { flex: 1; border: none; padding: 12px 14px; border-radius: 999px; font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.1); color: #fff; transition: all 0.2s; font-size: 14px; }
   .menu button.active { background: #fff; color: #1b5e20; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
+  /* Contenedores y Formularios */
   .container { background: #fff; width: 92%; margin: 10px auto; padding: 20px 16px; border-radius: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-
   .input-label { font-weight: 700; color: #1b5e20; font-size: 13px; margin-left: 4px; margin-bottom: 4px; display: block; }
   input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; transition: border 0.3s; appearance: none; -webkit-appearance: none; }
-  input:focus, textarea:focus, select:focus { outline: none; border-color: #1b5e20; background: #fff; }
-  textarea { min-height: 110px; resize: none; }
-
+  input:focus, textarea:focus, select:focus { border-color: #1b5e20; background: #fff; outline: none; }
+  
   .remember-box { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 14px; color: #555; }
   .remember-box input { width: auto; margin: 0; }
 
@@ -37,68 +38,44 @@
   .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
   .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
 
+  /* Cards de Registros */
   .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
   .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; align-items: center; }
-  .badge { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.2); font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
+  .badge { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.2); font-size: 11px; font-weight: 800; }
   .card .body { padding: 15px; color: #333; font-size: 14px; line-height: 1.5; }
   .row { margin-top: 10px; }
   .row b { display: block; margin-bottom: 3px; color: #1b5e20; font-size: 12px; text-transform: uppercase; }
 
+  /* Resumen de Asistencia */
   .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
   .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; }
   .att-red { background: #ef4444; }
   .att-orange { background: #f97316; }
-  .att-green { background: #22c55e; cursor: default; }
+  .att-green { background: #22c55e; }
   .att-num { font-size: 22px; font-weight: 900; display: block; }
   .att-lbl { font-size: 10px; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
 
+  /* Firmas */
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
   canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
-  .sig-actions { display: flex; gap: 10px; margin-top: 10px; }
-  .sig-actions button { flex: 1; padding: 10px; font-size: 13px; margin-top: 0; box-shadow: none !important; }
 
-  .new-item { border: 2px solid #d32f2f; animation: pulse 2s infinite; }
-  .new-tag { background: #d32f2f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
-
+  /* Soporte y Modales */
   #modalSoporte { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; display: none; overflow-y: auto; }
   .modal-header { background: #263238; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
   .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
   .modal-body { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-  .welcome-soporte { background: #e3f2fd; border-left: 5px solid #0288d1; padding: 20px; border-radius: 12px; margin-bottom: 20px; color: #01579b; line-height: 1.6; font-size: 15px; }
-
-  .history-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid #455a64; }
-  .history-header { display: flex; justify-content: space-between; font-size: 11px; color: #666; margin-bottom: 8px; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px; }
-  .history-body { font-size: 14px; color: #333; line-height: 1.4; }
+  .history-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #455a64; }
   .teacher-reply { background: #f3e5f5; border-left: 5px solid #6a1b9a; padding: 12px; border-radius: 8px; margin-top: 12px; color: #4a148c; font-size: 13px; }
+
+  .footer { margin: 30px 18px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #145018; opacity: 0.8; padding-bottom: 20px; line-height: 1.4; }
+  .btn-support-trigger { display: block; width: auto; min-width: 240px; padding: 15px 25px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; margin: 20px auto; }
 
   .success-overlay {
     display:none; position: fixed; top:0; left:0; width:100%; height:100%;
     z-index: 3000; color:white; text-align:center; padding: 40px 20px;
     justify-content:center; align-items:center; flex-direction:column;
   }
-
-  .overlay-box { max-width: 520px; margin: 0 auto; }
-  .overlay-box p { font-size: 16px; line-height: 1.45; margin: 12px 0 22px; color: #0b2e13; font-weight: 700; }
-  .overlay-title { font-size: 22px; font-weight: 900; margin: 0; color: #0b2e13; }
-
-  #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-  #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4.5s; }
-  @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-  @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-
-  .footer { margin: 30px 18px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #145018; opacity: 0.8; padding-bottom: 20px; line-height: 1.4; }
-  .btn-support-trigger { display: block; width: auto; min-width: 240px; padding: 15px 25px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; margin: 20px auto; }
-
-  /* Modal simple para listar fechas */
-  #modalFechas { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 3500; display:none; padding: 20px; }
-  #modalFechas .box { background: #fff; border-radius: 18px; max-width: 520px; margin: 0 auto; padding: 18px; box-shadow: 0 10px 28px rgba(0,0,0,.25); }
-  #modalFechas h3 { margin: 0 0 10px; color:#1b5e20; }
-  #modalFechas .close { float:right; border:none; background:#eee; border-radius: 12px; padding: 6px 10px; cursor:pointer; font-weight: 800; }
-  #modalFechas ul { margin: 10px 0 0; padding-left: 18px; }
-  #modalFechas li { margin: 6px 0; font-weight: 700; color:#333; }
-
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -111,90 +88,88 @@
     projectId: "diariodeprocesos-6f78d"
   });
   const db = firebase.firestore();
+
+  // LISTADO DE ESTUDIANTES (DEBE COINCIDIR CON EL PANEL DOCENTE)
+  const estudiantesValidos = [
+    { doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN" },
+    { doc: "1041636979", nombre: "OSORIO MUÑOZ JERONIMO" },
+    { doc: "1041636870", nombre: "GONZALEZ BETANCUR MARIA JOSE" },
+    { doc: "1042155380", nombre: "GUTIERREZ CHAVARRIA JOSE LEANDRO" },
+    { doc: "1041636841", nombre: "VARELAS BARRIENTOS LUCIANA" },
+    { doc: "1041636641", nombre: "MARTINEZ MARTINEZ SEBASTIAN" },
+    { doc: "1035922719", nombre: "MOLINA OCHOA BELEN" },
+    { doc: "1067959648", nombre: "PACHECO BARRERA JOSE DANIEL" },
+    { doc: "1032328826", nombre: "LOPERA CADAVID LUCIANA" },
+    { doc: "1042155250", nombre: "CASAS FERNANDEZ ANTONELLA" },
+    { doc: "1035801483", nombre: "RESTREPO VILLA DILMER FELIPE" },
+    { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" },
+    { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" },
+    { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" }
+  ];
 </script>
 </head>
 
 <body>
 
   <div class="header">
-    <img src="escudo.png" alt="Escudo I.E. De María" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1b5e20/ffffff?text=IE+De+Maria';">
+    <img src="escudo.png" alt="Escudo I.E. De María">
     <h2>Institución Educativa de María</h2>
     <h4>Sede Rural Santa Juana · Primaria 2026</h4>
     <strong>Docente: Oscar Barrientos</strong>
     <p>Seguimiento de Procesos Escolares</p>
   </div>
 
-  <!-- ORDEN: primero Asistencia, luego Observaciones -->
   <div class="menu">
-    <button id="btnExc" class="active" onclick="verExc()">Excusas / Asistencia</button>
-    <button id="btnObs" onclick="verObs()">Observaciones</button>
+    <button id="btnExc" class="active" onclick="switchTab('exc')">Excusas / Asistencia</button>
+    <button id="btnObs" onclick="switchTab('obs')">Observaciones</button>
   </div>
 
-  <!-- SECCIÓN 2: ASISTENCIA Y EXCUSAS -->
-  <div id="exc" class="container">
+  <!-- SECCIÓN: ASISTENCIA Y EXCUSAS -->
+  <div id="view-exc" class="container">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
-
     <div class="remember-box">
         <input type="checkbox" id="chkRemExc">
-        <label for="chkRemExc">Recordar documento en este dispositivo</label>
+        <label for="chkRemExc">Recordar documento</label>
     </div>
-
     <button id="btnInitExc" class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
 
-    <div id="contenedorFormExc" style="display:none; border-top:1px solid #eee; padding-top:20px; margin-top:20px;">
-        <!-- CINTILLA: nombre + periodo -->
-        <div id="cintillaEst" style="text-align:center; border-radius:14px; overflow:hidden; margin-bottom:15px; border:1px solid #c8e6c9;">
-          <div id="nombreExc" style="font-weight:900; color:#0b2e13; background:#e8f5e9; padding:10px 12px;"></div>
-          <div id="periodoAsisLabel" style="font-weight:900; background:#1b5e20; color:#fff; padding:8px 12px; font-size:12px;">
-            PERIODO: CARGANDO...
-          </div>
+    <div id="formExc" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
+        <div style="text-align:center; margin-bottom:15px; border:1px solid #c8e6c9; border-radius:14px; overflow:hidden;">
+          <div id="nombreExc" style="font-weight:900; color:#0b2e13; background:#e8f5e9; padding:10px;"></div>
+          <div id="periodoAsisLabel" style="background:#1b5e20; color:#fff; padding:5px; font-size:12px; font-weight:bold;"></div>
         </div>
 
         <div class="att-summary">
-            <div class="att-box att-red" onclick="mostrarFechas('I')">
-              <span class="att-num" id="statFallas">0</span><span class="att-lbl">Fallas</span>
-            </div>
-            <div class="att-box att-orange" onclick="mostrarFechas('E')">
-              <span class="att-num" id="statExcusas">0</span><span class="att-lbl">Excusas</span>
-            </div>
-            <div class="att-box att-green">
-              <span class="att-num" id="statEstado">OK</span><span class="att-lbl">Estado</span>
-            </div>
+            <div class="att-box att-red"><span class="att-num" id="statFallas">0</span><span class="att-lbl">Fallas</span></div>
+            <div class="att-box att-orange"><span class="att-num" id="statExcusas">0</span><span class="att-lbl">Excusas</span></div>
+            <div class="att-box att-green"><span class="att-num" id="statEstado">OK</span><span class="att-lbl">Estado</span></div>
         </div>
 
-        <h3 style="margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Enviar Excusa</h3>
-        <span class="input-label">FECHA DE INASISTENCIA</span>
+        <h3 style="margin-bottom:10px; font-size:16px;">Enviar Justificación</h3>
         <input id="fechaExc" type="date">
-        <span class="input-label">MOTIVO</span>
         <select id="motivoExc">
-            <option value="Enfermedad">Enfermedad</option>
-            <option value="Cita médica">Cita médica</option>
-            <option value="Calamidad">Calamidad</option>
-            <option value="Otro">Otro</option>
+            <option>Enfermedad</option><option>Cita médica</option><option>Calamidad</option><option>Otro</option>
         </select>
-        <span class="input-label">DETALLES</span>
         <textarea id="detalleExc" placeholder="Describa el motivo detalladamente..."></textarea>
-        <span class="input-label">FIRMA DEL ACUDIENTE (OBLIGATORIA)</span>
         <div class="sig-wrap">
+          <span class="input-label" style="text-align:center">FIRMA ACUDIENTE (OBLIGATORIA)</span>
           <canvas id="sigExc"></canvas>
-          <button class="btn sec" style="margin-top:10px" onclick="limpiarPad('sigExc')">Borrar Firma</button>
+          <button class="btn sec" style="padding:8px; font-size:12px;" onclick="limpiarPad('sigExc')">Borrar Firma</button>
         </div>
-        <button id="btnEnviarExc" class="btn" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
+        <button id="btnEnviarExc" class="btn" style="margin-top:15px;" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
     </div>
   </div>
 
-  <!-- SECCIÓN 1: OBSERVACIONES -->
-  <div id="obs" class="container" style="display:none;">
+  <!-- SECCIÓN: OBSERVACIONES -->
+  <div id="view-obs" class="container" style="display:none;">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
-
     <div class="remember-box">
         <input type="checkbox" id="chkRemObs">
-        <label for="chkRemObs">Recordar documento en este dispositivo</label>
+        <label for="chkRemObs">Recordar documento</label>
     </div>
-
-    <button id="btnBuscar" class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
+    <button class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
 
@@ -202,537 +177,279 @@
   <div id="modalSoporte">
     <div class="modal-header"><button class="close" onclick="cerrarSoporte()">✕</button>Soporte y Comunicación</div>
     <div class="modal-body">
-      <div id="sop_step_auth">
+      <div id="sop_auth">
         <h3 style="text-align:center">Autenticación</h3>
         <input id="docSoporte" type="number" placeholder="Documento del estudiante..." inputmode="numeric">
         <button class="btn" onclick="autenticarSoporte()">INGRESAR</button>
       </div>
 
-      <div id="sop_step_menu" style="display:none">
+      <div id="sop_menu" style="display:none">
         <div id="sop_nombre_est" style="font-weight:800; color:#1b5e20; text-align:center; margin-bottom:20px;"></div>
-        <button class="btn blue" style="margin-bottom:12px" onclick="alert('Descargando Horario Escolar...')">📅 HORARIO ESCOLAR</button>
-        <button class="btn blue" style="margin-bottom:12px" onclick="alert('Lista de Útiles 2026...')">📚 ÚTILES ESCOLARES 2026</button>
-        <button class="btn" style="margin-bottom:12px" onclick="irAInfoComunicacion()">✉️ COMUNICARSE CON EL DOCENTE</button>
-        <button class="btn sec" style="background:#6a1b9a;" onclick="irAHistorialMensajes()">📬 VER RESPUESTAS DEL DOCENTE</button>
+        <button class="btn blue" style="margin-bottom:12px">📅 HORARIO ESCOLAR</button>
+        <button class="btn blue" style="margin-bottom:12px">📚 ÚTILES ESCOLARES 2026</button>
+        <button class="btn" style="margin-bottom:12px" onclick="irAFormSop()">✉️ COMUNICARSE CON EL DOCENTE</button>
+        <button class="btn sec" style="background:#6a1b9a;" onclick="irAHistorialSop()">📬 VER RESPUESTAS DEL DOCENTE</button>
       </div>
 
-      <div id="sop_step_info" style="display:none">
-        <div class="welcome-soporte">
-            <strong>Bienvenido, padre de familia.</strong><br><br>
-            Este espacio le permite comunicarse directamente con el docente.<br>
-            Aquí puede escribir inquietudes, dudas, sugerencias o informar cualquier novedad relacionada con la vida escolar de su hijo.<br><br>
-            Le invitamos a expresarse con respeto y claridad.
-        </div>
-        <button class="btn" onclick="irAFormularioMsg()">ENTENDIDO</button>
-      </div>
-
-      <div id="sop_step_form" style="display:none">
-        <h3 style="border-bottom:2px solid #263238; padding-bottom:10px; margin-bottom:15px;">Nuevo Mensaje</h3>
-
-        <span class="input-label">FECHA</span>
+      <div id="sop_form" style="display:none">
+        <h3 style="margin-bottom:15px;">Nuevo Mensaje</h3>
         <input id="msg_fecha" type="date">
-
-        <span class="input-label">ASUNTO</span>
-        <input id="msg_asunto" type="text" placeholder="Inquietud, duda, sugerencia...">
-
-        <span class="input-label">CONTENIDO DEL MENSAJE</span>
-        <textarea id="msg_texto" placeholder="Escriba aquí su mensaje detallado..."></textarea>
-
-        <span class="input-label">FIRMA (OBLIGATORIA)</span>
+        <input id="msg_asunto" type="text" placeholder="Asunto (Duda, Sugerencia...)">
+        <textarea id="msg_texto" placeholder="Escriba su mensaje aquí..."></textarea>
         <div class="sig-wrap">
           <canvas id="sigSoporte"></canvas>
-          <button class="btn sec" style="margin-top:10px" onclick="limpiarPad('sigSoporte')">Borrar Firma</button>
+          <button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar Firma</button>
         </div>
-        <button class="btn" id="btnEnviarSop" onclick="enviarMensajeSoporte()">ENVIAR AL DOCENTE</button>
+        <button class="btn" style="margin-top:10px" onclick="enviarMensajeSoporte()">ENVIAR AL DOCENTE</button>
       </div>
 
-      <div id="sop_step_history" style="display:none">
-        <h3 style="color:#6a1b9a;">Mis Mensajes y Respuestas</h3>
-        <button class="btn sec" style="margin-bottom:15px; font-size:12px; padding:8px;" onclick="document.getElementById('sop_step_history').style.display='none'; document.getElementById('sop_step_menu').style.display='block';">← VOLVER</button>
-        <div id="listaMensajesRespuestas"></div>
+      <div id="sop_history" style="display:none">
+        <h3 style="color:#6a1b9a;">Mis Mensajes</h3>
+        <button class="btn sec" style="padding:8px; margin-bottom:10px;" onclick="irAMenuSop()">← VOLVER</button>
+        <div id="listaMensajesSop"></div>
       </div>
     </div>
   </div>
 
-  <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
-
-  <!-- Pantallazos éxito excusa / soporte -->
-  <div id="successAsistencia" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
+  <!-- ÉXITO OVERLAYS -->
+  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
     <h2>✅ ¡Envío Exitoso!</h2>
-    <p style="max-width:520px;">“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes a la jornada que No asistió.”</p>
+    <p>“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes.”</p>
     <button class="btn" style="background:white; color:#1b5e20; width:200px" onclick="location.reload()">ENTENDIDO</button>
   </div>
 
-  <div id="successMensaje" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
+  <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
     <h2>✅ Mensaje Enviado</h2>
-    <p style="max-width:520px;">“Apreciado Padre de familia, gracias por comunicarse, procuraré responder a su solicitud lo más pronto posible.”</p>
+    <p>“Apreciado Padre de familia, gracias por comunicarse, procuraré responder a su solicitud lo más pronto posible.”</p>
     <button class="btn" style="background:white; color:#0277bd; width:200px" onclick="location.reload()">ENTENDIDO</button>
   </div>
 
-  <!-- Overlays Observaciones (se muestran al firmar) -->
-  <div id="overlayObs" class="success-overlay" style="background: rgba(255,255,255,0.92);">
-    <div class="overlay-box" style="background:#fff; border-radius:18px; padding:22px; box-shadow: 0 12px 28px rgba(0,0,0,.25);">
-      <h2 class="overlay-title" id="overlayObsTitle">✅ Confirmación</h2>
-      <p id="overlayObsText"></p>
-      <button class="btn" style="width:240px" onclick="cerrarOverlayObs()">ENTENDIDO</button>
-    </div>
-  </div>
-
+  <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
+  
   <div class="footer">“Familia y escuela caminamos juntos”</div>
-  <div id="toast">🔔 ¡Atención! Tienes nuevas observaciones recientes.</div>
-
-  <!-- Modal Fechas -->
-  <div id="modalFechas">
-    <div class="box">
-      <button class="close" onclick="cerrarModalFechas()">✕</button>
-      <h3 id="modalFechasTitle">Fechas</h3>
-      <div id="modalFechasBody"></div>
-    </div>
-  </div>
 
 <script>
-  const estudiantesValidos = [
-    { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" },
-    { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" },
-    { doc: "1072263423", nombre: "MEDINA POLO JESUS DAVID" },
-    { doc: "1041636093", nombre: "MEJIA VALLEJO TOMAS" },
-    { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" }
-  ];
+  let estActualDoc = "";
+  let periodoAsis = 1;
+  const pads = new Map();
 
   window.onload = function() {
-    const savedDoc = localStorage.getItem("padres_doc_estudiante");
-    if(savedDoc) {
-        document.getElementById("docObs").value = savedDoc;
-        document.getElementById("docExc").value = savedDoc;
-        document.getElementById("docSoporte").value = savedDoc;
-        document.getElementById("chkRemObs").checked = true;
+    const saved = localStorage.getItem("padre_doc");
+    if(saved) {
+        document.getElementById("docExc").value = saved;
+        document.getElementById("docObs").value = saved;
+        document.getElementById("docSoporte").value = saved;
         document.getElementById("chkRemExc").checked = true;
+        document.getElementById("chkRemObs").checked = true;
     }
   };
 
-  // --- OBSERVACIONES + CICLOS (FIX REAL) ---
-  let unsubscribeObs = null;
-  const audioNotif = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3');
-
-  function notificarNovedad() {
-    if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    audioNotif.play().catch(e => {});
-    const x = document.getElementById("toast");
-    x.className = "show";
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+  function switchTab(t) {
+    document.getElementById("view-exc").style.display = t === 'exc' ? 'block' : 'none';
+    document.getElementById("view-obs").style.display = t === 'obs' ? 'block' : 'none';
+    document.getElementById("btnExc").className = t === 'exc' ? 'active' : '';
+    document.getElementById("btnObs").className = t === 'obs' ? 'active' : '';
   }
 
-  async function getCicloActualPadre(docEst){
-    // Colección REAL que me dijiste: ciclosObservaciones
-    // Campo puede variar, por eso fallback.
-    try {
-      const snap = await db.collection("ciclosObservaciones").doc(docEst).get();
-      if(!snap.exists) return 1;
-      const d = snap.data() || {};
-      const c = d.cicloActual ?? d.ciclo ?? d.actual ?? d.cicloObs ?? 1;
-      return Number(c) || 1;
-    } catch(e){
-      return 1;
-    }
+  // --- ASISTENCIA ---
+  async function activarFormularioExcusa() {
+    const docInput = document.getElementById("docExc").value.trim();
+    const est = estudiantesValidos.find(e => e.doc === docInput);
+    if(!est) return alert("Documento no encontrado.");
+    
+    if(document.getElementById("chkRemExc").checked) localStorage.setItem("padre_doc", docInput);
+
+    estActualDoc = docInput;
+    document.getElementById("btnInitExc").style.display = "none";
+    document.getElementById("formExc").style.display = "block";
+    document.getElementById("nombreExc").innerText = est.nombre;
+
+    // Sincronizar Periodo
+    const snapC = await db.collection("configuracionGlobal").doc("asistencia").get();
+    periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
+    document.getElementById("periodoAsisLabel").innerText = "PERIODO ACTUAL #" + periodoAsis;
+
+    consultarStats(docInput);
+    initPad('sigExc');
   }
 
+  async function consultarStats(docId) {
+    const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get();
+    let f=0, e=0;
+    snap.forEach(d => {
+        const reg = (d.data().detalles || []).find(x => x.doc === docId);
+        if(reg?.estado === 'I') f++;
+        if(reg?.estado === 'E') e++;
+    });
+    document.getElementById("statFallas").innerText = f;
+    document.getElementById("statExcusas").innerText = e;
+    document.getElementById("statEstado").innerText = (f+e >= 3) ? "ALERTA" : "OK";
+    document.getElementById("statEstado").parentElement.style.background = (f+e >= 3) ? "#ef4444" : "#22c55e";
+  }
+
+  async function enviarExcusa() {
+    const p = pads.get('sigExc');
+    if(!p?.hasData) return alert("Firma obligatoria.");
+    await db.collection("excusasInasistencia").add({
+        documentoEstudiante: estActualDoc,
+        fechaInasistencia: document.getElementById("fechaExc").value,
+        motivoTipo: document.getElementById("motivoExc").value,
+        motivoDetalle: document.getElementById("detalleExc").value,
+        firmaAcudiente: p.c.toDataURL(),
+        timestamp: new Date().toISOString()
+    });
+    document.getElementById("successAsis").style.display = "flex";
+  }
+
+  // --- OBSERVACIONES ---
   async function buscarObservaciones() {
-    const docInput = document.getElementById("docObs").value.trim();
-    const remember = document.getElementById("chkRemObs").checked;
+    const docId = document.getElementById("docObs").value.trim();
     const out = document.getElementById("resultadoObs");
-    const btn = document.getElementById("btnBuscar");
+    if(document.getElementById("chkRemObs").checked) localStorage.setItem("padre_doc", docId);
 
-    if(!docInput) { alert("Digite documento."); return; }
+    // Sincronizar Ciclo desde la colección configuracionCiclos
+    const cicloSnap = await db.collection("configuracionCiclos").doc(docId).get();
+    const cicloActual = cicloSnap.exists ? (cicloSnap.data().cicloActual || 1) : 1;
 
-    if(remember) localStorage.setItem("padres_doc_estudiante", docInput);
-    else localStorage.removeItem("padres_doc_estudiante");
-
-    if(unsubscribeObs) unsubscribeObs();
-
-    btn.disabled = true;
-    btn.textContent = "CONECTANDO...";
-    out.innerHTML = "<div style='text-align:center; padding:20px;'>Sincronizando...</div>";
-
-    // 1) Leemos ciclo actual desde ciclosObservaciones
-    const cicloDoc = await getCicloActualPadre(docInput);
-
-    const storageKey = 'count_' + docInput;
-    let lastCount = parseInt(localStorage.getItem(storageKey) || "0");
-
-    unsubscribeObs = db.collection("registrosComportamentales")
-      .where("documentoEstudiante", "==", docInput)
-      .onSnapshot(snapshot => {
-        btn.disabled = false;
-        btn.textContent = "ACTUALIZAR ESTADO";
-
-        if(snapshot.empty) {
-          out.innerHTML = "<p style='text-align:center'>No hay registros.</p>";
-          return;
+    db.collection("registrosComportamentales")
+      .where("documentoEstudiante", "==", docId)
+      .where("ciclo", "==", cicloActual)
+      .onSnapshot(snap => {
+        if(snap.empty) {
+            out.innerHTML = "<p style='text-align:center; font-size:13px; color:#666;'>Sin registros en el ciclo actual (#"+cicloActual+").</p>";
+            return;
         }
-
-        const currentCount = snapshot.size;
-        if (currentCount > lastCount) {
-           notificarNovedad();
-           localStorage.setItem(storageKey, currentCount);
-        } else if (lastCount === 0) {
-           localStorage.setItem(storageKey, currentCount);
-        }
-
-        let docs = [];
-        snapshot.forEach(d => docs.push({ id:d.id, ...d.data() }));
-
-        // Orden por fecha/timestamp para que el "último" quede arriba
-        docs.sort((a,b) => {
-          const ta = (a.timestamp || (a.fecha ? (a.fecha+"T00:00:00") : "")) || "";
-          const tb = (b.timestamp || (b.fecha ? (b.fecha+"T00:00:00") : "")) || "";
-          return ta.localeCompare(tb);
+        let html = `<p style="font-size:11px; font-weight:bold; color:#1b5e20; margin-bottom:10px;">CICLO ACTUAL: #${cicloActual}</p>`;
+        snap.forEach(d => {
+            const r = d.data();
+            const id = d.id;
+            const firmado = !!r.firmaAcudiente;
+            html += `
+              <div class="card">
+                <div class="top" style="background:${firmado ? '#2e7d32' : '#f57c00'}">
+                    <span>${r.fecha}</span><span>${firmado ? 'FIRMADO' : 'PENDIENTE'}</span>
+                </div>
+                <div class="body">
+                    <div class="row"><b>Situación:</b> ${r.comportamiento}</div>
+                    ${!firmado ? `
+                        <div class="sig-wrap">
+                            <canvas id="cv_${id}"></canvas>
+                            <button class="btn" style="margin-top:10px" onclick="firmarObs('${id}')">CONFIRMAR RECIBIDO</button>
+                        </div>
+                    ` : `<div style="text-align:right; margin-top:10px;"><img src="${r.firmaAcudiente}" style="height:50px;"></div>`}
+                </div>
+              </div>`;
         });
-
-        // 2) Auto-corrección: si el máximo ciclo real de registros es mayor al del doc, usamos el máximo
-        const ciclos = docs.map(r => Number(r.ciclo || 1) || 1);
-        const maxCiclo = Math.max(...ciclos, 1);
-        const cicloEfectivo = Math.max(Number(cicloDoc)||1, maxCiclo);
-
-        // Filtramos por ciclo efectivo
-        let docsCiclo = docs.filter(r => (Number(r.ciclo || 1) || 1) === cicloEfectivo);
-
-        // Si por alguna razón queda vacío, mostramos todo (para no “ocultar”)
-        if(docsCiclo.length === 0) docsCiclo = docs;
-
-        // Numeración por ciclo (1,2,3...) y semáforo
-        docsCiclo = docsCiclo.map((r, index) => {
-          const num = index + 1;
-          let color = "#4caf50";
-          if(num === 2) color = "#ff9800";
-          else if(num >= 3) color = "#f44336";
-          return { ...r, numSec: num, colorTema: color, cicloEfectivo };
-        });
-
-        // Último arriba
-        docsCiclo.reverse();
-
-        renderizarObs(docsCiclo, currentCount > lastCount);
-      }, err => {
-        btn.disabled = false;
-        btn.textContent = "VER OBSERVACIONES";
-        out.innerHTML = "<p style='text-align:center; color:#d32f2f; font-weight:800;'>Error conectando con Firebase. Revise conexión e intente de nuevo.</p>";
+        out.innerHTML = html;
+        setTimeout(() => snap.forEach(d => { if(!d.data().firmaAcudiente) initPad('cv_'+d.id); }), 300);
       });
   }
 
-  function renderizarObs(items, hayNovedad) {
-    let html = "";
-    items.forEach((r, idx) => {
-        const firmado = !!r.firmaAcudiente;
-        const esNuevo = (idx === 0 && hayNovedad && !firmado);
-
-        html += `
-            <div class="card ${esNuevo ? 'new-item' : ''}">
-                <div class="top" style="background:${r.colorTema}">
-                    <div>
-                      CICLO #${r.cicloEfectivo || (r.ciclo || 1)} · REGISTRO N° ${r.numSec}
-                      ${esNuevo ? '<span class="new-tag">¡NUEVO!</span>' : ''}
-                    </div>
-                    <div class="badge">${firmado ? "FIRMADO ✅" : "PENDIENTE ✍️"}</div>
-                </div>
-                <div class="body">
-                    <div class="row"><b>Fecha:</b> ${r.fecha || 'Sin fecha'}</div>
-                    <div class="row"><b>Comportamiento:</b> ${r.comportamiento || ''}</div>
-                    <div class="row"><b>Descargos:</b> ${r.descargos || 'Ninguno'}</div>
-                    <div class="row"><b>Procedimiento:</b> ${r.procedimiento || ''}</div>
-
-                    <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
-                        ${firmado ? `
-                            <div style="text-align:center">
-                                <div style="color:#2e7d32; font-weight:bold; font-size:11px;">✓ Firmado por Acudiente</div>
-                                <img src="${r.firmaAcudiente}" style="max-height:70px;">
-                            </div>
-                        ` : `
-                            <div class="sig-wrap" style="background:#fff9c4;">
-                                <div style="font-size:11px; text-align:center; font-weight:bold; margin-bottom:5px;">✍️ FIRMA RECIBIDO</div>
-                                <canvas id="cv_${r.id}"></canvas>
-                                <div class="sig-actions">
-                                    <button class="btn sec" onclick="limpiarPad('cv_${r.id}')">BORRAR</button>
-                                    <button class="btn" onclick="firmarRegistro('${r.id}', ${r.numSec})">CONFIRMAR</button>
-                                </div>
-                            </div>
-                        `}
-                    </div>
-                </div>
-            </div>`;
-    });
-    document.getElementById("resultadoObs").innerHTML = html;
-    setTimeout(() => { items.forEach(r => { if(!r.firmaAcudiente) initPad("cv_"+r.id); }); }, 200);
-  }
-
-  function abrirOverlayObs(colorFondo, texto){
-    const ov = document.getElementById("overlayObs");
-    const box = ov.querySelector(".overlay-box");
-    box.style.background = colorFondo;
-    document.getElementById("overlayObsText").textContent = texto;
-    ov.style.display = "flex";
-  }
-  function cerrarOverlayObs(){ document.getElementById("overlayObs").style.display="none"; }
-
-  async function firmarRegistro(id, numSec) {
-    const p = pads.get("cv_"+id);
-    if(!p?.hasData) return alert("Firme primero.");
-
+  async function firmarObs(id) {
+    const p = pads.get('cv_'+id);
+    if(!p?.hasData) return alert("Debe firmar.");
     await db.collection("registrosComportamentales").doc(id).update({
         firmaAcudiente: p.c.toDataURL(),
         fechaFirmaAcudiente: new Date().toISOString()
     });
-
-    // Overlays por firma 1-2-3
-    if(numSec === 1){
-      abrirOverlayObs("#d9fbe3", "Apreciado padre de familia, le recordamos que si su hijo acumula tres observaciones, usted será citado a una entrevista con el docente, con el propósito de analizar la situación y fortalecer sus procesos académicos y disciplinarios.");
-    } else if(numSec === 2){
-      abrirOverlayObs("#fff4c2", "Apreciado padre de familia, le recordamos que si su hijo acumula tres observaciones, usted será citado a una entrevista con el docente, con el propósito de analizar la situación y fortalecer sus procesos académicos y disciplinarios.");
-    } else {
-      abrirOverlayObs("#ffd0d0", "Apreciado padre de familia, su hijo ha acumulado tres observaciones; por tal motivo, es importante que acuda a la institución para que, junto con el docente, se establezcan compromisos orientados al mejoramiento académico y disciplinario de su hijo.");
-    }
+    alert("✅ Firma registrada.");
   }
 
-  // --- ASISTENCIA Y ESTADÍSTICAS ---
-  let cacheFechas = { I: [], E: [] };
-  let periodoActualAsis = 1;
-
-  async function activarFormularioExcusa() {
-    const docInput = document.getElementById("docExc").value.trim();
-    const est = estudiantesValidos.find(e => e.doc === docInput);
-    if(!est) return alert("No encontrado");
-
-    if(document.getElementById("chkRemExc").checked) localStorage.setItem("padres_doc_estudiante", docInput);
-
-    document.getElementById("btnInitExc").style.display="none";
-    document.getElementById("contenedorFormExc").style.display="block";
-    document.getElementById("nombreExc").innerText = est.nombre;
-
-    await cargarPeriodoAsistencia();
-    await consultarEstadisticas(docInput);
-
-    setTimeout(() => initPad('sigExc'), 200);
-  }
-
-  async function cargarPeriodoAsistencia(){
-    try{
-      const snap = await db.collection("configuracionGlobal").doc("asistencia").get();
-      if(snap.exists){
-        const d = snap.data() || {};
-        periodoActualAsis = Number(d.periodoActual || 1) || 1;
-      } else {
-        periodoActualAsis = 1;
-      }
-    } catch(e){
-      periodoActualAsis = 1;
-    }
-    document.getElementById("periodoAsisLabel").innerText = "PERIODO ACTUAL: #" + periodoActualAsis;
-  }
-
-  async function consultarEstadisticas(docId) {
-    // Recorre controlAsistencia y toma SOLO el periodo actual
-    const snap = await db.collection("controlAsistencia").get();
-
-    let f = 0, e = 0;
-    const fechasI = [];
-    const fechasE = [];
-
-    snap.forEach(d => {
-        const data = d.data() || {};
-        const periodo = Number(data.periodo || 1) || 1;
-
-        if(periodo !== periodoActualAsis) return;
-
-        const reg = (data.detalles || []).find(x => x.doc === docId);
-        if(reg?.estado === 'I'){ f++; fechasI.push(data.fecha || d.id); }
-        if(reg?.estado === 'E'){ e++; fechasE.push(data.fecha || d.id); }
-    });
-
-    cacheFechas.I = fechasI.sort();
-    cacheFechas.E = fechasE.sort();
-
-    document.getElementById("statFallas").innerText = f;
-    document.getElementById("statExcusas").innerText = e;
-
-    const total = f + e; // Después de 3 (excusa o injustificada) => alerta
-    const estado = total >= 3 ? "ALERTA" : "OK";
-    document.getElementById("statEstado").innerText = estado;
-    document.getElementById("statEstado").parentElement.style.background = total >= 3 ? "#d32f2f" : "#22c55e";
-  }
-
-  function mostrarFechas(tipo){
-    const arr = cacheFechas[tipo] || [];
-    document.getElementById("modalFechasTitle").innerText = (tipo === 'I') ? "Fallas (Inasistencia) - Periodo #" + periodoActualAsis : "Excusas - Periodo #" + periodoActualAsis;
-
-    if(arr.length === 0){
-      document.getElementById("modalFechasBody").innerHTML = "<p style='margin:0; color:#666; font-weight:700;'>No hay fechas registradas en este periodo.</p>";
-    } else {
-      document.getElementById("modalFechasBody").innerHTML = "<ul>" + arr.map(x => `<li>${x}</li>`).join("") + "</ul>";
-    }
-    document.getElementById("modalFechas").style.display = "block";
-  }
-  function cerrarModalFechas(){ document.getElementById("modalFechas").style.display="none"; }
-
-  function validarCamposExcusa() {
-    const doc = document.getElementById("docExc").value.trim();
-    const fecha = document.getElementById("fechaExc").value;
-    const motivo = document.getElementById("motivoExc").value;
-    const detalle = document.getElementById("detalleExc").value.trim();
-    const p = pads.get("sigExc");
-
-    if(!doc) return "Digite el documento del estudiante.";
-    if(!fecha) return "Seleccione la fecha de inasistencia.";
-    if(!motivo) return "Seleccione el motivo.";
-    if(!detalle) return "Escriba los detalles del motivo.";
-    if(detalle.length < 10) return "Los detalles están muy cortos. Escriba un poquito más (mínimo 10 caracteres).";
-    if(!p?.hasData) return "La firma es obligatoria.";
-
-    return null;
-  }
-
-  async function enviarExcusa() {
-    const error = validarCamposExcusa();
-    if(error) return alert("⚠️ " + error);
-
-    const btn = document.getElementById("btnEnviarExc");
-    btn.disabled = true;
-    btn.textContent = "ENVIANDO...";
-
-    try {
-      const p = pads.get("sigExc");
-      await db.collection("excusasInasistencia").add({
-        documentoEstudiante: document.getElementById("docExc").value.trim(),
-        fechaInasistencia: document.getElementById("fechaExc").value,
-        motivoTipo: document.getElementById("motivoExc").value,
-        motivoDetalle: document.getElementById("detalleExc").value.trim(),
-        firmaAcudiente: p.c.toDataURL(),
-        timestamp: new Date().toISOString()
-      });
-      document.getElementById("successAsistencia").style.display = "flex";
-    } catch(e) {
-      alert("❌ Error enviando la excusa. Intente de nuevo.");
-      btn.disabled = false;
-      btn.textContent = "ENVIAR EXCUSA";
-    }
-  }
-
-  // --- SOPORTE Y COMUNICACIÓN ---
-  let estActualSoporte = null;
+  // --- SOPORTE ---
+  let estSop = null;
   function abrirSoporte() { document.getElementById("modalSoporte").style.display = "block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display = "none"; }
-
+  
   function autenticarSoporte() {
-    const doc = document.getElementById("docSoporte").value.trim();
-    const est = estudiantesValidos.find(e => e.doc === doc);
-    if(est) {
-      estActualSoporte = est;
-      document.getElementById("sop_step_auth").style.display = "none";
-      document.getElementById("sop_step_menu").style.display = "block";
-      document.getElementById("sop_nombre_est").innerText = "Estudiante: " + est.nombre;
-    } else alert("Documento no encontrado.");
+    const docS = document.getElementById("docSoporte").value.trim();
+    const est = estudiantesValidos.find(e => e.doc === docS);
+    if(!est) return alert("No encontrado.");
+    estSop = est;
+    document.getElementById("sop_auth").style.display = "none";
+    document.getElementById("sop_menu").style.display = "block";
+    document.getElementById("sop_nombre_est").innerText = est.nombre;
   }
 
-  function irAInfoComunicacion() {
-    document.getElementById("sop_step_menu").style.display = "none";
-    document.getElementById("sop_step_info").style.display = "block";
-  }
-
-  function irAFormularioMsg() {
-    document.getElementById("sop_step_info").style.display = "none";
-    document.getElementById("sop_step_form").style.display = "block";
+  function irAFormSop() {
+    document.getElementById("sop_menu").style.display = "none";
+    document.getElementById("sop_form").style.display = "block";
     document.getElementById("msg_fecha").valueAsDate = new Date();
     setTimeout(() => initPad('sigSoporte'), 200);
   }
 
-  async function enviarMensajeSoporte() {
-    const p = pads.get("sigSoporte");
-    const asunto = document.getElementById("msg_asunto").value.trim();
-    const texto = document.getElementById("msg_texto").value.trim();
-    const fecha = document.getElementById("msg_fecha").value;
-
-    if(!asunto || !texto || !p?.hasData) return alert("⚠️ Por favor, complete la fecha, el asunto, el contenido y firme.");
-
-    document.getElementById("btnEnviarSop").disabled = true;
-    await db.collection("comunicacionPadres").add({
-      documentoEstudiante: estActualSoporte.doc,
-      nombreEstudiante: estActualSoporte.nombre,
-      fechaMsg: fecha,
-      asunto: asunto,
-      mensaje: texto,
-      firma: p.c.toDataURL(),
-      timestamp: new Date().toISOString()
-    });
-    document.getElementById("successMensaje").style.display = "flex";
+  function irAMenuSop() {
+    document.getElementById("sop_form").style.display = "none";
+    document.getElementById("sop_history").style.display = "none";
+    document.getElementById("sop_menu").style.display = "block";
   }
 
-  function irAHistorialMensajes() {
-    document.getElementById("sop_step_menu").style.display = "none";
-    document.getElementById("sop_step_history").style.display = "block";
-    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estActualSoporte.doc).onSnapshot(snap => {
+  async function enviarMensajeSoporte() {
+    const p = pads.get('sigSoporte');
+    if(!p?.hasData) return alert("Firma obligatoria.");
+    await db.collection("comunicacionPadres").add({
+        documentoEstudiante: estSop.doc,
+        nombreEstudiante: estSop.nombre,
+        asunto: document.getElementById("msg_asunto").value,
+        mensaje: document.getElementById("msg_texto").value,
+        fechaMsg: document.getElementById("msg_fecha").value,
+        timestamp: new Date().toISOString()
+    });
+    document.getElementById("successMsg").style.display = "flex";
+  }
+
+  function irAHistorialSop() {
+    document.getElementById("sop_menu").style.display = "none";
+    document.getElementById("sop_history").style.display = "block";
+    db.collection("comunicacionPadres")
+      .where("documentoEstudiante", "==", estSop.doc)
+      .onSnapshot(snap => {
         let html = "";
         snap.forEach(d => {
             const m = d.data();
             html += `<div class="history-card">
-              <div class="history-header"><span>${m.asunto}</span><span>${m.fechaMsg}</span></div>
-              <div class="history-body">${m.mensaje}</div>
-              ${m.respuestaDocente ? `<div class="teacher-reply">${m.respuestaDocente}</div>` : ''}
+              <div style="font-size:11px; color:#666;">${m.fechaMsg}</div>
+              <div style="font-weight:bold; margin:5px 0;">${m.asunto}</div>
+              <div style="font-size:13px;">${m.mensaje}</div>
+              ${m.respuestaDocente ? `<div class="teacher-reply"><b>Respuesta Docente:</b><br>${m.respuestaDocente}</div>` : ''}
             </div>`;
         });
-        document.getElementById("listaMensajesRespuestas").innerHTML = html || "Sin mensajes.";
+        document.getElementById("listaMensajesSop").innerHTML = html || "Sin mensajes.";
     });
   }
 
-  // --- UTILS CANVAS ---
-  const pads = new Map();
+  // --- CANVAS UTILS ---
   function initPad(id){
     const c = document.getElementById(id); if(!c) return;
     const ctx = c.getContext("2d");
     const ratio = window.devicePixelRatio || 1;
     const rect = c.getBoundingClientRect();
-    c.width = rect.width * ratio; c.height = 180 * ratio;
+    c.width = rect.width * ratio; c.height = rect.height * ratio;
     ctx.setTransform(ratio,0,0,ratio,0,0);
-
-    ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2.5; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
     let drawing=false;
-
     const getPos = (e) => {
       const r = c.getBoundingClientRect();
-      const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-      const clientY = (e.touches ? e.touches[0].clientY : e.clientY);
-      return { x: clientX - r.left, y: clientY - r.top };
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      const cy = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: cx - r.left, y: cy - r.top };
     };
-
-    c.addEventListener("mousedown", (e) => { drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); });
-    c.addEventListener("mousemove", (e) => { if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); const o=pads.get(id)||{}; pads.set(id, {...o, ctx, c, hasData:true}); });
-    window.addEventListener("mouseup", () => drawing=false);
-
-    c.addEventListener("touchstart", (e) => { e.preventDefault(); drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); }, {passive:false});
-    c.addEventListener("touchmove", (e) => { e.preventDefault(); if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); const o=pads.get(id)||{}; pads.set(id, {...o, ctx, c, hasData:true}); }, {passive:false});
-    c.addEventListener("touchend", () => drawing=false);
-
-    pads.set(id, {ctx, c, hasData:false});
+    const start = (e) => { drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); };
+    const move = (e) => { if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id, {c, hasData:true}); };
+    const stop = () => drawing=false;
+    c.addEventListener("mousedown", start); c.addEventListener("mousemove", move); window.addEventListener("mouseup", stop);
+    c.addEventListener("touchstart", (e)=>{e.preventDefault(); start(e);}); c.addEventListener("touchmove", (e)=>{e.preventDefault(); move(e);}); c.addEventListener("touchend", stop);
+    pads.set(id, {c, hasData:false});
   }
 
   function limpiarPad(id) {
     const p = pads.get(id);
-    if(p && p.ctx && p.c){
-      p.ctx.clearRect(0,0,p.c.width, p.c.height);
-      p.hasData=false;
+    if(p) {
+        const ctx = p.c.getContext("2d");
+        ctx.clearRect(0,0,p.c.width, p.c.height);
+        pads.set(id, {c: p.c, hasData:false});
     }
-  }
-
-  function verObs(){
-    document.getElementById("obs").style.display="block";
-    document.getElementById("exc").style.display="none";
-    document.getElementById("btnObs").classList.add("active");
-    document.getElementById("btnExc").classList.remove("active");
-  }
-
-  function verExc(){
-    document.getElementById("obs").style.display="none";
-    document.getElementById("exc").style.display="block";
-    document.getElementById("btnExc").classList.add("active");
-    document.getElementById("btnObs").classList.remove("active");
   }
 </script>
 </body>
 </html>
+
