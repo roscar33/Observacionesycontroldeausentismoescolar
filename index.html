@@ -46,12 +46,13 @@
   .row { margin-top: 10px; }
   .row b { display: block; margin-bottom: 3px; color: #1b5e20; font-size: 12px; text-transform: uppercase; }
 
-  /* Resumen de Asistencia */
+  /* Resumen de Asistencia - CUADROS CLICKEABLES */
   .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
-  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; }
+  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+  .att-box:active { transform: scale(0.95); }
   .att-red { background: #ef4444; }
   .att-orange { background: #f97316; }
-  .att-green { background: #22c55e; }
+  .att-green { background: #22c55e; cursor: default; } /* El de estado no suele ser clickeable */
   .att-num { font-size: 22px; font-weight: 900; display: block; }
   .att-lbl { font-size: 10px; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
 
@@ -64,6 +65,15 @@
   .modal-header { background: #263238; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
   .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
   .modal-body { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+  /* Modal de Fechas (Detalle Asistencia) */
+  #modalFechas { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; align-items: center; justify-content: center; padding: 20px; }
+  .modal-fechas-box { background: white; width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; animation: bounceIn 0.3s ease-out; }
+  @keyframes bounceIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-fechas-title { font-weight: 900; color: #1b5e20; margin-bottom: 15px; text-align: center; font-size: 18px; }
+  .lista-fechas { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; }
+  .lista-fechas li { padding: 10px; border-bottom: 1px solid #f0f0f0; font-weight: 700; color: #333; display: flex; align-items: center; gap: 10px; }
+  .lista-fechas li::before { content: "📅"; }
 
   .history-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #455a64; }
   .teacher-reply { background: #f3e5f5; border-left: 5px solid #6a1b9a; padding: 12px; border-radius: 8px; margin-top: 12px; color: #4a148c; font-size: 13px; }
@@ -89,7 +99,6 @@
   });
   const db = firebase.firestore();
 
-  // LISTADO DE ESTUDIANTES (DEBE COINCIDIR CON EL PANEL DOCENTE)
   const estudiantesValidos = [
     { doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN" },
     { doc: "1041636979", nombre: "OSORIO MUÑOZ JERONIMO" },
@@ -140,10 +149,20 @@
           <div id="periodoAsisLabel" style="background:#1b5e20; color:#fff; padding:5px; font-size:12px; font-weight:bold;"></div>
         </div>
 
+        <!-- CUADROS DE RESUMEN CLICKEABLES -->
         <div class="att-summary">
-            <div class="att-box att-red"><span class="att-num" id="statFallas">0</span><span class="att-lbl">Fallas</span></div>
-            <div class="att-box att-orange"><span class="att-num" id="statExcusas">0</span><span class="att-lbl">Excusas</span></div>
-            <div class="att-box att-green"><span class="att-num" id="statEstado">OK</span><span class="att-lbl">Estado</span></div>
+            <div class="att-box att-red" onclick="mostrarListadoFechas('I')">
+                <span class="att-num" id="statFallas">0</span>
+                <span class="att-lbl">Fallas</span>
+            </div>
+            <div class="att-box att-orange" onclick="mostrarListadoFechas('E')">
+                <span class="att-num" id="statExcusas">0</span>
+                <span class="att-lbl">Excusas</span>
+            </div>
+            <div class="att-box att-green">
+                <span class="att-num" id="statEstado">OK</span>
+                <span class="att-lbl">Estado</span>
+            </div>
         </div>
 
         <h3 style="margin-bottom:10px; font-size:16px;">Enviar Justificación</h3>
@@ -180,7 +199,6 @@
       <div id="sop_auth">
         <h3 style="text-align:center">Autenticación</h3>
         <input id="docSoporte" type="number" placeholder="Documento del estudiante..." inputmode="numeric">
-        <!-- AGREGADA CASILLA DE RECORDAR DOCUMENTO EN SOPORTE -->
         <div class="remember-box">
             <input type="checkbox" id="chkRemSop">
             <label for="chkRemSop">Recordar documento</label>
@@ -216,6 +234,15 @@
     </div>
   </div>
 
+  <!-- MODAL DE LISTADO DE FECHAS -->
+  <div id="modalFechas">
+      <div class="modal-fechas-box">
+          <h3 class="modal-fechas-title" id="txtTituloModalFechas">Historial de Fechas</h3>
+          <ul class="lista-fechas" id="containerListaFechas"></ul>
+          <button class="btn" style="margin-top:20px; background:#666; box-shadow: 0 4px 0 #333;" onclick="cerrarModalFechas()">CERRAR</button>
+      </div>
+  </div>
+
   <!-- ÉXITO OVERLAYS -->
   <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
     <h2>✅ ¡Envío Exitoso!</h2>
@@ -237,6 +264,8 @@
   let estActualDoc = "";
   let periodoAsis = 1;
   const pads = new Map();
+  // Variable para guardar las fechas encontradas en la consulta
+  let cacheFechas = { I: [], E: [] };
 
   window.onload = function() {
     const saved = localStorage.getItem("padre_doc");
@@ -246,7 +275,7 @@
         document.getElementById("docSoporte").value = saved;
         document.getElementById("chkRemExc").checked = true;
         document.getElementById("chkRemObs").checked = true;
-        document.getElementById("chkRemSop").checked = true; // Cargar estado en soporte
+        document.getElementById("chkRemSop").checked = true;
     }
   };
 
@@ -270,7 +299,6 @@
     document.getElementById("formExc").style.display = "block";
     document.getElementById("nombreExc").innerText = est.nombre;
 
-    // Sincronizar Periodo
     const snapC = await db.collection("configuracionGlobal").doc("asistencia").get();
     periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
     document.getElementById("periodoAsisLabel").innerText = "PERIODO ACTUAL #" + periodoAsis;
@@ -282,15 +310,49 @@
   async function consultarStats(docId) {
     const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get();
     let f=0, e=0;
+    cacheFechas.I = [];
+    cacheFechas.E = [];
+
     snap.forEach(d => {
-        const reg = (d.data().detalles || []).find(x => x.doc === docId);
-        if(reg?.estado === 'I') f++;
-        if(reg?.estado === 'E') e++;
+        const data = d.data();
+        const reg = (data.detalles || []).find(x => x.doc === docId);
+        if(reg?.estado === 'I') { 
+            f++; 
+            cacheFechas.I.push(data.fecha); 
+        }
+        if(reg?.estado === 'E') { 
+            e++; 
+            cacheFechas.E.push(data.fecha); 
+        }
     });
+
     document.getElementById("statFallas").innerText = f;
     document.getElementById("statExcusas").innerText = e;
     document.getElementById("statEstado").innerText = (f+e >= 3) ? "ALERTA" : "OK";
     document.getElementById("statEstado").parentElement.style.background = (f+e >= 3) ? "#ef4444" : "#22c55e";
+  }
+
+  // ✅ NUEVA FUNCIÓN: MOSTRAR EL LISTADO DE FECHAS
+  function mostrarListadoFechas(tipo) {
+    const titulo = (tipo === 'I') ? "Fallas Registradas" : "Excusas Presentadas";
+    const fechas = (tipo === 'I') ? cacheFechas.I : cacheFechas.E;
+    
+    document.getElementById("txtTituloModalFechas").innerText = titulo;
+    const container = document.getElementById("containerListaFechas");
+    
+    if(fechas.length === 0) {
+        container.innerHTML = "<p style='text-align:center; padding:20px; color:#999;'>No hay fechas registradas.</p>";
+    } else {
+        // Ordenar fechas de más reciente a más antigua
+        fechas.sort((a,b) => b.localeCompare(a));
+        container.innerHTML = fechas.map(f => `<li>${f}</li>`).join("");
+    }
+    
+    document.getElementById("modalFechas").style.display = "flex";
+  }
+
+  function cerrarModalFechas() {
+      document.getElementById("modalFechas").style.display = "none";
   }
 
   async function enviarExcusa() {
@@ -313,7 +375,6 @@
     const out = document.getElementById("resultadoObs");
     if(document.getElementById("chkRemObs").checked) localStorage.setItem("padre_doc", docId);
 
-    // Sincronizar Ciclo desde la colección configuracionCiclos
     const cicloSnap = await db.collection("configuracionCiclos").doc(docId).get();
     const cicloActual = cicloSnap.exists ? (cicloSnap.data().cicloActual || 1) : 1;
 
@@ -371,7 +432,6 @@
     const est = estudiantesValidos.find(e => e.doc === docS);
     if(!est) return alert("No encontrado.");
     
-    // GUARDAR SI LA CASILLA ESTÁ MARCADA
     if(document.getElementById("chkRemSop").checked) localStorage.setItem("padre_doc", docS);
 
     estSop = est;
