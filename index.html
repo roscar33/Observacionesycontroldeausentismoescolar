@@ -133,7 +133,6 @@
     <button id="btnObs" onclick="switchTab('obs')">Observaciones</button>
   </div>
 
-  <!-- SECCIÓN: ASISTENCIA Y EXCUSAS -->
   <div id="view-exc" class="container">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
@@ -149,7 +148,6 @@
           <div id="periodoAsisLabel" style="background:#1b5e20; color:#fff; padding:5px; font-size:12px; font-weight:bold;"></div>
         </div>
 
-        <!-- CUADROS DE RESUMEN CLICKEABLES -->
         <div class="att-summary">
             <div class="att-box att-red" onclick="mostrarListadoFechas('I')">
                 <span class="att-num" id="statFallas">0</span>
@@ -180,7 +178,6 @@
     </div>
   </div>
 
-  <!-- SECCIÓN: OBSERVACIONES -->
   <div id="view-obs" class="container" style="display:none;">
     <span class="input-label">DOCUMENTO DEL ESTUDIANTE</span>
     <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
@@ -192,7 +189,6 @@
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
 
-  <!-- PORTAL DE SOPORTE -->
   <div id="modalSoporte">
     <div class="modal-header"><button class="close" onclick="cerrarSoporte()">✕</button>Soporte y Comunicación</div>
     <div class="modal-body">
@@ -208,6 +204,11 @@
 
       <div id="sop_menu" style="display:none">
         <div id="sop_nombre_est" style="font-weight:800; color:#1b5e20; text-align:center; margin-bottom:20px;"></div>
+        
+        <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank" style="text-decoration: none;">
+          <button class="btn" style="margin-bottom:12px; background: #2e7d32; box-shadow: 0 4px 0 #1b5e20;">Planillas de asambleas</button>
+        </a>
+
         <button class="btn blue" style="margin-bottom:12px">📅 HORARIO ESCOLAR</button>
         <button class="btn blue" style="margin-bottom:12px">📚 ÚTILES ESCOLARES 2026</button>
         <button class="btn" style="margin-bottom:12px" onclick="irAFormSop()">✉️ COMUNICARSE CON EL DOCENTE</button>
@@ -234,7 +235,6 @@
     </div>
   </div>
 
-  <!-- MODAL DE LISTADO DE FECHAS -->
   <div id="modalFechas">
       <div class="modal-fechas-box">
           <h3 class="modal-fechas-title" id="txtTituloModalFechas">Historial de Fechas</h3>
@@ -243,7 +243,6 @@
       </div>
   </div>
 
-  <!-- ÉXITO OVERLAYS -->
   <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
     <h2>✅ ¡Envío Exitoso!</h2>
     <p>“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes.”</p>
@@ -522,4 +521,3 @@
 </script>
 </body>
 </html>
-
