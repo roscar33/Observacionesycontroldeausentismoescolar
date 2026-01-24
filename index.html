@@ -113,7 +113,8 @@
     { doc: "1035801483", nombre: "RESTREPO VILLA DILMER FELIPE" },
     { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" },
     { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" },
-    { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" }
+    { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" },
+    { doc: "12345678",   nombre: "PEDRO PEREZ" }
   ];
 </script>
 </head>
@@ -263,7 +264,6 @@
   let estActualDoc = "";
   let periodoAsis = 1;
   const pads = new Map();
-  // Variable para guardar las fechas encontradas en la consulta
   let cacheFechas = { I: [], E: [] };
 
   window.onload = function() {
@@ -285,7 +285,6 @@
     document.getElementById("btnObs").className = t === 'obs' ? 'active' : '';
   }
 
-  // --- ASISTENCIA ---
   async function activarFormularioExcusa() {
     const docInput = document.getElementById("docExc").value.trim();
     const est = estudiantesValidos.find(e => e.doc === docInput);
@@ -315,14 +314,8 @@
     snap.forEach(d => {
         const data = d.data();
         const reg = (data.detalles || []).find(x => x.doc === docId);
-        if(reg?.estado === 'I') { 
-            f++; 
-            cacheFechas.I.push(data.fecha); 
-        }
-        if(reg?.estado === 'E') { 
-            e++; 
-            cacheFechas.E.push(data.fecha); 
-        }
+        if(reg?.estado === 'I') { f++; cacheFechas.I.push(data.fecha); }
+        if(reg?.estado === 'E') { e++; cacheFechas.E.push(data.fecha); }
     });
 
     document.getElementById("statFallas").innerText = f;
@@ -331,7 +324,6 @@
     document.getElementById("statEstado").parentElement.style.background = (f+e >= 3) ? "#ef4444" : "#22c55e";
   }
 
-  // ✅ NUEVA FUNCIÓN: MOSTRAR EL LISTADO DE FECHAS
   function mostrarListadoFechas(tipo) {
     const titulo = (tipo === 'I') ? "Fallas Registradas" : "Excusas Presentadas";
     const fechas = (tipo === 'I') ? cacheFechas.I : cacheFechas.E;
@@ -342,7 +334,6 @@
     if(fechas.length === 0) {
         container.innerHTML = "<p style='text-align:center; padding:20px; color:#999;'>No hay fechas registradas.</p>";
     } else {
-        // Ordenar fechas de más reciente a más antigua
         fechas.sort((a,b) => b.localeCompare(a));
         container.innerHTML = fechas.map(f => `<li>${f}</li>`).join("");
     }
@@ -368,7 +359,6 @@
     document.getElementById("successAsis").style.display = "flex";
   }
 
-  // --- OBSERVACIONES ---
   async function buscarObservaciones() {
     const docId = document.getElementById("docObs").value.trim();
     const out = document.getElementById("resultadoObs");
@@ -421,7 +411,6 @@
     alert("✅ Firma registrada.");
   }
 
-  // --- SOPORTE ---
   let estSop = null;
   function abrirSoporte() { document.getElementById("modalSoporte").style.display = "block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display = "none"; }
@@ -486,7 +475,6 @@
     });
   }
 
-  // --- CANVAS UTILS ---
   function initPad(id){
     const c = document.getElementById(id); if(!c) return;
     const ctx = c.getContext("2d");
