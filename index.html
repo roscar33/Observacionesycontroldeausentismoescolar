@@ -4,13 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
 <title>Seguimiento Escolares · Primaria 2026</title>
-<!-- Fuente para el Footer -->
+<!-- Fuente Caligráfica para el Footer -->
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; user-select: none; }
   
-  /* CABECERA EDITADA */
+  /* CABECERA */
   .header { 
     background: #1b5e20; 
     color: #fff; 
@@ -23,7 +23,7 @@
     text-align: left;
   }
   .header img { 
-    width: 65px; 
+    width: 70px; 
     height: auto;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); 
     flex-shrink: 0;
@@ -33,26 +33,9 @@
     flex-direction: column;
     gap: 2px;
   }
-  .header h2 { 
-    margin: 0; 
-    font-size: 13px; 
-    line-height: 1.3; 
-    font-weight: 700;
-  }
-  .header h4 { 
-    margin: 0; 
-    font-weight: 500; 
-    color: #c8e6c9; 
-    font-size: 12px; 
-    margin-top: 3px;
-  }
-  .header p {
-    margin: 0;
-    font-size: 11px;
-    opacity: 0.8;
-    font-style: italic;
-    margin-top: 3px;
-  }
+  .header h2 { margin: 0; font-size: 13px; line-height: 1.2; font-weight: 800; text-transform: uppercase; }
+  .header h4 { margin: 0; font-weight: 500; color: #a5d6a7; font-size: 11px; margin-top: 2px; }
+  .header p { margin: 0; font-size: 11px; opacity: 0.9; font-style: italic; margin-top: 2px; color: #fff; }
   
   /* MENÚ */
   .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 8px; margin: -25px auto 20px; width: 92%; border-radius: 999px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); position: relative; z-index: 10; }
@@ -107,7 +90,7 @@
   .alert-box-ui h2 { font-size: 26px; margin-bottom: 15px; font-weight: 900; letter-spacing: 1px; }
   .alert-box-ui p { font-size: 15px; line-height: 1.6; margin-bottom: 30px; font-weight: 500; }
   .btn-entendido { background: white; color: #1b5e20; width: 220px; padding: 15px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
+  
   /* LISTADO FECHAS */
   .modal-fechas-box { background: white; width: 100%; max-width: 320px; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
   .modal-fechas-header { background: #1b5e20; padding: 15px; text-align: center; color: white; font-weight: 900; font-size: 16px; }
@@ -115,9 +98,53 @@
   .modal-fechas-list li { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; color: #333; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
   .btn-close-fechas { background: #546e7a; color: white; padding: 10px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; margin: 15px auto; display: block; }
 
-  /* FOOTER */
-  .footer { margin: 30px 18px 10px; text-align: center; font-size: 26px; font-family: 'Great Vibes', cursive; color: #1b5e20; opacity: 0.9; padding-bottom: 20px; }
-  .btn-support-trigger { display: block; width: 92%; margin: 20px auto; padding: 15px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; }
+  /* FOOTER CON DIFUMINADO PREMIUM */
+  .footer-container {
+    margin-top: 40px;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .footer-blob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 140px;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(200, 230, 201, 0.6) 40%, rgba(165, 214, 167, 0.3) 70%, rgba(255, 255, 255, 0) 100%);
+    filter: blur(25px);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .footer-text {
+    position: relative;
+    z-index: 1;
+    font-family: 'Great Vibes', cursive;
+    font-size: 32px;
+    color: #1b5e20;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+  }
+  .copyright-text {
+    position: relative;
+    z-index: 1;
+    font-size: 10px;
+    color: #1b5e20;
+    opacity: 0.7;
+    text-align: center;
+    font-family: system-ui, sans-serif;
+    margin-top: 5px;
+  }
+  
+  .btn-support-trigger { display: block; width: 92%; margin: 0 auto; padding: 15px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -188,7 +215,7 @@
         </select>
         <textarea id="detalleExc" placeholder="Describa el motivo detalladamente..."></textarea>
         <div class="sig-wrap">
-            <p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE (OBLIGATORIA)</p>
+            <p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE</p>
             <canvas id="sigExc"></canvas>
             <button class="btn sec" style="padding:6px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigExc')">Borrar Firma</button>
         </div>
@@ -251,8 +278,8 @@
         
         <div id="sop_menu" style="display:none; margin-top:20px;">
             <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank" style="text-decoration:none;"><button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS DE ASAMBLEAS</button></a>
-            <button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button>
-            <button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES 2026</button>
+            <a href="https://roscar33.github.io/Horario/" target="_blank" style="text-decoration:none;"><button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button></a>
+            <a href="https://roscar33.github.io/Utiles2026/" target="_blank" style="text-decoration:none;"><button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES 2026</button></a>
             <button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button>
             <button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button>
         </div>
@@ -277,7 +304,12 @@
   
   <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
   
-  <div class="footer">Familia y escuela caminamos juntos</div>
+  <!-- FOOTER CON DIFUMINADO PREMIUM -->
+  <div class="footer-container">
+    <div class="footer-blob"></div>
+    <div class="footer-text">Familia y escuela caminamos juntos</div>
+    <div class="copyright-text">© 2026 Santa Juana Digital</div>
+  </div>
 
 <script>
   let estActualDoc = ""; let periodoAsis = 1; let estSop = null; const pads = new Map(); let cacheFechas = { I: [], E: [] };
