@@ -4,107 +4,206 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
 <title>Seguimiento Escolares · Primaria 2026</title>
+<!-- Fuente para el Footer -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 95px; user-select: none; }
-  .header { background: #1b5e20; color: #fff; text-align: center; padding: 20px 16px 35px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  .header img { width: 90px; margin-bottom: 10px; }
-  .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 8px; margin: -25px auto 20px; width: 92%; border-radius: 999px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-  .menu button { flex: 1; border: none; padding: 12px; border-radius: 999px; font-weight: 800; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 14px; }
-  .menu button.active { background: #fff; color: #1b5e20; }
-  .container { background: #fff; width: 92%; margin: 10px auto; padding: 20px; border-radius: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+  
+  /* CABECERA EDITADA */
+  .header { 
+    background: #1b5e20; 
+    color: #fff; 
+    padding: 20px 16px 35px; 
+    border-radius: 0 0 30px 30px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+  .header img { 
+    width: 65px; 
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); 
+    flex-shrink: 0;
+  }
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .header h2 { 
+    margin: 0; 
+    font-size: 13px; 
+    line-height: 1.3; 
+    font-weight: 700;
+  }
+  .header h4 { 
+    margin: 0; 
+    font-weight: 500; 
+    color: #c8e6c9; 
+    font-size: 12px; 
+    margin-top: 3px;
+  }
+  .header p {
+    margin: 0;
+    font-size: 11px;
+    opacity: 0.8;
+    font-style: italic;
+    margin-top: 3px;
+  }
+  
+  /* MENÚ */
+  .menu { display: flex; justify-content: space-around; gap: 10px; background: #2e7d32; padding: 8px; margin: -25px auto 20px; width: 92%; border-radius: 999px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); position: relative; z-index: 10; }
+  .menu button { flex: 1; border: none; padding: 12px; border-radius: 999px; font-weight: 800; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 13px; transition: 0.3s; }
+  .menu button.active { background: #fff; color: #1b5e20; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  
+  /* CONTENEDOR GENERAL */
+  .container { background: #fff; width: 92%; margin: 10px auto; padding: 20px 16px; border-radius: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+  
+  /* INPUTS Y BOTONES */
   input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; outline: none; }
-  .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; box-shadow: 0 4px 0 #145018; }
+  .remember-box { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 14px; color: #555; }
+  .remember-box input { width: auto; margin: 0; }
+  .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; }
   .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
   .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
-  .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
-  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; }
   
-  /* Tarjetas de Observación */
-  .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; }
-  .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; }
-  .card .body { padding: 15px; font-size: 14px; color: #333; line-height: 1.6; }
+  /* ASISTENCIA */
+  .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
+  .att-box { flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.1s; }
+  .att-box:active { transform: scale(0.95); }
+  
+  /* OBSERVACIONES (TARJETAS) */
+  .card { margin-top: 15px; border-radius: 16px; overflow: hidden; border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .card .top { padding: 10px 12px; font-weight: 900; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+  .card .body { padding: 15px; font-size: 14px; color: #333; line-height: 1.5; }
   .obs-label { font-weight: 800; display: block; margin-top: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
   .obs-content { background: #fcfcfc; padding: 10px; border-radius: 8px; border-left: 4px solid #ccc; margin-bottom: 5px; font-size: 13px; }
 
-  .sig-wrap { margin-top: 10px; padding: 10px; background: #f1f5f9; border-radius: 14px; border: 2px dashed #b0bec5; }
-  canvas { width: 100%; height: 180px; background: #fff; border-radius: 8px; touch-action: none; display: block; }
-  
+  /* FIRMAS */
+  .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
+  canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
+
+  /* MODALES Y OVERLAYS */
   #modalSoporte, #modalFechas { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
   #modalSoporte { background: #fff; overflow-y: auto; }
   #modalFechas { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
-  .modal-header { background: #263238; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
+  
+  .modal-header { background: #263238; color: #fff; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; font-weight: bold; font-size: 16px; }
   .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
   
-  /* OVERLAYS */
   .success-overlay {
     display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 5000; color:white; text-align:center; padding: 40px 24px;
+    z-index: 3000; color:white; text-align:center; padding: 40px 24px;
     justify-content:center; align-items:center; flex-direction:column;
     backdrop-filter: blur(8px);
   }
   .alert-box-ui { 
-    background: rgba(255,255,255,0.15); 
-    padding: 30px 20px; 
-    border-radius: 24px; 
-    border: 1px solid rgba(255,255,255,0.3);
-    max-width: 360px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.15); padding: 30px 20px; border-radius: 24px; 
+    border: 1px solid rgba(255,255,255,0.3); max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   }
   .alert-box-ui h2 { font-size: 26px; margin-bottom: 15px; font-weight: 900; letter-spacing: 1px; }
   .alert-box-ui p { font-size: 15px; line-height: 1.6; margin-bottom: 30px; font-weight: 500; }
-  .btn-entendido { background: white; color: #333; width: 220px; padding: 15px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-  
-  .remember-box { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 14px; color: #555; }
-  .remember-box input { width: auto; margin: 0; }
-  
-  /* Fechas Listado */
-  .modal-fechas-box { background: white; width: 100%; max-width: 320px; border-radius: 25px; overflow: hidden; }
-  .modal-fechas-header { background: #1b5e20; padding: 15px; text-align: center; color: white; font-weight: 900; }
+  .btn-entendido { background: white; color: #1b5e20; width: 220px; padding: 15px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+  /* LISTADO FECHAS */
+  .modal-fechas-box { background: white; width: 100%; max-width: 320px; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+  .modal-fechas-header { background: #1b5e20; padding: 15px; text-align: center; color: white; font-weight: 900; font-size: 16px; }
   .modal-fechas-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
-  .modal-fechas-list li { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; color: #333; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .modal-fechas-list li { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; color: #333; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
   .btn-close-fechas { background: #546e7a; color: white; padding: 10px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; margin: 15px auto; display: block; }
+
+  /* FOOTER */
+  .footer { margin: 30px 18px 10px; text-align: center; font-size: 26px; font-family: 'Great Vibes', cursive; color: #1b5e20; opacity: 0.9; padding-bottom: 20px; }
+  .btn-support-trigger { display: block; width: 92%; margin: 20px auto; padding: 15px; background: #455a64; color: #fff; font-weight: 800; border: none; border-radius: 50px; font-size: 14px; box-shadow: 0 4px 0 #263238; cursor: pointer; }
 </style>
+
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 <script>
-  firebase.initializeApp({ apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8", authDomain: "diariodeprocesos-6f78d.firebaseapp.com", projectId: "diariodeprocesos-6f78d" });
+  const firebaseConfig = { apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8", authDomain: "diariodeprocesos-6f78d.firebaseapp.com", projectId: "diariodeprocesos-6f78d" };
+  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const estudiantesValidos = [{ doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN" }, { doc: "1041636979", nombre: "OSORIO MUÑOZ JERONIMO" }, { doc: "1041636870", nombre: "GONZALEZ BETANCUR MARIA JOSE" }, { doc: "1042155380", nombre: "GUTIERREZ CHAVARRIA JOSE LEANDRO" }, { doc: "1041636841", nombre: "VARELAS BARRIENTOS LUCIANA" }, { doc: "1041636641", nombre: "MARTINEZ MARTINEZ SEBASTIAN" }, { doc: "1035922719", nombre: "MOLINA OCHOA BELEN" }, { doc: "1067959648", nombre: "PACHECO BARRERA JOSE DANIEL" }, { doc: "1032328826", nombre: "LOPERA CADAVID LUCIANA" }, { doc: "1042155250", nombre: "CASAS FERNANDEZ ANTONELLA" }, { doc: "1035801483", nombre: "RESTREPO VILLA DILMER FELIPE" }, { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" }, { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" }, { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" }, { doc: "12345678", nombre: "PEDRO PEREZ" }];
+
+  const estudiantesValidos = [
+    { doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN" }, { doc: "1041636979", nombre: "OSORIO MUÑOZ JERONIMO" },
+    { doc: "1041636870", nombre: "GONZALEZ BETANCUR MARIA JOSE" }, { doc: "1042155380", nombre: "GUTIERREZ CHAVARRIA JOSE LEANDRO" },
+    { doc: "1041636841", nombre: "VARELAS BARRIENTOS LUCIANA" }, { doc: "1041636641", nombre: "MARTINEZ MARTINEZ SEBASTIAN" },
+    { doc: "1035922719", nombre: "MOLINA OCHOA BELEN" }, { doc: "1067959648", nombre: "PACHECO BARRERA JOSE DANIEL" },
+    { doc: "1032328826", nombre: "LOPERA CADAVID LUCIANA" }, { doc: "1042155250", nombre: "CASAS FERNANDEZ ANTONELLA" },
+    { doc: "1035801483", nombre: "RESTREPO VILLA DILMER FELIPE" }, { doc: "1157463842", nombre: "BERRIO CORREA VALENTINA" },
+    { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" }, { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" },
+    { doc: "12345678", nombre: "PEDRO PEREZ" }
+  ];
 </script>
 </head>
 <body>
-  <div class="header"><img src="escudo.png" alt="Logo"><h2>I.E. De María</h2><h4>Sede Santa Juana · 2026</h4></div>
-  <div class="menu"><button id="btnExc" class="active" onclick="switchTab('exc')">Excusas / Asistencia</button><button id="btnObs" onclick="switchTab('obs')">Observaciones</button></div>
+
+  <div class="header">
+    <img src="escudo.png" alt="Escudo">
+    <div class="header-text">
+        <h2>INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Rural Santa Juana. - Primaria.</h2>
+        <h4>Sistema Integrado de Gestión Escolar María Juana.</h4>
+        <p>Docente: Oscar Barrientos. 2026</p>
+    </div>
+  </div>
+
+  <div class="menu">
+    <button id="btnExc" class="active" onclick="switchTab('exc')">Excusas / Asistencia</button>
+    <button id="btnObs" onclick="switchTab('obs')">Observaciones</button>
+  </div>
 
   <!-- ASISTENCIA -->
   <div id="view-exc" class="container">
     <div id="loginExc">
         <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
         <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
-        <div class="remember-box"><input type="checkbox" id="chkRemExc"><label for="chkRemExc">Recordar documento</label></div>
+        <div class="remember-box">
+            <input type="checkbox" id="chkRemExc">
+            <label for="chkRemExc">Recordar documento</label>
+        </div>
         <button class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
     </div>
-    <div id="formExc" style="display:none; margin-top:20px;">
+
+    <div id="formExc" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
         <div id="nombreExc" style="text-align:center; font-weight:900; color:#1b5e20; margin-bottom:5px;"></div>
         <div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin-bottom:15px; border-radius:4px;"></div>
+        
         <div class="att-summary">
-            <div class="att-box" style="background:#ef4444;" onclick="mostrarListadoFechas('I')"><span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS</div>
-            <div class="att-box" style="background:#f97316;" onclick="mostrarListadoFechas('E')"><span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS</div>
+            <div class="att-box" style="background:#ef4444;" onclick="mostrarListadoFechas('I')">
+                <span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS
+            </div>
+            <div class="att-box" style="background:#f97316;" onclick="mostrarListadoFechas('E')">
+                <span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS
+            </div>
         </div>
+
+        <h3 style="margin-bottom:10px; font-size:16px;">Enviar Justificación</h3>
         <input id="fechaExc" type="date">
-        <select id="motivoExc"><option value="">Seleccione Motivo...</option><option>Enfermedad</option><option>Cita médica</option><option>Calamidad Doméstica</option><option>Otro</option></select>
+        <select id="motivoExc">
+            <option value="">Seleccione Motivo...</option>
+            <option>Enfermedad</option><option>Cita médica</option><option>Calamidad Doméstica</option><option>Otro</option>
+        </select>
         <textarea id="detalleExc" placeholder="Describa el motivo detalladamente..."></textarea>
-        <div class="sig-wrap"><p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE</p><canvas id="sigExc"></canvas><button class="btn sec" style="padding:6px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigExc')">Borrar</button></div>
+        <div class="sig-wrap">
+            <p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE (OBLIGATORIA)</p>
+            <canvas id="sigExc"></canvas>
+            <button class="btn sec" style="padding:6px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigExc')">Borrar Firma</button>
+        </div>
         <button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
     </div>
   </div>
 
-  <!-- OBSERVACIONES -->
+  <!-- VISTA OBSERVACIONES -->
   <div id="view-obs" class="container" style="display:none;">
     <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
     <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
-    <div class="remember-box"><input type="checkbox" id="chkRemObs"><label for="chkRemObs">Recordar documento</label></div>
+    <div class="remember-box">
+        <input type="checkbox" id="chkRemObs">
+        <label for="chkRemObs">Recordar documento</label>
+    </div>
     <button class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
@@ -112,7 +211,9 @@
   <!-- MODAL SEMÁFORO -->
   <div id="overlaySem" class="success-overlay">
     <div class="alert-box-ui">
-        <h2 id="semTitle">ADVERTENCIA</h2><p id="semText" style="font-style:normal; margin-bottom:20px;"></p><button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
+        <h2 id="semTitle">ADVERTENCIA</h2>
+        <p id="semText" style="font-style:normal; margin-bottom:20px;"></p>
+        <button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
     </div>
   </div>
 
@@ -173,7 +274,10 @@
         </div>
     </div>
   </div>
-  <button class="btn" style="margin-top:20px; background:#455a64; width:92%; margin-left:4%;" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
+  
+  <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
+  
+  <div class="footer">Familia y escuela caminamos juntos</div>
 
 <script>
   let estActualDoc = ""; let periodoAsis = 1; let estSop = null; const pads = new Map(); let cacheFechas = { I: [], E: [] };
@@ -240,7 +344,7 @@
     document.getElementById("successAsis").style.display="flex";
   }
 
-  // --- OBSERVACIONES (LÓGICA: ORDEN INVERSO + DETALLE COMPLETO + SEMÁFORO) ---
+  // --- OBSERVACIONES (DETALLE COMPLETO + SEMÁFORO) ---
   async function buscarObservaciones() {
     const docId = document.getElementById("docObs").value.trim(); const out = document.getElementById("resultadoObs");
     if(!docId) return alert("Ingrese documento.");
@@ -255,15 +359,13 @@
         let obsList = [];
         snap.forEach(d => { if(d.data().ciclo == cAct) obsList.push({ id: d.id, ...d.data() }); });
         
-        // 1. Ordenamos cronológicamente (antiguo a nuevo) para calcular semáforo
         obsList.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
 
         if(obsList.length === 0) { out.innerHTML = `<p style='text-align:center;'>No hay anotaciones pendientes para el ciclo #${cAct}</p>`; return; }
 
         let html = `<p style="font-size:11px; font-weight:bold; color:#1b5e20; margin-bottom:10px;">CICLO ACTUAL: #${cAct}</p>`;
         
-        // 2. Mapeamos para asignar colores y títulos
-        const processedCards = obsList.map((r, index) => {
+        const cards = obsList.map((r, index) => {
             const num = index + 1;
             let titulo = `OBSERVACIÓN N° ${num}`;
             let color = "#2e7d32"; 
@@ -271,7 +373,6 @@
             else if (num >= 3) { color = "#d32f2f"; titulo = "CITACIÓN"; }
 
             const firmado = !!r.firmaAcudiente;
-            
             return `<div class="card" style="border: 2px solid ${color};">
                 <div class="top" style="background:${color}"><span>${titulo}</span><span>${firmado ? 'FIRMADO' : 'PENDIENTE'}</span></div>
                 <div class="body">
@@ -290,11 +391,7 @@
                 </div>
             </div>`;
         });
-
-        // 3. Invertimos para mostrar la más reciente primero
-        out.innerHTML = html + processedCards.reverse().join('');
-
-        // Inicializar pads (necesario buscar los IDs que quedaron en el DOM)
+        out.innerHTML = html + cards.reverse().join('');
         setTimeout(() => obsList.forEach(r => { if(!r.firmaAcudiente && document.getElementById('cv_'+r.id)) initPad('cv_'+r.id); }), 500);
     });
   }
