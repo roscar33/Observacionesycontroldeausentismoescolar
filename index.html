@@ -185,6 +185,12 @@
     box-shadow: 0 3px 0 #7f1111;
   }
 
+  /* MODAL LOGIN ALERTA (NUEVO) */
+  #modalLoginAlerta {
+    display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 3600;
+    background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+  }
+
   /* MODAL ALERTA ACADÉMICA (LISTADO) */
   #modalAlertaAcad {
     display:none; position: fixed; top:0; left:0; width:100%; height:100%;
@@ -484,7 +490,6 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
       document.getElementById("docExc").value = saved;
       document.getElementById("docObs").value = saved;
       document.getElementById("docSoporte").value = saved;
-      // Prellenar también el nuevo input de alerta
       document.getElementById("docAlertaInput").value = saved;
       
       ["chkRemExc", "chkRemObs", "chkRemSop", "chkRemAlerta"].forEach(id => {
@@ -508,7 +513,13 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const di = document.getElementById("docExc").value.trim();
     const est = estudiantesValidos.find(e => e.doc === di);
     if(!est) return alert("Documento no encontrado en la base de datos.");
-    if(document.getElementById("chkRemExc").checked) localStorage.setItem("padre_doc", di);
+    
+    // CORRECCIÓN CHECK
+    if(document.getElementById("chkRemExc").checked) {
+      localStorage.setItem("padre_doc", di);
+    } else {
+      localStorage.removeItem("padre_doc");
+    }
 
     estActualDoc = di;
     document.getElementById("loginExc").style.display="none";
@@ -573,7 +584,13 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const out = document.getElementById("resultadoObs");
     if(!docId) return alert("Ingrese documento.");
     if(!estudiantesValidos.find(e => e.doc === docId)) return alert("Documento no encontrado.");
-    if(document.getElementById("chkRemObs").checked) localStorage.setItem("padre_doc", docId);
+    
+    // CORRECCIÓN CHECK
+    if(document.getElementById("chkRemObs").checked) {
+      localStorage.setItem("padre_doc", docId);
+    } else {
+      localStorage.removeItem("padre_doc");
+    }
 
     out.innerHTML = "<p style='text-align:center;'>Buscando...</p>";
     const cSnap = await db.collection("configuracionCiclos").doc(docId).get();
@@ -673,7 +690,13 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const ds = document.getElementById("docSoporte").value.trim();
     const e = estudiantesValidos.find(x => x.doc === ds);
     if(!e) return alert("No válido.");
-    if(document.getElementById("chkRemSop").checked) localStorage.setItem("padre_doc", ds);
+    
+    // CORRECCIÓN CHECK
+    if(document.getElementById("chkRemSop").checked) {
+      localStorage.setItem("padre_doc", ds);
+    } else {
+      localStorage.removeItem("padre_doc");
+    }
 
     estSop = e;
     document.getElementById("sop_auth").style.display="none";
@@ -738,21 +761,15 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
   //  ALERTA ACADÉMICA (LÓGICA NUEVA)
   // ==========================
   function abrirAlertaAcademica() {
-    // Si ya hay documento guardado, usarlo directamente
     const saved = localStorage.getItem("padre_doc");
+    // Siempre mostramos el modal, pero si hay guardado, lo pre-llenamos y marcamos check
     if (saved) {
-      // Validar si existe en la lista para estar seguros
-      const est = estudiantesValidos.find(e => e.doc === saved);
-      if(est) {
-        docAlertaActual = saved;
-        iniciarCargaAlerta();
-        return;
-      } else {
-        // Si estaba guardado pero no es válido, limpiar y mostrar login
-        localStorage.removeItem("padre_doc");
-      }
+      document.getElementById("docAlertaInput").value = saved;
+      document.getElementById("chkRemAlerta").checked = true;
+    } else {
+      document.getElementById("docAlertaInput").value = "";
+      document.getElementById("chkRemAlerta").checked = false;
     }
-    // Si no hay guardado, mostrar modal
     document.getElementById("modalLoginAlerta").style.display = "flex";
   }
 
@@ -767,13 +784,15 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const est = estudiantesValidos.find(e => e.doc === docInput);
     if (!est) return alert("Documento no encontrado en la base de datos.");
 
-    // Si marcó recordar, guardar en localStorage
+    // CORRECCIÓN CHECK ALERTA
     if (document.getElementById("chkRemAlerta").checked) {
       localStorage.setItem("padre_doc", docInput);
       // Sincronizar con otros inputs
       document.getElementById("docExc").value = docInput;
       document.getElementById("docObs").value = docInput;
       document.getElementById("docSoporte").value = docInput;
+    } else {
+      localStorage.removeItem("padre_doc");
     }
 
     docAlertaActual = docInput;
