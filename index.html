@@ -37,7 +37,7 @@
   .header h4 { margin: 0; font-weight: 500; color: #a5d6a7; font-size: 11px; margin-top: 2px; }
   .header p { margin: 0; font-size: 11px; opacity: 0.9; font-style: italic; margin-top: 2px; color: #fff; }
 
-  /* MENÚ */
+  /* MENÚ PRINCIPAL */
   .menu {
     display: flex; justify-content: space-around; gap: 10px;
     background: #2e7d32; padding: 8px; margin: -25px auto 20px;
@@ -76,7 +76,7 @@
   .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
   .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
 
-  /* ASISTENCIA */
+  /* ASISTENCIA (ESTILOS ORIGINALES) */
   .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
   .att-box {
     flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px;
@@ -85,7 +85,7 @@
   }
   .att-box:active { transform: scale(0.95); }
 
-  /* OBSERVACIONES (TARJETAS) */
+  /* OBSERVACIONES (TARJETAS RESTAURADAS) */
   .card {
     margin-top: 15px; border-radius: 16px; overflow: hidden;
     border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -104,48 +104,120 @@
     border-left: 4px solid #ccc; margin-bottom: 5px; font-size: 13px;
   }
 
-  /* FIRMAS */
+  /* PIZARRA INTEGRADA UI */
+  .pizarra-header-ui {
+    background: #6d4c41; color: white; padding: 15px;
+    border-radius: 14px 14px 0 0; text-align: center;
+    font-weight: 900; font-size: 18px; margin: -20px -16px 15px;
+  }
+  .btn-consultar-madera {
+    background: #1b5e20; color: white; width:100%; border:none; padding:15px; 
+    font-weight:900; border-radius:50px; box-shadow: 0 4px 0 #145018;
+    cursor:pointer;
+  }
+  .aa-tabs { display: flex; background: #5d4037; padding: 10px 5px 0 5px; margin: 0 -16px 15px; }
+  .aa-tab-btn {
+    flex: 1; background: rgba(255,255,255,0.1); border: none; color: #d7ccc8; 
+    padding: 14px; font-weight: bold; font-size: 13px; cursor: pointer;
+    border-radius: 8px 8px 0 0; transition: 0.3s; margin-right: 2px;
+  }
+  #tab-notas { background: #c62828; color: white; }
+  #tab-notas.active { background: #b71c1c; border-bottom: 4px solid #fff; color: #fff; }
+  #tab-agenda.active { background: rgba(255,255,255,0.2); color: white; border-bottom: 4px solid #fff; }
+
+  #view-aa-notas, #view-aa-agenda { display: none; }
+  #view-aa-notas.active, #view-aa-agenda.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  /* AGENDA UI (RESTORED BUTTONS) */
+  .btn-download-pdf {
+    width: 100%; background: #ef4444; color: white; border: none; padding: 12px;
+    border-radius: 12px; font-weight: 900; font-size: 13px; margin-bottom: 15px;
+    cursor: pointer; box-shadow: 0 4px 0 #b91c1c; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-download-pdf:active { transform: translateY(2px); box-shadow: 0 2px 0 #b91c1c; }
+
+  .agenda-card {
+    border: 1px solid #e2e8f0; border-left: 5px solid #0284c7; 
+    border-radius: 12px; padding: 14px; margin-bottom: 12px; background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    position: relative;
+  }
+  .agenda-area-badge {
+    font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px;
+  }
+  .agenda-date-container {
+    background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
+    padding: 6px 10px; margin-bottom: 10px; display: inline-block;
+  }
+  .agenda-date-label {
+    display: block; font-size: 9px; font-weight: 800; color: #b91c1c; 
+    text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px;
+  }
+  .agenda-date-value { font-size: 13px; font-weight: 900; color: #991b1b; text-transform: capitalize; }
+  .agenda-title { font-size: 16px; font-weight: 900; color: #334155; margin-bottom: 6px; line-height: 1.3; }
+  .agenda-desc { font-size: 13px; color: #475569; white-space: pre-wrap; line-height: 1.5; margin-bottom: 8px; }
+
+  /* ALERTA UI */
+  .aa-student{ font-weight: 900; color:#5d4037; margin-bottom: 10px; font-size: 15px; text-align: center; }
+  .aa-badge{
+    display:block; width: fit-content; margin: 0 auto 15px; font-size: 10px; font-weight: 900; 
+    padding: 4px 12px; border-radius: 999px;
+    background:#efebe9; color:#5d4037; border: 1px solid #d7ccc8;
+  }
+  .aa-item{
+    border: 1px solid #eee; border-radius: 14px; padding: 12px; margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .aa-top{ display:flex; justify-content: space-between; gap: 10px; align-items:flex-start; }
+  .aa-title{ font-weight: 900; color:#0f172a; font-size: 13px; line-height: 1.2; }
+  .aa-meta{ font-size: 11px; color:#64748b; margin-top: 3px; font-weight: 700; }
+  .aa-score{
+    min-width: 66px; text-align:center; font-weight: 900; font-size: 18px;
+    color:#b71c1c; background:#fee2e2; border-radius: 12px; padding: 6px 10px;
+    border: 1px solid #fecaca;
+  }
+  .aa-obs-label{ margin-top: 10px; font-size: 11px; font-weight: 900; color:#1b5e20; text-transform: uppercase; letter-spacing: 0.5px; }
+  .aa-obs{ margin-top: 6px; background:#f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; font-size: 13px; color:#0f172a; }
+
+  .reply-box {
+    margin-top: 10px; padding: 10px; background: #ecfdf5; border: 1px solid #a7f3d0;
+    border-radius: 8px; font-size: 13px; color: #065f46;
+  }
+  .reply-label { font-weight: 900; font-size: 11px; display: block; margin-bottom: 4px; color: #059669; }
+
+  /* FIRMAS & BOTONES */
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
   canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
-
-  /* MODALES Y OVERLAYS */
-  #modalSoporte, #modalFechas, #modalPreguntaTarea { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
-  #modalSoporte { background: #fff; overflow-y: auto; }
-  #modalFechas { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
-  #modalPreguntaTarea { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; z-index: 4000; }
-
-  .modal-header {
-    background: #263238; color: #fff; padding: 20px; text-align: center;
-    position: sticky; top: 0; z-index: 10; font-weight: bold; font-size: 16px;
-  }
-  .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
-
-  .success-overlay {
-    display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 3000; color:white; text-align:center; padding: 40px 24px;
-    justify-content:center; align-items:center; flex-direction:column;
-    backdrop-filter: blur(8px);
-  }
-  .alert-box-ui {
-    background: rgba(255,255,255,0.15); padding: 30px 20px; border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.3); max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  }
-  .alert-box-ui h2 { font-size: 24px; margin-bottom: 15px; font-weight: 900; letter-spacing: 1px; }
-  .alert-box-ui p { font-size: 14px; line-height: 1.6; margin-bottom: 22px; font-weight: 500; white-space: pre-line; }
-  .btn-entendido {
-    background: white; color: #1b5e20; width: 220px; padding: 15px; border-radius: 50px;
-    font-weight: 900; border: none; cursor: pointer; text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  .btn-ask {
+    background: #f1f5f9; color: #475569; font-weight: bold; font-size: 11px;
+    border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+    transition: 0.2s;
   }
 
-  /* LISTADO FECHAS */
-  .modal-fechas-box { background: white; width: 100%; max-width: 320px; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-  .modal-fechas-header { background: #1b5e20; padding: 15px; text-align: center; color: white; font-weight: 900; font-size: 16px; }
-  .modal-fechas-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
-  .modal-fechas-list li { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; color: #333; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; text-transform: capitalize; }
-  .btn-close-fechas { background: #546e7a; color: white; padding: 10px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; margin: 15px auto; display: block; }
+  /* OTROS ELEMENTOS */
+  .btn-support-trigger {
+    display: block; width: 92%; margin: 0 auto 12px;
+    padding: 15px; background: #455a64; color: #fff; font-weight: 800;
+    border: none; border-radius: 50px; font-size: 14px;
+    box-shadow: 0 4px 0 #263238; cursor: pointer;
+  }
+  .btn-pizarra {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 92%; height: 120px; margin: 0 auto;
+    background: #213c1c; border: 8px solid #5d4037; border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 0 50px rgba(0,0,0,0.4);
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .btn-pizarra::before {
+    content: "✍️ Pizarra Escolar";
+    font-family: 'Great Vibes', cursive; color: rgba(255,255,255,0.9);
+    font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
 
-  /* FOOTER */
+  /* FOOTER (RESTORED) */
   .footer-container {
     margin-top: 40px; padding: 40px 20px;
     display: flex; justify-content: center; align-items: center;
@@ -170,171 +242,17 @@
     font-family: system-ui, sans-serif; margin-top: 5px;
   }
 
-  .btn-support-trigger {
-    display: block; width: 92%; margin: 0 auto 12px;
-    padding: 15px; background: #455a64; color: #fff; font-weight: 800;
-    border: none; border-radius: 50px; font-size: 14px;
-    box-shadow: 0 4px 0 #263238; cursor: pointer;
-  }
-
-  /* BOTÓN PIZARRA TRADICIONAL */
-  .btn-pizarra {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    width: 92%; height: 120px; margin: 0 auto;
-    background: #213c1c; /* Verde pizarra tradicional */
-    border: 8px solid #5d4037; /* Marco madera */
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 0 50px rgba(0,0,0,0.4);
-    cursor: pointer; position: relative; overflow: hidden;
-  }
-  .btn-pizarra::before {
-    content: "✍️ Pizarra Escolar";
-    font-family: 'Great Vibes', cursive; color: rgba(255,255,255,0.9);
-    font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  }
-  .btn-pizarra::after {
-    content: ""; position: absolute; top: 10%; left: 5%; width: 90%; height: 2px;
-    background: rgba(255,255,255,0.08); filter: blur(1.5px);
-  }
-  .btn-pizarra:active { transform: scale(0.98); }
-
-  /* MODAL LOGIN ALERTA */
-  #modalLoginAlerta {
-    display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 3600;
-    background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
-  }
-  
-  /* BOTÓN INGRESAR VERDE OSCURO */
-  .btn-consultar-madera {
-    background: #1b5e20; color: white; width:100%; border:none; padding:15px; 
-    font-weight:900; border-radius:50px; box-shadow: 0 4px 0 #145018;
-    cursor:pointer;
-  }
-
-  /* MODAL ALERTA ACADÉMICA Y AGENDA (LISTADO) */
-  #modalAlertaAcad {
+  /* MODALES / OVERLAYS */
+  #modalSoporte, #modalFechas, #modalPreguntaTarea { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
+  #modalSoporte { background: #fff; overflow-y: auto; }
+  #modalFechas { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
+  #modalPreguntaTarea { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; z-index: 4000; }
+  .success-overlay {
     display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 3500; background: rgba(0,0,0,0.6); padding: 18px;
-    align-items: center; justify-content: center;
+    z-index: 3000; color:white; text-align:center; padding: 40px 24px;
+    justify-content:center; align-items:center; flex-direction:column;
+    backdrop-filter: blur(8px);
   }
-  .modal-aa-box{
-    width:100%; max-width: 420px; background:#fff; border-radius: 22px; overflow:hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  }
-  .modal-aa-head {
-    background: #6d4c41; /* Fondo madera */
-    color:#fff; font-weight: 900;
-  }
-
-  /* PESTAÑAS (TABS) - AJUSTADAS */
-  .aa-tabs { display: flex; background: #5d4037; padding: 10px 5px 0 5px; }
-  
-  .aa-tab-btn {
-    flex: 1; background: rgba(255,255,255,0.1); border: none; color: #d7ccc8; 
-    padding: 14px; font-weight: bold; font-size: 13px; cursor: pointer;
-    border-radius: 8px 8px 0 0; transition: 0.3s; margin-right: 2px;
-  }
-  
-  /* ESTILO ESPECÍFICO PESTAÑA ALERTA (ROJO) */
-  #tab-notas {
-    background: #c62828; /* Rojo fuerte */
-    color: white;
-  }
-  #tab-notas.active {
-    background: #b71c1c; /* Rojo más oscuro activo */
-    border-bottom: 4px solid #fff;
-    color: #fff;
-  }
-
-  /* ESTILO AGENDA */
-  #tab-agenda.active { 
-    background: rgba(255,255,255,0.2);
-    color: white; border-bottom: 4px solid #fff; 
-  }
-
-  /* VISTAS */
-  #view-aa-notas, #view-aa-agenda { display: none; }
-  #view-aa-notas.active, #view-aa-agenda.active { display: block; animation: fadeIn 0.3s; }
-  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-  .modal-aa-body{ padding: 14px 16px; max-height: 70vh; overflow-y:auto; }
-  
-  .aa-student{ font-weight: 900; color:#5d4037; margin-bottom: 10px; font-size: 15px; text-align: center; }
-  .aa-badge{
-    display:block; width: fit-content; margin: 0 auto 15px; font-size: 10px; font-weight: 900; 
-    padding: 4px 12px; border-radius: 999px;
-    background:#efebe9; color:#5d4037; border: 1px solid #d7ccc8;
-  }
-
-  /* ITEMS ALERTA */
-  .aa-item{
-    border: 1px solid #eee; border-radius: 14px; padding: 12px; margin-bottom: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  .aa-top{ display:flex; justify-content: space-between; gap: 10px; align-items:flex-start; }
-  .aa-title{ font-weight: 900; color:#0f172a; font-size: 13px; line-height: 1.2; }
-  .aa-meta{ font-size: 11px; color:#64748b; margin-top: 3px; font-weight: 700; }
-  .aa-score{
-    min-width: 66px; text-align:center; font-weight: 900; font-size: 18px;
-    color:#b71c1c; background:#fee2e2; border-radius: 12px; padding: 6px 10px;
-    border: 1px solid #fecaca;
-  }
-  .aa-obs-label{ margin-top: 10px; font-size: 11px; font-weight: 900; color:#1b5e20; text-transform: uppercase; letter-spacing: 0.5px; }
-  .aa-obs{ margin-top: 6px; background:#f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; font-size: 13px; color:#0f172a; }
-
-  /* ITEMS AGENDA Y RESPUESTAS */
-  .agenda-card {
-    border: 1px solid #e2e8f0; border-left: 5px solid #0284c7; 
-    border-radius: 12px; padding: 14px; margin-bottom: 12px; background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    position: relative;
-  }
-  /* Estilo para la Materia (Área) */
-  .agenda-area-badge {
-    font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 6px;
-    text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px;
-  }
-  
-  /* ESTILO FECHA DE ENTREGA RESALTADO */
-  .agenda-date-container {
-    background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
-    padding: 6px 10px; margin-bottom: 10px; display: inline-block;
-  }
-  .agenda-date-label {
-    display: block; font-size: 9px; font-weight: 800; color: #b91c1c; 
-    text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px;
-  }
-  .agenda-date-value {
-    font-size: 13px; font-weight: 900; color: #991b1b; text-transform: capitalize;
-  }
-
-  .agenda-title { font-size: 16px; font-weight: 900; color: #334155; margin-bottom: 6px; line-height: 1.3; }
-  .agenda-desc { font-size: 13px; color: #475569; white-space: pre-wrap; line-height: 1.5; margin-bottom: 8px; }
-  
-  /* ESTILO RESPUESTA PROFE */
-  .reply-box {
-    margin-top: 10px; padding: 10px; background: #ecfdf5; border: 1px solid #a7f3d0;
-    border-radius: 8px; font-size: 13px; color: #065f46;
-  }
-  .reply-label { font-weight: 900; font-size: 11px; display: block; margin-bottom: 4px; color: #059669; }
-
-  /* BOTÓN PREGUNTAR (AGENDA) */
-  .btn-ask {
-    background: #f1f5f9; color: #475569; font-weight: bold; font-size: 11px;
-    border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
-    transition: 0.2s;
-  }
-  .btn-ask:active { transform: scale(0.95); background: #e2e8f0; }
-
-  /* BOTÓN DESCARGAR PDF */
-  .btn-download-pdf {
-    width: 100%; background: #ef4444; color: white; border: none; padding: 12px;
-    border-radius: 12px; font-weight: 900; font-size: 13px; margin-bottom: 15px;
-    cursor: pointer; box-shadow: 0 4px 0 #b91c1c; display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-download-pdf:active { transform: translateY(2px); box-shadow: 0 2px 0 #b91c1c; }
-
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -346,11 +264,9 @@
     authDomain: "diariodeprocesos-6f78d.firebaseapp.com",
     projectId: "diariodeprocesos-6f78d"
   };
-
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // LISTADO DE ESTUDIANTES CON GRADO ASIGNADO
   const estudiantesValidos = [
     { doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN", grado: "Primero" }, 
     { doc: "1041636979", nombre: "OSORIO MUÑOZ JERONIMO", grado: "Primero" },
@@ -387,6 +303,7 @@
     <button id="btnObs" onclick="switchTab('obs')">Observaciones</button>
   </div>
 
+  <!-- VISTA EXCUSAS -->
   <div id="view-exc" class="container">
     <div id="loginExc">
       <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
@@ -397,11 +314,9 @@
       </div>
       <button class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
     </div>
-
     <div id="formExc" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
       <div id="nombreExc" style="text-align:center; font-weight:900; color:#1b5e20; margin-bottom:5px;"></div>
       <div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin-bottom:15px; border-radius:4px;"></div>
-
       <div class="att-summary">
         <div class="att-box" style="background:#ef4444;" onclick="mostrarListadoFechas('I')">
           <span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS
@@ -410,28 +325,22 @@
           <span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS
         </div>
       </div>
-
-      <h3 style="margin-bottom:10px; font-size:16px;">Enviar Justificación</h3>
       <input id="fechaExc" type="date">
       <select id="motivoExc">
         <option value="">Seleccione Motivo...</option>
-        <option>Enfermedad</option>
-        <option>Cita médica</option>
-        <option>Calamidad Doméstica</option>
-        <option>Otro</option>
+        <option>Enfermedad</option><option>Cita médica</option><option>Calamidad Doméstica</option><option>Otro</option>
       </select>
-      <textarea id="detalleExc" placeholder="Describa el motivo detalladamente..."></textarea>
-
+      <textarea id="detalleExc" placeholder="Describa el motivo..."></textarea>
       <div class="sig-wrap">
         <p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE</p>
         <canvas id="sigExc"></canvas>
-        <button class="btn sec" style="padding:6px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigExc')">Borrar Firma</button>
+        <button class="btn sec" style="padding:6px; font-size:10px;" onclick="limpiarPad('sigExc')">Borrar</button>
       </div>
-
       <button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
     </div>
   </div>
 
+  <!-- VISTA OBSERVACIONES -->
   <div id="view-obs" class="container" style="display:none;">
     <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
     <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
@@ -443,158 +352,38 @@
     <div id="resultadoObs" style="margin-top:20px;"></div>
   </div>
 
-  <div id="overlaySem" class="success-overlay">
-    <div class="alert-box-ui">
-      <h2 id="semTitle">ADVERTENCIA</h2>
-      <p id="semText" style="font-style:normal; margin-bottom:20px;"></p>
-      <button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
+  <!-- VISTA PIZARRA INTEGRADA -->
+  <div id="view-piz" class="container" style="display:none;">
+    <div id="loginAlertaFlow">
+      <div class="pizarra-header-ui">✍️ Pizarra Escolar</div>
+      <p style="font-weight:bold; color:#5d4037; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
+      <input id="docAlertaInput" type="number" placeholder="Digite documento..." inputmode="numeric">
+      <div class="remember-box">
+        <input type="checkbox" id="chkRemAlerta">
+        <label for="chkRemAlerta">Recordar documento</label>
+      </div>
+      <button class="btn-consultar-madera" onclick="procesarLoginAlerta()">INGRESAR A LA PIZARRA</button>
+      <button onclick="switchTab('exc')" style="background:transparent; border:none; color:#666; width:100%; margin-top:10px; font-weight:bold; font-size:12px;">SALIR</button>
     </div>
-  </div>
-
-  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
-    <h2>✅ ¡Envío Exitoso!</h2>
-    <p>“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes.”</p>
-    <button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
-  </div>
-
-  <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
-    <h2>✅ Mensaje Enviado</h2>
-    <p>“Apreciado Padre de familia, gracias por comunicarse, procuraré responder a su solicitud lo más pronto posible.”</p>
-    <button class="btn-entendido" style="color:#0277bd;" onclick="cerrarSuccessMsg()">ENTENDIDO</button>
-  </div>
-
-  <div id="modalFechas">
-    <div class="modal-fechas-box">
-      <div class="modal-fechas-header" id="txtTituloModalFechas">HISTORIAL</div>
-      <ul id="containerListaFechas" class="modal-fechas-list"></ul>
-      <div class="modal-fechas-footer"><button class="btn-close-fechas" onclick="cerrarModalFechas()">CERRAR</button></div>
-    </div>
-  </div>
-
-  <div id="modalSoporte">
-    <div class="modal-header">
-      <button class="close" onclick="cerrarSoporte()">✕</button>
-      Soporte
-    </div>
-    <div class="modal-body" style="padding:20px; text-align:center;">
-      <div id="sop_auth">
-        <input id="docSoporte" type="number" placeholder="Documento">
-        <button class="btn" onclick="autenticarSoporte()">INGRESAR</button>
-        <div class="remember-box" style="justify-content:center; margin-top:10px;">
-          <input type="checkbox" id="chkRemSop">
-          <label for="chkRemSop">Recordar</label>
-        </div>
+    <div id="contentAlertaFlow" style="display:none;">
+      <div class="pizarra-header-ui">✍️ Pizarra Escolar</div>
+      <div class="aa-tabs">
+        <button id="tab-notas" class="aa-tab-btn active" onclick="switchTabAlerta('notas')">⚠️ Alerta Académica</button>
+        <button id="tab-agenda" class="aa-tab-btn" onclick="switchTabAlerta('agenda')">📅 Agenda de Tareas</button>
       </div>
-
-      <div id="sop_menu" style="display:none; margin-top:20px;">
-        <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank" style="text-decoration:none;">
-          <button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS DE ASAMBLEAS</button>
-        </a>
-        <a href="https://roscar33.github.io/Horario/" target="_blank" style="text-decoration:none;">
-          <button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button>
-        </a>
-        <a href="https://roscar33.github.io/Utiles2026/" target="_blank" style="text-decoration:none;">
-          <button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES 2026</button>
-        </a>
-        <button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button>
-        <button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button>
+      <div class="aa-student" id="aaNombre"></div>
+      <div class="aa-badge" id="aaBadge"></div>
+      <div id="view-aa-notas" class="active"><div id="aaLista"></div></div>
+      <div id="view-aa-agenda">
+        <button onclick="descargarAgendaPDF()" class="btn-download-pdf">📄 Descargar Tareas en PDF</button>
+        <div id="aaAgendaLista"></div>
       </div>
-
-      <div id="sop_form" style="display:none; text-align:left;">
-        <h3 style="color:#1b5e20; text-align:center; margin-bottom:15px;">Nuevo Mensaje</h3>
-        <input id="msg_fecha" type="date">
-        <input id="msg_asunto" type="text" placeholder="Asunto (Duda, Sugerencia...)">
-        <textarea id="msg_texto" placeholder="Escriba su mensaje aquí..." rows="4"></textarea>
-        <div class="sig-wrap">
-          <p style="text-align:center; font-size:11px; font-weight:bold;">FIRMA ACUDIENTE</p>
-          <canvas id="sigSoporte"></canvas>
-          <button class="btn sec" style="padding:5px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigSoporte')">Borrar</button>
-        </div>
-        <button class="btn" style="margin-top:10px;" onclick="enviarMensajeSoporte()">ENVIAR AL DOCENTE</button>
-        <button class="btn sec" style="margin-top:10px;" onclick="irAMenuSop()">VOLVER</button>
-      </div>
-
-      <div id="sop_history" style="display:none; text-align:left;">
-        <h3 style="color:#1b5e20; text-align:center;">Historial</h3>
-        <div id="listaMensajesSop" style="max-height:300px; overflow-y:auto; margin-bottom:15px;"></div>
-        <button class="btn sec" onclick="irAMenuSop()">VOLVER</button>
-      </div>
+      <button onclick="location.reload()" style="background:transparent; border:none; color:#5d4037; width:100%; margin-top:20px; font-weight:bold; font-size:13px; text-decoration:underline;">SALIR DE LA PIZARRA</button>
     </div>
   </div>
 
   <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
-
-  <div class="btn-pizarra" onclick="abrirAlertaAcademica()"></div>
-
-  <div id="modalLoginAlerta">
-    <div class="modal-aa-box" style="padding: 20px; max-width: 340px;">
-      <h3 style="text-align:center; color:#5d4037; font-weight:900; font-size:18px; margin-top:0; margin-bottom:15px;">Pizarra Escolar</h3>
-      
-      <p style="font-size:12px; font-weight:bold; color:#333; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-      <input id="docAlertaInput" type="number" placeholder="Digite documento..." style="margin-bottom:10px;">
-      
-      <div class="remember-box" style="margin-bottom:20px;">
-        <input type="checkbox" id="chkRemAlerta" checked>
-        <label for="chkRemAlerta" style="font-size:13px;">Recordar documento</label>
-      </div>
-
-      <button class="btn-consultar-madera" onclick="procesarLoginAlerta()">INGRESAR</button>
-      <button onclick="cerrarLoginAlerta()" style="background:transparent; border:none; color:#666; width:100%; margin-top:10px; font-weight:bold; font-size:12px;">CANCELAR</button>
-    </div>
-  </div>
-
-  <div id="modalAlertaAcad">
-    <div class="modal-aa-box">
-      <div class="modal-aa-head" style="padding-bottom:0; display:block;">
-        <div style="display:flex; justify-content:space-between; align-items:center; padding: 14px 16px 10px;">
-          <span style="font-size:18px; text-shadow:0 1px 2px rgba(0,0,0,0.3);">📝 Pizarra Escolar</span>
-          <button onclick="cerrarModalAlertaAcad()" style="background:rgba(255,255,255,0.2); border:none; color:white; width:30px; height:30px; border-radius:8px; font-weight:bold;">✕</button>
-        </div>
-        <div class="aa-tabs">
-          <button id="tab-notas" class="aa-tab-btn active" onclick="switchTabAlerta('notas')">⚠️ Alerta Académica</button>
-          <button id="tab-agenda" class="aa-tab-btn" onclick="switchTabAlerta('agenda')">📅 Agenda de Tareas</button>
-        </div>
-      </div>
-
-      <div class="modal-aa-body">
-        <div class="aa-student" id="aaNombre"></div>
-        <div class="aa-badge" id="aaBadge"></div>
-        
-        <div id="view-aa-notas" class="active">
-          <div id="aaLista"></div>
-        </div>
-
-        <div id="view-aa-agenda">
-          <button onclick="descargarAgendaPDF()" class="btn-download-pdf">📄 Descargar Tareas en PDF</button>
-          <div id="aaAgendaLista"></div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div id="modalPreguntaTarea">
-    <div class="modal-aa-box" style="max-width:320px; padding:20px;">
-      <h3 style="text-align:center; color:#1b5e20; margin-top:0;">Duda sobre Tarea</h3>
-      <p id="tituloTareaPregunta" style="font-size:12px; color:#555; text-align:center; font-weight:bold; margin-bottom:15px;"></p>
-      <textarea id="textoPregunta" rows="4" placeholder="Escriba su pregunta aquí..."></textarea>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button onclick="document.getElementById('modalPreguntaTarea').style.display='none'" style="flex:1; padding:12px; background:#ccc; border:none; border-radius:10px; font-weight:bold; color:#333;">Cancelar</button>
-        <button onclick="enviarPregunta()" style="flex:1; padding:12px; background:#1b5e20; border:none; border-radius:10px; font-weight:bold; color:white;">Enviar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="overlayAcad" class="success-overlay" style="background: rgba(93, 64, 55, 0.98);">
-    <div class="alert-box-ui">
-      <h2>⚠️ Importante</h2>
-      <p id="txtAcad">
-Apreciado padre de familia:
-Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa correspondiente para recuperar la evaluación o entregar el trabajo pendiente. En caso de haber reprobado una evaluación, podrá solicitar la recuperación por los canales institucionales.
-      </p>
-      <button class="btn-entendido" onclick="cerrarMensajeAlerta()">ENTENDIDO</button>
-    </div>
-  </div>
+  <div id="pizarraBottomBtn" class="btn-pizarra" onclick="switchTab('piz')"></div>
 
   <div class="footer-container">
     <div class="footer-blob"></div>
@@ -602,523 +391,183 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     <div class="copyright-text">© 2026 Santa Juana Digital</div>
   </div>
 
+  <!-- MODAL SOPORTE -->
+  <div id="modalSoporte">
+    <div class="modal-header" style="background:#263238; color:white; padding:20px; text-align:center;">
+      <button onclick="cerrarSoporte()" style="position:absolute; left:15px; top:18px; background:none; border:none; color:white; font-size:24px;">✕</button>
+      Soporte
+    </div>
+    <div class="modal-body" style="padding:20px;">
+      <div id="sop_auth" style="text-align:center;"><input id="docSoporte" type="number" placeholder="Documento"><button class="btn" onclick="autenticarSoporte()">INGRESAR</button></div>
+      <div id="sop_menu" style="display:none; text-align:center;">
+        <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank"><button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS ASAMBLEAS</button></a>
+        <a href="https://roscar33.github.io/Horario/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button></a>
+        <a href="https://roscar33.github.io/Utiles2026/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES</button></a>
+        <button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button>
+        <button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button>
+      </div>
+      <div id="sop_form" style="display:none; text-align:left;">
+        <input id="msg_fecha" type="date"><input id="msg_asunto" type="text" placeholder="Asunto"><textarea id="msg_texto" rows="4"></textarea>
+        <div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar</button></div>
+        <button class="btn" onclick="enviarMensajeSoporte()">ENVIAR</button>
+      </div>
+      <div id="sop_history" style="display:none;"><div id="listaMensajesSop"></div><button class="btn sec" onclick="irAMenuSop()">VOLVER</button></div>
+    </div>
+  </div>
+
+  <div id="modalPreguntaTarea">
+    <div class="container" style="max-width:320px; margin-top:20vh; border-radius:20px;">
+      <h3 style="text-align:center; color:#1b5e20;">Duda sobre Tarea</h3>
+      <p id="tituloTareaPregunta" style="text-align:center; font-size:12px; font-weight:bold;"></p>
+      <textarea id="textoPregunta" rows="4"></textarea>
+      <div style="display:flex; gap:10px;"><button class="btn sec" onclick="document.getElementById('modalPreguntaTarea').style.display='none'">Cerrar</button><button class="btn" onclick="enviarPregunta()">Enviar</button></div>
+    </div>
+  </div>
+
+  <div id="overlaySem" class="success-overlay">
+    <div class="alert-box-ui"><h2 id="semTitle">ADVERTENCIA</h2><p id="semText" style="white-space:pre-line;"></p><button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button></div>
+  </div>
+  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
+    <h2>✅ ¡Envío Exitoso!</h2><p>Póngase al día con sus procesos.</p><button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
+  </div>
+  <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
+    <h2>✅ Mensaje Enviado</h2><p>Docente responderá pronto.</p><button class="btn-entendido" style="color:#0277bd;" onclick="cerrarSuccessMsg()">ENTENDIDO</button>
+  </div>
+  <div id="modalFechas"><div class="modal-fechas-box"><div class="modal-fechas-header" id="txtTituloModalFechas"></div><ul id="containerListaFechas" class="modal-fechas-list"></ul><button class="btn-close-fechas" onclick="cerrarModalFechas()">CERRAR</button></div></div>
+
 <script>
-  let estActualDoc = "";
-  let periodoAsis = 1;
-  let estSop = null;
-  const pads = new Map();
-  let cacheFechas = { I: [], E: [] };
-
-  // Variables Alerta/Agenda
-  let docAlertaActual = "";
-  let periodoNotasActual = 1;
-  let gradoEstudianteActual = "";
-  let cacheTareasAgenda = []; 
-  
-  // Variables para la pregunta
-  let currentTaskId = null;
-  let currentTaskTitle = null;
-
-  // Asignar jsPDF globalmente
+  let estActualDoc = ""; let periodoAsis = 1; let estSop = null; const pads = new Map(); let cacheFechas = { I: [], E: [] };
+  let docAlertaActual = ""; let periodoNotasActual = 1; let gradoEstudianteActual = ""; let cacheTareasAgenda = []; let currentTaskId = null; let currentTaskTitle = null;
   window.jsPDF = window.jspdf.jsPDF;
 
-  // ==========================
-  //  GESTIÓN DE DOCUMENTO (RECORDAR)
-  // ==========================
   window.onload = function() {
     const saved = localStorage.getItem("padre_doc");
-    const checkIds = ["chkRemExc", "chkRemObs", "chkRemSop", "chkRemAlerta"];
-    const inputIds = ["docExc", "docObs", "docSoporte", "docAlertaInput"];
-
     if(saved) {
-      inputIds.forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = saved; });
-      checkIds.forEach(id => { if(document.getElementById(id)) document.getElementById(id).checked = true; });
+      ["docExc", "docObs", "docAlertaInput", "docSoporte"].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = saved; });
+      ["chkRemExc", "chkRemObs", "chkRemAlerta"].forEach(id => { if(document.getElementById(id)) document.getElementById(id).checked = true; });
     }
-
-    // Funcionalidad: Al desactivar cualquier check, se borra de inmediato el dato del sistema
-    checkIds.forEach(id => {
-      const el = document.getElementById(id);
-      if(el) {
-        el.addEventListener('change', function() {
-          if(!this.checked) {
-            localStorage.removeItem("padre_doc");
-            // Sincronizar todos los checks a desactivado
-            checkIds.forEach(cid => { if(document.getElementById(cid)) document.getElementById(cid).checked = false; });
-          } else {
-            // Sincronizar todos los checks a activado
-            checkIds.forEach(cid => { if(document.getElementById(cid)) document.getElementById(cid).checked = true; });
-          }
-        });
-      }
-    });
   };
 
-  // Helper para formato de fecha: "Viernes, 30 de Enero de 2026"
-  function formatearFecha(fechaStr) {
-    if(!fechaStr) return "";
-    const fecha = new Date(fechaStr + "T00:00:00"); 
-    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return fecha.toLocaleDateString('es-ES', opciones);
-  }
-
-  // --- FUNCIÓN AUXILIAR PARA YOUTUBE ---
-  function getYouTubeEmbedUrl(url) {
-    if (!url) return null;
-    let videoId = '';
-    try {
-      if (url.includes('youtube.com/watch?v=')) {
-        videoId = url.split('v=')[1].split('&')[0];
-      } else if (url.includes('youtu.be/')) {
-        videoId = url.split('youtu.be/')[1].split('?')[0];
-      }
-      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-    } catch (e) { return null; }
+  function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
+  function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
+  function getAreaStyle(a) { 
+    const area = (a || '').toUpperCase();
+    if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' };
+    if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' };
+    if(area.includes('NATURALES')) return { border: '#059669', badge: '#d1fae5', text: '#047857' };
+    if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#fef3c7', text: '#b45309' };
+    return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' };
   }
 
   function switchTab(t) {
     document.getElementById("view-exc").style.display = t==='exc'?'block':'none';
     document.getElementById("view-obs").style.display = t==='obs'?'block':'none';
+    document.getElementById("view-piz").style.display = t==='piz'?'block':'none';
     document.getElementById("btnExc").className = t==='exc'?'active':'';
     document.getElementById("btnObs").className = t==='obs'?'active':'';
+    document.getElementById("pizarraBottomBtn").style.display = t==='piz'?'none':'flex';
   }
 
-  // ==========================
-  //  ASISTENCIA
-  // ==========================
+  // ASISTENCIA
   async function activarFormularioExcusa() {
-    const di = document.getElementById("docExc").value.trim();
-    const est = estudiantesValidos.find(e => e.doc === di);
-    if(!est) return alert("Documento no encontrado en la base de datos.");
-    
-    // GUARDADO / BORRADO AL CONTINUAR
-    if(document.getElementById("chkRemExc").checked) {
-      localStorage.setItem("padre_doc", di);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    estActualDoc = di;
-    document.getElementById("loginExc").style.display="none";
-    document.getElementById("formExc").style.display="block";
-    document.getElementById("nombreExc").innerText=est.nombre;
-
-    const snapC = await db.collection("configuracionGlobal").doc("asistencia").get();
-    periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
-    document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis;
-
-    consultarStats(di);
-    initPad('sigExc');
+    const di = document.getElementById("docExc").value.trim(); const est = estudiantesValidos.find(e => e.doc === di);
+    if(!est) return alert("Documento no encontrado.");
+    if(document.getElementById("chkRemExc").checked) localStorage.setItem("padre_doc", di);
+    estActualDoc = di; document.getElementById("loginExc").style.display="none"; document.getElementById("formExc").style.display="block"; document.getElementById("nombreExc").innerText=est.nombre;
+    const snapC = await db.collection("configuracionGlobal").doc("asistencia").get(); periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
+    document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis; consultarStats(di); initPad('sigExc');
   }
-
   async function consultarStats(di) {
     const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get();
-    let f=0, e=0;
-    cacheFechas.I = [];
-    cacheFechas.E = [];
-    snap.forEach(d => {
-      const reg = (d.data().detalles || []).find(x => x.doc === di);
-      if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); }
-      if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); }
-    });
-    document.getElementById("statFallas").innerText = f;
-    document.getElementById("statExcusas").innerText = e;
+    let f=0, e=0; cacheFechas.I=[]; cacheFechas.E=[];
+    snap.forEach(d => { const reg = (d.data().detalles || []).find(x => x.doc === di); if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); } if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); } });
+    document.getElementById("statFallas").innerText=f; document.getElementById("statExcusas").innerText=e;
   }
+  function mostrarListadoFechas(tipo) { const arr=(tipo==='I')?cacheFechas.I:cacheFechas.E; document.getElementById("txtTituloModalFechas").innerText=(tipo==='I')?"FECHAS DE FALLAS":"FECHAS DE EXCUSAS"; const c=document.getElementById("containerListaFechas"); c.innerHTML=arr.length?arr.map(f=>`<li>📅 ${formatearFecha(f)}</li>`).join(""):"<li style='justify-content:center; color:#999;'>Sin registros.</li>"; document.getElementById("modalFechas").style.display="flex"; }
+  function cerrarModalFechas() { document.getElementById("modalFechas").style.display="none"; }
+  async function enviarExcusa() { const p=pads.get('sigExc'); if(!p?.hasData) return alert("Firme el recuadro."); await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: document.getElementById("fechaExc").value, motivoTipo: document.getElementById("motivoExc").value, motivoDetalle: document.getElementById("detalleExc").value, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); document.getElementById("successAsis").style.display="flex"; }
 
-  function mostrarListadoFechas(tipo) {
-    const arr = (tipo === 'I') ? cacheFechas.I : cacheFechas.E;
-    document.getElementById("txtTituloModalFechas").innerText = (tipo === 'I') ? "FECHAS DE FALLAS" : "FECHAS DE EXCUSAS";
-    const container = document.getElementById("containerListaFechas");
-    if(arr.length === 0) container.innerHTML = "<li style='justify-content:center; color:#999;'>No hay registros en este periodo.</li>";
-    else container.innerHTML = arr.map(f => `<li>📅 ${formatearFecha(f)}</li>`).join("");
-    document.getElementById("modalFechas").style.display = "flex";
-  }
-  function cerrarModalFechas() { document.getElementById("modalFechas").style.display = "none"; }
-
-  async function enviarExcusa() {
-    const fecha = document.getElementById("fechaExc").value;
-    const motivo = document.getElementById("motivoExc").value;
-    const detalle = document.getElementById("detalleExc").value;
-    const p = pads.get('sigExc');
-    if(!fecha || !motivo || !detalle.trim() || !p?.hasData) return alert("⚠️ Todos los campos son obligatorios (Fecha, Motivo, Detalle y Firma).");
-
-    await db.collection("excusasInasistencia").add({
-      documentoEstudiante: estActualDoc,
-      fechaInasistencia: fecha,
-      motivoTipo: motivo,
-      motivoDetalle: detalle,
-      firmaAcudiente: p.c.toDataURL(),
-      timestamp: new Date().toISOString()
-    });
-    document.getElementById("successAsis").style.display="flex";
-  }
-
-  // ==========================
-  //  OBSERVACIONES
-  // ==========================
+  // OBSERVACIONES
   async function buscarObservaciones() {
-    const docId = document.getElementById("docObs").value.trim();
-    const out = document.getElementById("resultadoObs");
-    if(!docId) return alert("Ingrese documento.");
-    if(!estudiantesValidos.find(e => e.doc === docId)) return alert("Documento no encontrado.");
-    
-    // GUARDADO / BORRADO AL CONTINUAR
-    if(document.getElementById("chkRemObs").checked) {
-      localStorage.setItem("padre_doc", docId);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    out.innerHTML = "<p style='text-align:center;'>Buscando...</p>";
-    const cSnap = await db.collection("configuracionCiclos").doc(docId).get();
-    const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1;
-
+    const docId = document.getElementById("docObs").value.trim(); if(!docId || !estudiantesValidos.find(e => e.doc === docId)) return alert("No encontrado.");
+    if(document.getElementById("chkRemObs").checked) localStorage.setItem("padre_doc", docId);
+    const out = document.getElementById("resultadoObs"); out.innerHTML = "Buscando...";
+    const cSnap = await db.collection("configuracionCiclos").doc(docId).get(); const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1;
     db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => {
-      let obsList = [];
-      snap.forEach(d => { if(d.data().ciclo == cAct) obsList.push({ id: d.id, ...d.data() }); });
-
-      obsList.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
-
-      if(obsList.length === 0) {
-        out.innerHTML = `<p style='text-align:center;'>No hay anotaciones pendientes para el ciclo #${cAct}</p>`;
-        return;
-      }
-
-      let html = `<p style="font-size:11px; font-weight:bold; color:#1b5e20; margin-bottom:10px;">CICLO ACTUAL: #${cAct}</p>`;
-
-      const cards = obsList.map((r, index) => {
-        const num = index + 1;
-        let titulo = `OBSERVACIÓN N° ${num}`;
-        let color = "#2e7d32";
-        if (num === 2) { color = "#f97316"; titulo = `OBSERVACIÓN N° ${num}`; }
-        else if (num >= 3) { color = "#d32f2f"; titulo = "CITACIÓN"; }
-
-        const firmado = !!r.firmaAcudiente;
-        return `<div class="card" style="border: 2px solid ${color};">
-          <div class="top" style="background:${color}">
-            <span>${titulo}</span>
-            <span>${firmado ? 'FIRMADO' : 'PENDIENTE'}</span>
-          </div>
-          <div class="body">
-            <div style="font-size:11px; color:#666; margin-bottom:8px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}</div>
-
-            <span class="obs-label" style="color:${color}">DESCRIPCIÓN DE LOS HECHOS:</span>
-            <div class="obs-content" style="border-left-color:${color}">${r.comportamiento || "Sin descripción"}</div>
-
-            <span class="obs-label" style="color:${color}">DESCARGOS DEL ESTUDIANTE:</span>
-            <div class="obs-content" style="border-left-color:${color}">${r.descargos || "Sin descargos"}</div>
-
-            <span class="obs-label" style="color:${color}">PROCEDIMIENTO SEGUIDO:</span>
-            <div class="obs-content" style="border-left-color:${color}">${r.procedimiento || "Sin procedimiento"}</div>
-
-            ${!firmado
-              ? `<div class="sig-wrap">
-                   <canvas id="cv_${r.id}"></canvas>
-                   <button class="btn" style="margin-top:10px; background:${color};" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR RECIBIDO</button>
-                 </div>`
-              : `<div style="text-align:right;"><img src="${r.firmaAcudiente}" height="45"></div>`}
-          </div>
-        </div>`;
-      });
-
-      out.innerHTML = html + cards.reverse().join('');
-      setTimeout(() => obsList.forEach(r => {
-        if(!r.firmaAcudiente && document.getElementById('cv_'+r.id)) initPad('cv_'+r.id);
-      }), 500);
+      let list = []; snap.forEach(d => { if(d.data().ciclo == cAct) list.push({ id: d.id, ...d.data() }); });
+      let obsL = list.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
+      if(obsL.length === 0) { out.innerHTML = `<p style='text-align:center;'>No hay anotaciones para el ciclo #${cAct}</p>`; return; }
+      out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => {
+        let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32");
+        return `<div class="card" style="border: 2px solid ${color};"><div class="top" style="background:${color}"><span>OBSERVACIÓN N° ${n}</span></div><div class="body"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><span class="obs-label">HECHOS:</span><div class="obs-content">${r.comportamiento}</div><span class="obs-label">DESCARGOS:</span><div class="obs-content">${r.descargos || "N/A"}</div><span class="obs-label">PROCEDIMIENTO:</span><div class="obs-content">${r.procedimiento || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<img src="${r.firmaAcudiente}" height="45">`}</div></div>`;
+      }).join("");
+      setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500);
     });
   }
+  async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
+  function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  async function firmarObs(id, docId, ciclo) {
-    const p = pads.get('cv_'+id);
-    if(!p?.hasData) return alert("Firme el recuadro.");
-
-    await db.collection("registrosComportamentales").doc(id).update({
-      firmaAcudiente: p.c.toDataURL(),
-      fechaFirma: new Date().toISOString()
-    });
-
-    const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).get();
-    let n = 0;
-    snap.forEach(d => { if(d.data().ciclo == ciclo) n++; });
-    mostrarSem(n);
-  }
-
-  function mostrarSem(n) {
-    const ov = document.getElementById("overlaySem");
-    const t = document.getElementById("semTitle");
-    const x = document.getElementById("semText");
-
-    const m12 = "Apreciado padre de familia:\nLe recordamos que, si su hijo(a) acumula tres observaciones, usted, como acudiente, será citado(a) a una entrevista con el docente, con el fin de fortalecer y mejorar los procesos disciplinarios y académicos del estudiante.";
-    const m3  = "Apreciado padre de familia:\nDe acuerdo con el seguimiento realizado, su hijo(a) ha acumulado tres observaciones, por lo cual usted es citado(a) a una entrevista con el docente, con el fin de analizar la situación y establecer estrategias de mejora en los procesos disciplinarios y académicos del estudiante.";
-
-    if(n===1) { ov.style.background="rgba(27,94,32,0.98)"; t.innerText="ADVERTENCIA 1"; x.innerText=m12; }
-    else if(n===2) { ov.style.background="rgba(245,124,0,0.98)"; t.innerText="ADVERTENCIA 2"; x.innerText=m12; }
-    else if(n>=3) { ov.style.background="rgba(211,47,47,0.98)"; t.innerText="CITACIÓN"; x.innerText=m3; }
-    ov.style.display = "flex";
-  }
-
-  // ==========================
-  //  SOPORTE
-  // ==========================
-  function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
-  function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
-
-  function autenticarSoporte() {
-    const ds = document.getElementById("docSoporte").value.trim();
-    const e = estudiantesValidos.find(x => x.doc === ds);
-    if(!e) return alert("No válido.");
-    
-    // GUARDADO / BORRADO AL CONTINUAR
-    if(document.getElementById("chkRemSop").checked) {
-      localStorage.setItem("padre_doc", ds);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    estSop = e;
-    document.getElementById("sop_auth").style.display="none";
-    document.getElementById("sop_menu").style.display="block";
-  }
-
-  function irAFormSop() {
-    document.getElementById("sop_menu").style.display = "none";
-    document.getElementById("sop_form").style.display = "block";
-    document.getElementById("msg_fecha").valueAsDate = new Date();
-    setTimeout(() => initPad('sigSoporte'), 200);
-  }
-
-  function irAMenuSop() {
-    document.getElementById("sop_form").style.display = "none";
-    document.getElementById("sop_history").style.display = "none";
-    document.getElementById("sop_menu").style.display = "block";
-  }
-
-  function irAHistorialSop() {
-    document.getElementById("sop_menu").style.display = "none";
-    document.getElementById("sop_history").style.display = "block";
-
-    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estSop.doc).onSnapshot(snap => {
-      let html = "";
-      snap.forEach(d => {
-        const m = d.data();
-        html += `<div style="background:#f8f9fa; padding:12px; border-radius:10px; border-left:4px solid #1b5e20; margin-bottom:10px; font-size:13px;">
-          <div style="font-size:11px; color:#666; margin-bottom:5px;">${formatearFecha(m.fechaMsg)}</div>
-          <div style="font-weight:bold; margin-bottom:5px;">${m.asunto}</div>
-          <div style="margin-bottom:8px;">${m.mensaje}</div>
-          ${m.respuestaDocente
-            ? `<div style="background:#e8f5e9; padding:8px; border-radius:6px; color:#2e7d32; font-weight:bold;">Respuesta: ${m.respuestaDocente}</div>`
-            : '<div style="color:#f57c00; font-size:11px;">Pendiente de respuesta...</div>'}
-        </div>`;
-      });
-      document.getElementById("listaMensajesSop").innerHTML = html || "<p style='text-align:center;'>No hay mensajes.</p>";
-    });
-  }
-
-  async function enviarMensajeSoporte() {
-    const p = pads.get('sigSoporte');
-    if(!p?.hasData) return alert("Firme el mensaje.");
-
-    await db.collection("comunicacionPadres").add({
-      documentoEstudiante: estSop.doc,
-      nombreEstudiante: estSop.nombre,
-      asunto: document.getElementById("msg_asunto").value,
-      mensaje: document.getElementById("msg_texto").value,
-      fechaMsg: document.getElementById("msg_fecha").value,
-      timestamp: new Date().toISOString()
-    });
-
-    document.getElementById("modalSoporte").style.display="none";
-    document.getElementById("successMsg").style.display="flex";
-    irAMenuSop();
-  }
-
-  function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
-
-  // ==========================
-  //  PIZARRA ESCOLAR (ALERTA + AGENDA)
-  // ==========================
-  function abrirAlertaAcademica() {
-    const saved = localStorage.getItem("padre_doc");
-    if (saved) {
-      document.getElementById("docAlertaInput").value = saved;
-      document.getElementById("chkRemAlerta").checked = true;
-    } else {
-      document.getElementById("docAlertaInput").value = "";
-      document.getElementById("chkRemAlerta").checked = true; 
-    }
-    document.getElementById("modalLoginAlerta").style.display = "flex";
-  }
-
-  function cerrarLoginAlerta() {
-    document.getElementById("modalLoginAlerta").style.display = "none";
-  }
-
+  // PIZARRA (RESTORED INTERNAL LOGIC & MESSAGES)
   function procesarLoginAlerta() {
-    const docInput = document.getElementById("docAlertaInput").value.trim();
-    if (!docInput) return alert("Ingrese el documento.");
-
-    const est = estudiantesValidos.find(e => e.doc === docInput);
-    if (!est) return alert("Documento no encontrado.");
-
-    if (!est.grado) {
-      alert("Error: Este estudiante no tiene un grado asignado. Contacte al docente.");
-      return;
-    }
-    gradoEstudianteActual = est.grado;
-
-    // GUARDADO / BORRADO AL CONTINUAR
-    if (document.getElementById("chkRemAlerta").checked) {
-      localStorage.setItem("padre_doc", docInput);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    docAlertaActual = docInput;
-    cerrarLoginAlerta();
-    iniciarCargaAlerta();
+    const di=document.getElementById("docAlertaInput").value.trim(); const est=estudiantesValidos.find(e=>e.doc===di);
+    if(!est) return alert("Documento no encontrado."); docAlertaActual=di; gradoEstudianteActual=est.grado;
+    if(document.getElementById("chkRemAlerta").checked) localStorage.setItem("padre_doc", di);
+    document.getElementById("loginAlertaFlow").style.display="none"; document.getElementById("contentAlertaFlow").style.display="block"; iniciarCargaAlerta();
   }
-
-  async function iniciarCargaAlerta() {
-    switchTabAlerta('notas'); 
-    document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre;
-    await cargarPeriodoNotasActual();
-    cargarNotasBajasPeriodo(docAlertaActual);
-    cargarAgendaEscolar(gradoEstudianteActual); 
-    document.getElementById("modalAlertaAcad").style.display = "flex";
-  }
-
-  async function cargarPeriodoNotasActual() {
-    try {
-      const snap = await db.collection("configuracionGlobal").doc("notas").get();
-      periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1;
-    } catch(e) {
-      periodoNotasActual = 1;
-    }
-  }
-
+  async function iniciarCargaAlerta() { document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; await cargarPeriodoNotasActual(); cargarNotasBajasPeriodo(docAlertaActual); cargarAgendaEscolar(gradoEstudianteActual); }
+  async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
+  
   async function cargarNotasBajasPeriodo(docEst) {
     document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`;
-    document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#64748b;font-weight:800;padding:18px;">Cargando...</div>`;
-
-    try {
-      const snap = await db.collection("notasAcademicas")
-        .where("documentoEstudiante", "==", docEst)
-        .where("periodo", "==", periodoNotasActual)
-        .get();
-
-      let items = [];
-      snap.forEach(d => {
-        const r = d.data() || {};
-        let n = r.nota;
-        if (typeof n === "string") n = parseFloat(n.replace(",", "."));
-        if (typeof n !== "number" || isNaN(n)) return;
-        if (n < 3) items.push({ area: (r.area || "").toUpperCase(), actividad: (r.actividad || r.nombreActividad || "Actividad"), nota: n, observacion: (r.observacion || r.obs || "").trim() });
-      });
-
-      if (items.length === 0) {
-        document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#0f172a;font-weight:900;padding:14px;">✅ No hay notas en desempeño bajo en este periodo.</div>`;
-        return;
-      }
-
-      items.sort((a,b) => (a.area+a.actividad).localeCompare(b.area+b.actividad));
-      document.getElementById("aaLista").innerHTML = items.map(it => `
-        <div class="aa-item">
-          <div class="aa-top">
-            <div style="min-width:0;"><div class="aa-title">${it.actividad}</div><div class="aa-meta">${it.area}</div></div>
-            <div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div>
-          </div>
-          <div class="aa-obs-label">Observación</div>
-          <div class="aa-obs">${it.observacion ? it.observacion : "Sin observación registrada."}</div>
-        </div>`).join("");
-
-    } catch (err) {
-      document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#b71c1c;font-weight:900;padding:14px;">Error cargando notas.</div>`;
+    const div = document.getElementById("aaLista"); div.innerHTML = "Cargando...";
+    const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get();
+    let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); });
+    if (items.length === 0) { 
+        div.innerHTML = `<div style="text-align:center;color:#0f172a;font-weight:900;padding:14px;">✅ No hay notas en desempeño bajo en este periodo.</div>`; 
+        return; 
     }
-  }
-
-  function getAreaStyle(areaName) {
-    const a = (areaName || '').toUpperCase();
-    let style = { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' };
-    if(a.includes('MATEMATICAS')) style = { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' };
-    else if(a.includes('ESPAÑOL') || a.includes('LENGUAJE')) style = { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' };
-    else if(a.includes('NATURALES')) style = { border: '#059669', badge: '#d1fae5', text: '#047857' };
-    else if(a.includes('SOCIALES')) style = { border: '#d97706', badge: '#fef3c7', text: '#b45309' };
-    else if(a.includes('INGLES')) style = { border: '#7c3aed', badge: '#ede9fe', text: '#6d28d9' };
-    return style;
+    div.innerHTML = items.map(it => `<div class="aa-item"><div class="aa-top"><div><div class="aa-title">${it.actividad}</div><div class="aa-meta">${it.area}</div></div><div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="aa-obs-label" style="color:#1b5e20; font-weight:900; font-size:11px; margin-top:10px;">OBSERVACIÓN:</div><div class="aa-obs">${it.observacion || "Sin registro"}</div></div>`).join("");
   }
 
   async function cargarAgendaEscolar(grado) {
-    const div = document.getElementById("aaAgendaLista");
-    div.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">Cargando tareas de ${grado}...</div>`;
-
-    try {
-      const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).limit(20).get();
-      if (snap.empty) { div.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">No hay tareas pendientes.</div>`; cacheTareasAgenda = []; return; }
-
-      const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
-      const respuestasMap = {};
-      msgsSnap.forEach(doc => { const m = doc.data(); respuestasMap[m.taskId] = { pregunta: m.pregunta, respuesta: m.respuesta }; });
-
-      let tareas = [];
-      snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-      const tareasFiltradas = tareas.filter(t => !t.targetStudent || t.targetStudent === docAlertaActual);
-      tareasFiltradas.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      cacheTareasAgenda = tareasFiltradas;
-
-      let html = "";
-      tareasFiltradas.forEach(t => {
-        const infoMsg = respuestasMap[t.id];
-        const colors = getAreaStyle(t.area);
-        const videoEmbed = getYouTubeEmbedUrl(t.videoLink);
-        
-        const videoHtml = videoEmbed ? `<div style="margin-top:12px; border-radius:12px; overflow:hidden; aspect-ratio: 16/9; border: 1px solid #ddd; background:#000;"><iframe width="100%" height="100%" src="${videoEmbed}" frameborder="0" allowfullscreen></iframe></div>` : '';
-        const driveHtml = t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="margin-top:10px; background:#0284c7; box-shadow: 0 4px 0 #01579b; font-size:12px; padding:12px;">📂 Descargar Recurso / Guía (Drive)</button></a>` : '';
-
-        let btnHtml = infoMsg ? (infoMsg.respuesta ? `<span style="font-size:11px; color:#059669; font-weight:bold;">✅ Resuelto</span>` : `<span style="font-size:11px; color:#f59e0b; font-weight:bold;">⏳ Esperando...</span>`) : `<button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Duda</button>`;
-        let replyHtml = (infoMsg && infoMsg.respuesta) ? `<div class="reply-box"><span class="reply-label">Respuesta del Profe:</span>${infoMsg.respuesta}</div>` : '';
-
-        html += `<div class="agenda-card" style="border-left-color: ${colors.border};">
-            <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
-            <div class="agenda-date-container"><span class="agenda-date-label">📅 FECHA DE ENTREGA:</span><span class="agenda-date-value">${formatearFecha(t.date)}</span></div>
-            <div class="agenda-title">${t.title}</div><div class="agenda-desc">${t.description || ''}</div>
-            ${videoHtml}${driveHtml}${replyHtml}
-            <div style="text-align:right; margin-top:12px;">${btnHtml}</div>
-          </div>`;
-      });
-      div.innerHTML = html;
-    } catch (e) { div.innerHTML = `<div style="text-align:center; color:red; padding:10px;">Error de conexión.</div>`; }
+    const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda...";
+    const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get();
+    const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
+    const resMap = {}; msgsSnap.forEach(doc => { const m = doc.data(); resMap[m.taskId] = m; });
+    let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
+    const filtered = tareas.filter(t => !t.targetStudent || t.targetStudent === docAlertaActual).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    cacheTareasAgenda = filtered;
+    if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; }
+    div.innerHTML = filtered.map(t => {
+      const info = resMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink);
+      return `<div class="agenda-card" style="border-left-color: ${colors.border};">
+        <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
+        <div class="agenda-date-container"><span class="agenda-date-label">📅 FECHA DE ENTREGA:</span><span class="agenda-date-value">${formatearFecha(t.date)}</span></div>
+        <div class="agenda-title">${t.title}</div><div class="agenda-desc">${t.description || ''}</div>
+        ${videoUrl ? `<div style="margin-top:12px; border-radius:12px; overflow:hidden; aspect-ratio: 16/9; border: 1px solid #ddd; background:#000;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
+        ${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="margin-top:10px; background:#0284c7; box-shadow: 0 4px 0 #01579b; font-size:12px; padding:12px;">📂 Descargar Recurso / Guía (Drive)</button></a>` : ''}
+        ${info && info.respuesta ? `<div class="reply-box"><span class="reply-label">Respuesta del Profe:</span>${info.respuesta}</div>` : ''}
+        <div style="text-align:right; margin-top:12px;">${info ? '<span style="color:#059669; font-weight:bold; font-size:11px;">✅ Resuelto</span>' : `<button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Duda</button>`}</div>
+      </div>`;
+    }).join("");
   }
 
   function descargarAgendaPDF() {
-    if(!cacheTareasAgenda || cacheTareasAgenda.length === 0) return alert("No hay tareas.");
-    const doc = new window.jsPDF();
-    const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-    doc.setFontSize(14); doc.setTextColor(27, 94, 32); doc.text("INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Santa Juana", 105, 15, { align: "center" });
-    const bodyData = cacheTareasAgenda.map(t => [t.area || "General", t.title + "\n" + (t.description || ""), formatearFecha(t.date)]);
-    doc.autoTable({ startY: 35, head: [['ASIGNATURA', 'ACTIVIDAD', 'ENTREGA']], body: bodyData, theme: 'grid', headStyles: { fillColor: [27, 94, 32] } });
-    doc.save(`Agenda_${est ? est.nombre : 'Estudiante'}.pdf`);
+    const doc = new window.jsPDF(); const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
+    doc.text("AGENDA ESCOLAR - " + (est ? est.nombre : ""), 10, 15);
+    const body = cacheTareasAgenda.map(t => [t.area || "Gral", t.title, formatearFecha(t.date)]);
+    doc.autoTable({ startY: 25, head: [['ÁREA', 'ACTIVIDAD', 'ENTREGA']], body, headStyles:{fillColor:[27,94,32]} });
+    doc.save(`Agenda_${docAlertaActual}.pdf`);
   }
 
-  function prepararPregunta(taskId, taskTitle) {
-    currentTaskId = taskId; currentTaskTitle = taskTitle;
-    document.getElementById("tituloTareaPregunta").innerText = taskTitle;
-    document.getElementById("textoPregunta").value = "";
-    document.getElementById("modalPreguntaTarea").style.display = "flex";
-  }
-
+  function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "block"; }
   async function enviarPregunta() {
-    const texto = document.getElementById("textoPregunta").value.trim();
-    if (!texto) return alert("Escriba su pregunta.");
+    const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda.");
     const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-    try {
-      await db.collection("mensajesAgenda").add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: est ? est.nombre : "Desconocido", pregunta: texto, timestamp: new Date().toISOString(), read: false });
-      alert("✅ Pregunta enviada.");
-      document.getElementById("modalPreguntaTarea").style.display = "none";
-      cargarAgendaEscolar(gradoEstudianteActual);
-    } catch (e) { alert("Error."); }
+    await db.collection("mensajesAgenda").add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: est.nombre, pregunta: txt, timestamp: new Date().toISOString(), read: false });
+    alert("Duda enviada."); document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual);
   }
 
-  function cerrarModalAlertaAcad() { document.getElementById("modalAlertaAcad").style.display = "none"; if(document.getElementById("tab-notas").classList.contains("active")) document.getElementById("overlayAcad").style.display = "flex"; }
-  function cerrarMensajeAlerta() { document.getElementById("overlayAcad").style.display = "none"; }
   function switchTabAlerta(tab) {
     document.getElementById("view-aa-notas").className = tab === 'notas' ? 'active' : '';
     document.getElementById("view-aa-agenda").className = tab === 'agenda' ? 'active' : '';
@@ -1126,22 +575,27 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     document.getElementById("tab-agenda").className = tab === 'agenda' ? 'aa-tab-btn active' : 'aa-tab-btn';
   }
 
-  function initPad(id){
-    const c=document.getElementById(id); if(!c) return;
-    const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1;
-    c.width=c.offsetWidth*r; c.height=150*r; ctx.setTransform(r,0,0,r,0,0);
-    ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false;
-    const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; };
-    c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);});
-    c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});});
-    window.addEventListener("mouseup",()=>d=false);
-    c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);});
-    c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});});
-    c.addEventListener("touchend",()=>d=false);
-    pads.set(id,{hasData:false,c});
+  // SOPORTE
+  function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
+  function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
+  function autenticarSoporte() { const ds=document.getElementById("docSoporte").value.trim(); const e=estudiantesValidos.find(x=>x.doc===ds); if(e){ estSop=e; document.getElementById("sop_auth").style.display="none"; document.getElementById("sop_menu").style.display="block"; } else alert("No encontrado."); }
+  function irAFormSop() { document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_form").style.display="block"; initPad('sigSoporte'); }
+  function irAMenuSop() { document.getElementById("sop_form").style.display="none"; document.getElementById("sop_history").style.display="none"; document.getElementById("sop_menu").style.display="block"; }
+  function irAHistorialSop() { 
+    document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_history").style.display="block"; 
+    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estSop.doc).onSnapshot(snap => {
+      let h = ""; snap.forEach(d => { const m = d.data(); h += `<div style="background:#f1f1f1; padding:12px; border-radius:10px; margin-bottom:10px;"><b>${m.asunto}</b><br>${m.mensaje}</div>`; });
+      document.getElementById("listaMensajesSop").innerHTML = h || "Sin mensajes.";
+    });
   }
+  async function enviarMensajeSoporte() { const p=pads.get('sigSoporte'); if(!p?.hasData) return alert("Firme el mensaje."); await db.collection("comunicacionPadres").add({ documentoEstudiante: estSop.doc, nombreEstudiante: estSop.nombre, asunto: document.getElementById("msg_asunto").value, mensaje: document.getElementById("msg_texto").value, timestamp: new Date().toISOString() }); document.getElementById("modalSoporte").style.display="none"; document.getElementById("successMsg").style.display="flex"; }
+  function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
+  function cerrarMensajeAlerta() { document.getElementById("overlayAcad").style.display = "none"; }
 
+  // FIRMAS
+  function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=150*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
 </script>
 </body>
 </html>
+
