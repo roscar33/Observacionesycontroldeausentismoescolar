@@ -76,7 +76,7 @@
   .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
   .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
 
-  /* ASISTENCIA (ESTILOS ORIGINALES) */
+  /* ASISTENCIA */
   .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
   .att-box {
     flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px;
@@ -85,7 +85,7 @@
   }
   .att-box:active { transform: scale(0.95); }
 
-  /* OBSERVACIONES (TARJETAS RESTAURADAS) */
+  /* OBSERVACIONES */
   .card {
     margin-top: 15px; border-radius: 16px; overflow: hidden;
     border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -129,7 +129,7 @@
   #view-aa-notas.active, #view-aa-agenda.active { display: block; animation: fadeIn 0.3s; }
   @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
-  /* AGENDA UI (RESTORED BUTTONS) */
+  /* AGENDA UI */
   .btn-download-pdf {
     width: 100%; background: #ef4444; color: white; border: none; padding: 12px;
     border-radius: 12px; font-weight: 900; font-size: 13px; margin-bottom: 15px;
@@ -217,7 +217,7 @@
     font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   }
 
-  /* FOOTER (RESTORED) */
+  /* FOOTER */
   .footer-container {
     margin-top: 40px; padding: 40px 20px;
     display: flex; justify-content: center; align-items: center;
@@ -242,7 +242,7 @@
     font-family: system-ui, sans-serif; margin-top: 5px;
   }
 
-  /* MODALES / OVERLAYS */
+  /* MODALES */
   #modalSoporte, #modalFechas, #modalPreguntaTarea { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
   #modalSoporte { background: #fff; overflow-y: auto; }
   #modalFechas { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
@@ -507,7 +507,7 @@
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  // PIZARRA (RESTORED INTERNAL LOGIC & MESSAGES)
+  // PIZARRA
   function procesarLoginAlerta() {
     const di=document.getElementById("docAlertaInput").value.trim(); const est=estudiantesValidos.find(e=>e.doc===di);
     if(!est) return alert("Documento no encontrado."); docAlertaActual=di; gradoEstudianteActual=est.grado;
@@ -529,6 +529,7 @@
     div.innerHTML = items.map(it => `<div class="aa-item"><div class="aa-top"><div><div class="aa-title">${it.actividad}</div><div class="aa-meta">${it.area}</div></div><div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="aa-obs-label" style="color:#1b5e20; font-weight:900; font-size:11px; margin-top:10px;">OBSERVACIÓN:</div><div class="aa-obs">${it.observacion || "Sin registro"}</div></div>`).join("");
   }
 
+  // --- COMPONENTE DE AGENDA ACTUALIZADO ---
   async function cargarAgendaEscolar(grado) {
     const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda...";
     const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get();
@@ -544,8 +545,21 @@
         <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
         <div class="agenda-date-container"><span class="agenda-date-label">📅 FECHA DE ENTREGA:</span><span class="agenda-date-value">${formatearFecha(t.date)}</span></div>
         <div class="agenda-title">${t.title}</div><div class="agenda-desc">${t.description || ''}</div>
+        
         ${videoUrl ? `<div style="margin-top:12px; border-radius:12px; overflow:hidden; aspect-ratio: 16/9; border: 1px solid #ddd; background:#000;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
-        ${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="margin-top:10px; background:#0284c7; box-shadow: 0 4px 0 #01579b; font-size:12px; padding:12px;">📂 Descargar Recurso / Guía (Drive)</button></a>` : ''}
+        
+        <!-- BOTÓN DE DESCARGA DE MATERIAL DRIVE -->
+        ${t.pdfLink ? `
+          <div style="margin-top:15px; background: #f0fdf4; border: 1px dashed #22c55e; padding: 12px; border-radius: 12px;">
+            <p style="margin:0 0 8px 0; font-size:10px; font-weight:900; color:#15803d; text-transform:uppercase;">Recurso de apoyo disponible:</p>
+            <a href="${t.pdfLink}" target="_blank" style="text-decoration:none;">
+              <button class="btn" style="margin-top:0; background:#1b5e20; box-shadow: 0 4px 0 #0d3b10; font-size:12px; padding:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                📂 DESCARGAR MATERIAL (PDF)
+              </button>
+            </a>
+          </div>
+        ` : ''}
+
         ${info && info.respuesta ? `<div class="reply-box"><span class="reply-label">Respuesta del Profe:</span>${info.respuesta}</div>` : ''}
         <div style="text-align:right; margin-top:12px;">${info ? '<span style="color:#059669; font-weight:bold; font-size:11px;">✅ Resuelto</span>' : `<button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Duda</button>`}</div>
       </div>`;
