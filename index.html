@@ -1,251 +1,201 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
-<title>Seguimiento Escolares · Primaria 2026</title>
+  <meta charset="UTF-8" />
+  <title>Panel Administrativo Docente · Primaria 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <!-- Scripts para generación de PDF y Tablas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-<style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 140px; user-select: none; }
+  <style>
+    :root {
+      --primary: #1b5e20; --primary-light: #2e7d32; --accent: #0288d1; --tools-color: #f57c00; --corr-color: #6a1b9a;
+      --bg-body: #c8e6c9; --text-main: #0f172a; --card-bg: #ffffff; --radius-xl: 30px; --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-body); min-height: 100vh; padding: 15px; color: var(--text-main); display: flex; justify-content: center; }
+    .app-shell { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
 
-  /* CABECERA */
-  .header {
-    background: #1b5e20;
-    color: #fff;
-    padding: 20px 16px 35px;
-    border-radius: 0 0 30px 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-align: left;
-  }
-  .header img {
-    width: 70px;
-    height: auto;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-    flex-shrink: 0;
-  }
-  .header-text { display: flex; flex-direction: column; gap: 2px; }
-  .header h2 { margin: 0; font-size: 13px; line-height: 1.2; font-weight: 800; text-transform: uppercase; }
-  .header h4 { margin: 0; font-weight: 500; color: #a5d6a7; font-size: 11px; margin-top: 2px; }
-  .header p { margin: 0; font-size: 11px; opacity: 0.9; font-style: italic; margin-top: 2px; color: #fff; }
+    /* Barra Superior */
+    .top-bar { display: flex; align-items: center; padding: 12px 20px; background: #ffffff; border-radius: 50px; box-shadow: var(--shadow); gap: 12px; }
+    .brand-logo { width: 45px; height: 45px; border: 1px solid #eee; border-radius: 50%; padding: 2px; }
+    .brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .brand-title { font-size: 14px; font-weight: 800; color: var(--primary-light); line-height: 1.1; }
 
-  /* MENÚ */
-  .menu {
-    display: flex; justify-content: space-around; gap: 10px;
-    background: #2e7d32; padding: 8px; margin: -25px auto 20px;
-    width: 92%; border-radius: 999px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    position: relative; z-index: 10;
-  }
-  .menu button {
-    flex: 1; border: none; padding: 12px; border-radius: 999px;
-    font-weight: 800; background: rgba(255,255,255,0.1);
-    color: #fff; cursor: pointer; font-size: 13px; transition: 0.3s;
-  }
-  .menu button.active { background: #fff; color: #1b5e20; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    /* Navegación */
+    .nav-tabs { display: flex; background: #fff; padding: 5px; border-radius: 50px; box-shadow: var(--shadow); gap: 5px; overflow-x: auto; }
+    .nav-btn { flex: 1; border: none; background: transparent; padding: 12px 15px; border-radius: 40px; font-weight: 700; color: #666; cursor: pointer; font-size: 11px; text-align: center; white-space: nowrap; }
+    .nav-btn.active-asis { background: var(--accent); color: white; }
+    .nav-btn.active-obs { background: var(--primary); color: white; }
+    .nav-btn.active-herramientas { background: var(--tools-color); color: white; }
+    .nav-btn.active-corr { background: var(--corr-color); color: white; }
 
-  /* CONTENEDOR GENERAL */
-  .container {
-    background: #fff; width: 92%; margin: 10px auto;
-    padding: 20px 16px; border-radius: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  }
+    .card { background: var(--card-bg); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow); border: 1px solid white; position: relative; }
+    .card-title { font-size: 20px; font-weight: 800; color: #0288d1; margin-bottom: 5px; }
 
-  /* INPUTS Y BOTONES */
-  input, textarea, select {
-    width: 100%; padding: 14px; margin-bottom: 15px;
-    border-radius: 12px; border: 2px solid #ddd;
-    font-size: 16px; background: #f9f9f9; outline: none;
-  }
-  .remember-box { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 14px; color: #555; }
-  .remember-box input { width: auto; margin: 0; }
+    /* ASISTENCIA (Botones Horizontales + Documento Pequeño) */
+    .attendance-list { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; }
+    .student-card { background: #f8fafc; border-radius: 20px; padding: 15px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+    .stu-info { display: flex; flex-direction: column; gap: 2px; }
+    .stu-name { font-weight: 800; font-size: 13px; color: #1e293b; text-transform: uppercase; line-height: 1.2; max-width: 170px; }
+    .stu-doc { font-size: 10px; color: #64748b; font-weight: 600; display: block; } /* NUEVO ESTILO DOCUMENTO */
+    .stu-faltas { background: #fee2e2; color: #dc2626; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 10px; width: fit-content; margin-top: 4px; }
+    .stu-btns { display: flex; gap: 8px; }
+    .att-btn { width: 36px; height: 36px; border: 1.5px solid #cbd5e1; background: #fff; border-radius: 10px; font-weight: 800; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    .att-btn.active-p { background: #dcfce7; color: #166534; border-color: #86efac; }
+    .att-btn.active-e { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+    .att-btn.active-i { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 
-  .btn {
-    width: 100%; padding: 15px; background: #1b5e20; color: #fff;
-    font-weight: 800; border: none; border-radius: 14px; cursor: pointer;
-    font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px;
-  }
-  .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
-  .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
+    /* Botones Acción */
+    .btn-action { width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 15px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-blue { background: #0288d1; color: white; box-shadow: 0 4px 0 #01579b; margin-bottom: 20px; }
+    .btn-green { background: #1b5e20; color: white; border-radius: 50px; margin-top: 10px; }
+    .btn-slate { background: #455a64; color: white; border-radius: 50px; margin-top: 15px; }
 
-  /* ASISTENCIA */
-  .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
-  .att-box {
-    flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px;
-    color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    cursor: pointer; transition: transform 0.1s;
-  }
-  .att-box:active { transform: scale(0.95); }
+    /* Controles */
+    .report-box { background: #f0f9ff; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #bae6fd; margin-top: 15px; }
+    .btn-period-green { background: #2e7d32; color: white; padding: 12px; border-radius: 50px; border: none; font-weight: 800; font-size: 12px; cursor: pointer; width: 100%; }
+    .cycle-box { background: #fff3e0; padding: 20px; border-radius: 25px; border: 1px solid #ffe0b2; margin-top: 20px; }
+    .btn-cycle-orange { background: #f57c00; color: white; width: 100%; padding: 12px; border-radius: 50px; border: none; font-weight: 800; font-size: 11px; margin-bottom: 10px; cursor: pointer; text-transform: uppercase; }
+    .btn-cycle-green { background: #43a047; color: white; width: 100%; padding: 12px; border-radius: 50px; border: none; font-weight: 800; font-size: 11px; cursor: pointer; text-transform: uppercase; }
 
-  /* OBSERVACIONES (TARJETAS) */
-  .card {
-    margin-top: 15px; border-radius: 16px; overflow: hidden;
-    border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-  .card .top {
-    padding: 10px 12px; font-weight: 900; color: #fff;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .card .body { padding: 15px; font-size: 14px; color: #333; line-height: 1.5; }
-  .obs-label {
-    font-weight: 800; display: block; margin-top: 12px;
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .obs-content {
-    background: #fcfcfc; padding: 10px; border-radius: 8px;
-    border-left: 4px solid #ccc; margin-bottom: 5px; font-size: 13px;
-  }
+    /* Excusas Visual */
+    .excusa-card { background: #fff; border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; border-left: 5px solid #0288d1; }
+    .btn-pdf-carta { background: #f1f5f9; border: 1.5px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; color: #334155; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .btn-delete-exc { background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
 
-  /* FIRMAS */
-  .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
-  canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
+    /* Herramientas Naranjas */
+    .tools-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+    .btn-tool-orange { background: #f57c00; color: white; padding: 18px; border-radius: 20px; font-weight: 900; text-decoration: none; text-align: center; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 4px 0 #b35900; text-transform: uppercase; transition: all 0.2s ease; }
+    .btn-tool-orange:active { transform: translateY(2px); box-shadow: 0 2px 0 #b35900; }
 
-  /* MODALES Y OVERLAYS */
-  #modalSoporte, #modalFechas { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
-  #modalSoporte { background: #fff; overflow-y: auto; }
-  #modalFechas { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
+    /* Observaciones */
+    .obs-item { background: #fff; padding: 15px; border-radius: 18px; border-left: 5px solid #1b5e20; margin-bottom: 12px; font-size: 13px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .obs-sigs-preview { display: flex; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #eee; overflow-x: auto; }
+    .sig-thumb { text-align: center; flex: 1; min-width: 60px; }
+    .sig-thumb span { font-size: 8px; font-weight: 800; display: block; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+    .sig-thumb img { max-height: 35px; border: 1px solid #f0f0f0; background: #fff; max-width: 100%; object-fit: contain; }
+    .obs-controls { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px; }
+    .btn-edit { background: #e3f2fd; color: #1976d2; padding: 5px 10px; border-radius: 5px; border: none; font-size: 10px; font-weight: 800; cursor: pointer; }
+    .btn-delete { background: #ffebee; color: #d32f2f; padding: 5px 10px; border-radius: 5px; border: none; font-size: 10px; font-weight: 800; cursor: pointer; }
 
-  .modal-header {
-    background: #263238; color: #fff; padding: 20px; text-align: center;
-    position: sticky; top: 0; z-index: 10; font-weight: bold; font-size: 16px;
-  }
-  .modal-header .close { position: absolute; left: 15px; top: 18px; font-size: 24px; background: none; border: none; color: #fff; }
+    .signature-container { background: #fff; border: 2px dashed #b0bec5; border-radius: 15px; overflow: hidden; margin: 10px 0; }
+    canvas { width: 100%; height: 140px; display: block; touch-action: none; }
+    input, textarea, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; background: #fafafa; font-size: 14px; margin-bottom: 8px; }
+    .hidden-section { display: none; margin-top: 15px; }
+    .msg-card { background: #fff; border-radius: 18px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; border-left: 5px solid var(--corr-color); }
+    .btn-delete-msg { background: #fee2e2; color: #d32f2f; border: none; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer; margin-left: 8px; }
+  </style>
+</head>
 
-  .success-overlay {
-    display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 3000; color:white; text-align:center; padding: 40px 24px;
-    justify-content:center; align-items:center; flex-direction:column;
-    backdrop-filter: blur(8px);
-  }
-  .alert-box-ui {
-    background: rgba(255,255,255,0.15); padding: 30px 20px; border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.3); max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  }
-  .alert-box-ui h2 { font-size: 24px; margin-bottom: 15px; font-weight: 900; letter-spacing: 1px; }
-  .alert-box-ui p { font-size: 14px; line-height: 1.6; margin-bottom: 22px; font-weight: 500; white-space: pre-line; }
-  .btn-entendido {
-    background: white; color: #1b5e20; width: 220px; padding: 15px; border-radius: 50px;
-    font-weight: 900; border: none; cursor: pointer; text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
+<body>
+<div class="app-shell">
+  <header class="top-bar">
+    <div class="brand-group">
+      <div class="brand-logo"><img src="escudo.png" alt="Escudo"></div>
+      <div class="brand-text">
+        <div class="brand-title">Panel Administrativo Docente</div>
+        <div style="font-size: 10px; opacity: 0.7; font-weight: 600;">Primaria 2026 · Santa Juana</div>
+      </div>
+    </div>
+  </header>
 
-  /* LISTADO FECHAS */
-  .modal-fechas-box { background: white; width: 100%; max-width: 320px; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-  .modal-fechas-header { background: #1b5e20; padding: 15px; text-align: center; color: white; font-weight: 900; font-size: 16px; }
-  .modal-fechas-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
-  .modal-fechas-list li { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; color: #333; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
-  .btn-close-fechas { background: #546e7a; color: white; padding: 10px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; margin: 15px auto; display: block; }
+  <nav class="nav-tabs">
+    <button id="btnTabAsis" class="nav-btn active-asis" onclick="switchTab('asis')">Asistencia</button>
+    <button id="btnTabObs" class="nav-btn" onclick="switchTab('obs')">Observaciones</button>
+    <button id="btnTabHerramientas" class="nav-btn" onclick="switchTab('herramientas')">Herramientas</button>
+    <button id="btnTabCorr" class="nav-btn" onclick="switchTab('corr')">Correspondencia</button>
+  </nav>
 
-  /* FOOTER */
-  .footer-container {
-    margin-top: 40px; padding: 40px 20px;
-    display: flex; justify-content: center; align-items: center;
-    position: relative; overflow: visible; flex-direction: column; gap: 5px;
-  }
-  .footer-blob {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 320px; height: 140px;
-    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(200, 230, 201, 0.6) 40%, rgba(165, 214, 167, 0.3) 70%, rgba(255, 255, 255, 0) 100%);
-    filter: blur(25px); border-radius: 50%; z-index: 0; pointer-events: none;
-  }
-  .footer-text {
-    position: relative; z-index: 1; font-family: 'Great Vibes', cursive;
-    font-size: 32px; color: #1b5e20; text-align: center;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
-    letter-spacing: 1px;
-  }
-  .copyright-text {
-    position: relative; z-index: 1; font-size: 10px;
-    color: #1b5e20; opacity: 0.7; text-align: center;
-    font-family: system-ui, sans-serif; margin-top: 5px;
-  }
+  <!-- SECCIÓN ASISTENCIA -->
+  <div id="view-asis">
+    <section class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div><h2 class="card-title">Registro Diario</h2><span id="periodoActualLabel" style="font-size:11px; font-weight:bold; color:#666;">Periodo Actual: ...</span></div>
+        <input type="date" id="fechaAsistencia" style="width:auto;" onchange="window.cargarAsistenciaDelDia()">
+      </div>
+      
+      <!-- LISTADO CON DOCUMENTO PEQUEÑO -->
+      <div id="attendanceList" class="attendance-list"></div>
+      
+      <button class="btn-action btn-blue" onclick="window.guardarAsistencia()">💾 GUARDAR ASISTENCIA</button>
+      <div class="report-box">
+        <h3 style="font-size:11px; color:#0288d1; margin-bottom:10px; font-weight:900;">REPORTE MENSUAL</h3>
+        <select id="mesSeleccionadoAsis">
+          <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+          <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+          <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+          <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+        </select>
+        <button class="btn-action btn-blue" style="font-size:12px; padding:12px; margin-bottom:8px;" onclick="window.descargarReporteMensualAsis()">📊 DESCARGAR COMPILACIÓN (PDF)</button>
+        <button class="btn-period-green" onclick="window.resetearFaltasPeriodo()">🔄 INICIAR NUEVO PERIODO</button>
+      </div>
+      <p style="margin:20px 0 10px; font-weight:800; font-size:14px; color:#0288d1; border-bottom:1px dashed #ccc;">Gestión de Excusas</p>
+      <button class="btn-action btn-slate" style="margin-top:0;" onclick="window.toggleHistorial('historialExc')">📩 VER EXCUSAS RECIBIDAS</button>
+      <div id="historialExc" class="hidden-section"><input type="text" id="searchExcInput" placeholder="Buscar..." oninput="window.filtrarExcusas()"><div id="listaExcusas"></div></div>
+    </section>
+  </div>
 
-  .btn-support-trigger {
-    display: block; width: 92%; margin: 0 auto 12px;
-    padding: 15px; background: #455a64; color: #fff; font-weight: 800;
-    border: none; border-radius: 50px; font-size: 14px;
-    box-shadow: 0 4px 0 #263238; cursor: pointer;
-  }
+  <!-- SECCIÓN OBSERVACIONES -->
+  <div id="view-obs" style="display:none;">
+    <section class="card" style="border-left: 5px solid #1b5e20;">
+      <h2 class="card-title" style="color:#1b5e20;">📝 Registro de Observaciones</h2>
+      <form id="formRegistro" onsubmit="window.guardarRegistroObs(event)">
+        <input type="hidden" id="editId">
+        <select id="tipoRegistro"><option>Comportamental</option><option>Académico</option></select>
+        <input type="date" id="fecha" required>
+        <select id="selectEstudianteObs" required onchange="window.actualizarHistorialObs()"><option value="">Seleccione Estudiante...</option></select>
+        <textarea id="comportamiento" rows="3" placeholder="Descripción de la situación..."></textarea>
+        <textarea id="descargos" placeholder="Descargos del estudiante..."></textarea>
+        <textarea id="procedimiento" placeholder="Procedimiento seguido..."></textarea>
+        <div class="signature-container"><canvas id="sigStudent"></canvas></div>
+        <button type="button" style="color:red; font-size:9px; border:none; background:none; margin-bottom:10px;" onclick="limpiarPad('sigStudent')">Limpiar Firma Estudiante</button>
+        <div class="signature-container"><canvas id="sigTeacher"></canvas></div>
+        <button type="button" style="color:red; font-size:9px; border:none; background:none;" onclick="limpiarPad('sigTeacher')">Limpiar Firma Docente</button>
+        <button type="submit" class="btn-action btn-green" id="btnSubmitObs">ENVIAR REGISTRO</button>
+        <div class="cycle-box">
+          <p style="font-size:10px; font-weight:900; margin-bottom:12px; color:#e65100;">CONTROLES DE CICLO:</p>
+          <button type="button" class="btn-cycle-orange" onclick="window.resetearCicloEstudiante()">🔄 REINICIAR CICLO PARA ESTE ESTUDIANTE</button>
+          <button type="button" class="btn-cycle-green" onclick="window.descargarPDFUnificado()">📄 GENERAR PDF UNIFICADO</button>
+        </div>
+        <button type="button" class="btn-action btn-slate" style="margin-top:15px;" onclick="window.toggleHistorialObs()">📂 VER HISTORIAL COMPLETO</button>
+      </form>
+      <div id="historialObs" class="hidden-section"><div id="listaRegistros" style="margin-top:15px;"></div></div>
+    </section>
+  </div>
 
-  /* BOTÓN ALERTA (ROJO) */
-  .btn-alerta-acad {
-    display: block; width: 92%; margin: 0 auto;
-    padding: 16px; background: #b71c1c; color: #fff; font-weight: 900;
-    border: none; border-radius: 50px; font-size: 15px;
-    box-shadow: 0 5px 0 #7f1111; cursor: pointer;
-  }
-  .btn-alerta-acad:active {
-    transform: translateY(2px);
-    box-shadow: 0 3px 0 #7f1111;
-  }
+  <!-- SECCIÓN HERRAMIENTAS -->
+  <div id="view-herramientas" style="display:none;">
+    <section class="card" style="border-left: 6px solid var(--tools-color);">
+      <h2 class="card-title" style="color:var(--tools-color); display: flex; align-items: center; gap: 10px;">🧰 Herramientas</h2>
+      <div class="tools-list">
+        <a href="https://roscar33.github.io/Diariodeprocesos2026/" target="_blank" class="btn-tool-orange">📓 DIARIO DE PROCESOS</a>
+        <a href="https://roscar33.github.io/PLANILLASDENOTAS/" target="_blank" class="btn-tool-orange">📊 PLANILLA DE NOTAS</a>
+        <a href="https://roscar33.github.io/Bancodecriterios/" target="_blank" class="btn-tool-orange">📚 TEMARIOS</a>
+        <a href="https://roscar33.github.io/Horario/" target="_blank" class="btn-tool-orange">🕒 HORARIO DE CLASES</a>
+        <a href="https://roscar33.github.io/Libtodevisitas/" target="_blank" class="btn-tool-orange">📖 LIBRO DE VISITAS</a>
+        <a href="https://roscar33.github.io/Paneldocentevisitas/" target="_blank" class="btn-tool-orange">🤝 PANEL DE ASAMBLEAS</a>
+      </div>
+    </section>
+  </div>
 
-  /* MODAL LOGIN ALERTA (NUEVO) */
-  #modalLoginAlerta {
-    display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 3600;
-    background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
-  }
+  <!-- CORRESPONDENCIA -->
+  <div id="view-corr" style="display:none;">
+    <section class="card" style="border-left: 5px solid var(--corr-color);"><h2 class="card-title" style="color:var(--corr-color);">📨 Correspondencia</h2><div id="listaCorrespondencia">Cargando...</div></section>
+  </div>
+</div>
 
-  /* MODAL ALERTA ACADÉMICA (LISTADO) */
-  #modalAlertaAcad {
-    display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 3500; background: rgba(0,0,0,0.6); padding: 18px;
-    align-items: center; justify-content: center;
-  }
-  .modal-aa-box{
-    width:100%; max-width: 420px; background:#fff; border-radius: 22px; overflow:hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  }
-  .modal-aa-head{
-    background:#b71c1c; color:#fff; padding: 14px 16px; font-weight: 900;
-    display:flex; justify-content: space-between; align-items:center;
-  }
-  .modal-aa-head button{
-    background: rgba(255,255,255,0.2); border:none; color:#fff; font-size: 20px;
-    width: 36px; height: 36px; border-radius: 12px; cursor:pointer;
-  }
-  .modal-aa-body{ padding: 14px 16px; max-height: 70vh; overflow-y:auto; }
-  .aa-student{ font-weight: 900; color:#1b5e20; margin-bottom: 10px; }
-  .aa-badge{
-    display:inline-block; font-size: 11px; font-weight: 900; padding: 6px 10px; border-radius: 999px;
-    background:#fee2e2; color:#b71c1c; margin-bottom: 10px;
-  }
-  .aa-item{
-    border: 1px solid #eee; border-radius: 14px; padding: 12px; margin-bottom: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  .aa-top{ display:flex; justify-content: space-between; gap: 10px; align-items:flex-start; }
-  .aa-title{ font-weight: 900; color:#0f172a; font-size: 13px; line-height: 1.2; }
-  .aa-meta{ font-size: 11px; color:#64748b; margin-top: 3px; font-weight: 700; }
-  .aa-score{
-    min-width: 66px; text-align:center; font-weight: 900; font-size: 18px;
-    color:#b71c1c; background:#fee2e2; border-radius: 12px; padding: 6px 10px;
-    border: 1px solid #fecaca;
-  }
-  .aa-obs-label{ margin-top: 10px; font-size: 11px; font-weight: 900; color:#1b5e20; text-transform: uppercase; letter-spacing: 0.5px; }
-  .aa-obs{ margin-top: 6px; background:#f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; font-size: 13px; color:#0f172a; }
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-</style>
+  const firebaseConfig = { apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8", authDomain: "diariodeprocesos-6f78d.firebaseapp.com", projectId: "diariodeprocesos-6f78d" };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8",
-    authDomain: "diariodeprocesos-6f78d.firebaseapp.com",
-    projectId: "diariodeprocesos-6f78d"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  const estudiantesValidos = [
+  const estudiantesBase = [
     { doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN" }, { doc: "1041636979", nombre: "OSORIO MUÑOZ JERONIMO" },
     { doc: "1041636870", nombre: "GONZALEZ BETANCUR MARIA JOSE" }, { doc: "1042155380", nombre: "GUTIERREZ CHAVARRIA JOSE LEANDRO" },
     { doc: "1041636841", nombre: "VARELAS BARRIENTOS LUCIANA" }, { doc: "1041636641", nombre: "MARTINEZ MARTINEZ SEBASTIAN" },
@@ -255,680 +205,260 @@
     { doc: "1038213324", nombre: "GUZMAN CORREA DYLAN" }, { doc: "1041636021", nombre: "VARELAS BARRIENTOS MAXIMILIANO" },
     { doc: "12345678", nombre: "PEDRO PEREZ" }
   ];
-</script>
-</head>
 
-<body>
+  let localAsistenciaCompleta = []; let localExcusas = []; let periodoActualAsis = 1; let asistenciaTemp = {}; let pads = new Map();
 
-  <div class="header">
-    <img src="escudo.png" alt="Escudo">
-    <div class="header-text">
-      <h2>INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Rural Santa Juana. - Primaria.</h2>
-      <h4>Sistema Integrado de Gestión Escolar María Juana.</h4>
-      <p>Docente: Oscar Barrientos. 2026</p>
-    </div>
-  </div>
-
-  <div class="menu">
-    <button id="btnExc" class="active" onclick="switchTab('exc')">Excusas / Asistencia</button>
-    <button id="btnObs" onclick="switchTab('obs')">Observaciones</button>
-  </div>
-
-  <!-- ASISTENCIA -->
-  <div id="view-exc" class="container">
-    <div id="loginExc">
-      <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-      <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
-      <div class="remember-box">
-        <input type="checkbox" id="chkRemExc">
-        <label for="chkRemExc">Recordar documento</label>
-      </div>
-      <button class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
-    </div>
-
-    <div id="formExc" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
-      <div id="nombreExc" style="text-align:center; font-weight:900; color:#1b5e20; margin-bottom:5px;"></div>
-      <div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin-bottom:15px; border-radius:4px;"></div>
-
-      <div class="att-summary">
-        <div class="att-box" style="background:#ef4444;" onclick="mostrarListadoFechas('I')">
-          <span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS
-        </div>
-        <div class="att-box" style="background:#f97316;" onclick="mostrarListadoFechas('E')">
-          <span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS
-        </div>
-      </div>
-
-      <h3 style="margin-bottom:10px; font-size:16px;">Enviar Justificación</h3>
-      <input id="fechaExc" type="date">
-      <select id="motivoExc">
-        <option value="">Seleccione Motivo...</option>
-        <option>Enfermedad</option>
-        <option>Cita médica</option>
-        <option>Calamidad Doméstica</option>
-        <option>Otro</option>
-      </select>
-      <textarea id="detalleExc" placeholder="Describa el motivo detalladamente..."></textarea>
-
-      <div class="sig-wrap">
-        <p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE</p>
-        <canvas id="sigExc"></canvas>
-        <button class="btn sec" style="padding:6px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigExc')">Borrar Firma</button>
-      </div>
-
-      <button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
-    </div>
-  </div>
-
-  <!-- VISTA OBSERVACIONES -->
-  <div id="view-obs" class="container" style="display:none;">
-    <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-    <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
-    <div class="remember-box">
-      <input type="checkbox" id="chkRemObs">
-      <label for="chkRemObs">Recordar documento</label>
-    </div>
-    <button class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
-    <div id="resultadoObs" style="margin-top:20px;"></div>
-  </div>
-
-  <!-- OVERLAY SEMÁFORO OBS -->
-  <div id="overlaySem" class="success-overlay">
-    <div class="alert-box-ui">
-      <h2 id="semTitle">ADVERTENCIA</h2>
-      <p id="semText" style="font-style:normal; margin-bottom:20px;"></p>
-      <button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
-    </div>
-  </div>
-
-  <!-- OVERLAY ÉXITO ASISTENCIA -->
-  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
-    <h2>✅ ¡Envío Exitoso!</h2>
-    <p>“Recuerda que es responsabilidad del estudiante ponerse al día con las actividades correspondientes.”</p>
-    <button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
-  </div>
-
-  <!-- OVERLAY ÉXITO MENSAJE -->
-  <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
-    <h2>✅ Mensaje Enviado</h2>
-    <p>“Apreciado Padre de familia, gracias por comunicarse, procuraré responder a su solicitud lo más pronto posible.”</p>
-    <button class="btn-entendido" style="color:#0277bd;" onclick="cerrarSuccessMsg()">ENTENDIDO</button>
-  </div>
-
-  <!-- MODAL FECHAS -->
-  <div id="modalFechas">
-    <div class="modal-fechas-box">
-      <div class="modal-fechas-header" id="txtTituloModalFechas">HISTORIAL</div>
-      <ul id="containerListaFechas" class="modal-fechas-list"></ul>
-      <div class="modal-fechas-footer"><button class="btn-close-fechas" onclick="cerrarModalFechas()">CERRAR</button></div>
-    </div>
-  </div>
-
-  <!-- SOPORTE -->
-  <div id="modalSoporte">
-    <div class="modal-header">
-      <button class="close" onclick="cerrarSoporte()">✕</button>
-      Soporte
-    </div>
-    <div class="modal-body" style="padding:20px; text-align:center;">
-      <div id="sop_auth">
-        <input id="docSoporte" type="number" placeholder="Documento">
-        <button class="btn" onclick="autenticarSoporte()">INGRESAR</button>
-        <div class="remember-box" style="justify-content:center; margin-top:10px;">
-          <input type="checkbox" id="chkRemSop">
-          <label for="chkRemSop">Recordar</label>
-        </div>
-      </div>
-
-      <div id="sop_menu" style="display:none; margin-top:20px;">
-        <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank" style="text-decoration:none;">
-          <button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS DE ASAMBLEAS</button>
-        </a>
-        <a href="https://roscar33.github.io/Horario/" target="_blank" style="text-decoration:none;">
-          <button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button>
-        </a>
-        <a href="https://roscar33.github.io/Utiles2026/" target="_blank" style="text-decoration:none;">
-          <button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES 2026</button>
-        </a>
-        <button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button>
-        <button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button>
-      </div>
-
-      <div id="sop_form" style="display:none; text-align:left;">
-        <h3 style="color:#1b5e20; text-align:center; margin-bottom:15px;">Nuevo Mensaje</h3>
-        <input id="msg_fecha" type="date">
-        <input id="msg_asunto" type="text" placeholder="Asunto (Duda, Sugerencia...)">
-        <textarea id="msg_texto" placeholder="Escriba su mensaje aquí..." rows="4"></textarea>
-        <div class="sig-wrap">
-          <p style="text-align:center; font-size:11px; font-weight:bold;">FIRMA ACUDIENTE</p>
-          <canvas id="sigSoporte"></canvas>
-          <button class="btn sec" style="padding:5px; font-size:10px; margin-top:5px;" onclick="limpiarPad('sigSoporte')">Borrar</button>
-        </div>
-        <button class="btn" style="margin-top:10px;" onclick="enviarMensajeSoporte()">ENVIAR AL DOCENTE</button>
-        <button class="btn sec" style="margin-top:10px;" onclick="irAMenuSop()">VOLVER</button>
-      </div>
-
-      <div id="sop_history" style="display:none; text-align:left;">
-        <h3 style="color:#1b5e20; text-align:center;">Historial</h3>
-        <div id="listaMensajesSop" style="max-height:300px; overflow-y:auto; margin-bottom:15px;"></div>
-        <button class="btn sec" onclick="irAMenuSop()">VOLVER</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- BOTÓN SOPORTE (GRIS) -->
-  <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
-
-  <!-- BOTÓN ALERTA ACADÉMICA (ROJO) -->
-  <button class="btn-alerta-acad" onclick="abrirAlertaAcademica()">⚠️ Alerta Académica</button>
-
-  <!-- MODAL LOGIN ALERTA (NUEVO) -->
-  <div id="modalLoginAlerta" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 3600; background: rgba(0,0,0,0.6); align-items: center; justify-content: center;">
-    <div class="modal-aa-box" style="padding: 20px; max-width: 340px;">
-      <h3 style="text-align:center; color:#b71c1c; font-weight:900; font-size:18px; margin-top:0; margin-bottom:15px;">Ingreso Alerta Académica</h3>
-      
-      <p style="font-size:12px; font-weight:bold; color:#333; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-      <input id="docAlertaInput" type="number" placeholder="Digite documento..." style="margin-bottom:10px;">
-      
-      <div class="remember-box" style="margin-bottom:20px;">
-        <input type="checkbox" id="chkRemAlerta">
-        <label for="chkRemAlerta" style="font-size:13px;">Recordar documento</label>
-      </div>
-
-      <button class="btn-alerta-acad" style="width:100%; box-shadow:none;" onclick="procesarLoginAlerta()">CONSULTAR</button>
-      <button onclick="cerrarLoginAlerta()" style="background:transparent; border:none; color:#666; width:100%; margin-top:10px; font-weight:bold; font-size:12px;">CANCELAR</button>
-    </div>
-  </div>
-
-  <!-- OVERLAY MENSAJE ALERTA ACADÉMICA (Aparece DESPUÉS de ver las notas) -->
-  <div id="overlayAcad" class="success-overlay" style="background: rgba(183, 28, 28, 0.96);">
-    <div class="alert-box-ui">
-      <h2>⚠️ Alerta Académica</h2>
-      <p id="txtAcad">
-Apreciado padre de familia:
-Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa correspondiente para recuperar la evaluación o entregar el trabajo pendiente. En caso de haber reprobado una evaluación, podrá solicitar la recuperación por los canales institucionales.
-      </p>
-      <button class="btn-entendido" onclick="cerrarMensajeAlerta()">ENTENDIDO</button>
-    </div>
-  </div>
-
-  <!-- MODAL LISTADO ALERTA ACADÉMICA -->
-  <div id="modalAlertaAcad">
-    <div class="modal-aa-box">
-      <div class="modal-aa-head">
-        <span>⚠️ Desempeños Bajos (Periodo actual)</span>
-        <button onclick="cerrarModalAlertaAcad()">✕</button>
-      </div>
-      <div class="modal-aa-body">
-        <div class="aa-student" id="aaNombre"></div>
-        <div class="aa-badge" id="aaBadge"></div>
-        <div id="aaLista"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer-container">
-    <div class="footer-blob"></div>
-    <div class="footer-text">Familia y escuela caminamos juntos</div>
-    <div class="copyright-text">© 2026 Santa Juana Digital</div>
-  </div>
-
-<script>
-  let estActualDoc = "";
-  let periodoAsis = 1;
-  let estSop = null;
-  const pads = new Map();
-  let cacheFechas = { I: [], E: [] };
-
-  let docAlertaActual = "";
-  let periodoNotasActual = 1;
-
-  window.onload = function() {
-    const saved = localStorage.getItem("padre_doc");
-    if(saved) {
-      document.getElementById("docExc").value = saved;
-      document.getElementById("docObs").value = saved;
-      document.getElementById("docSoporte").value = saved;
-      document.getElementById("docAlertaInput").value = saved;
-      
-      ["chkRemExc", "chkRemObs", "chkRemSop", "chkRemAlerta"].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.checked = true;
-      });
-    }
+  window.switchTab = (t) => {
+    ['asis', 'obs', 'herramientas', 'corr'].forEach(key => {
+      const v = document.getElementById('view-' + key);
+      const b = document.getElementById('btnTab' + key.charAt(0).toUpperCase() + key.slice(1));
+      if(v) v.style.display = (key === t) ? 'block' : 'none';
+      if(b) b.className = (key === t) ? 'nav-btn active-' + t : 'nav-btn';
+    });
+    if(t==='obs') setTimeout(() => { initPad('sigStudent'); initPad('sigTeacher'); }, 300);
+    if(t==='corr') cargarCorrespondencia();
   };
 
-  function switchTab(t) {
-    document.getElementById("view-exc").style.display = t==='exc'?'block':'none';
-    document.getElementById("view-obs").style.display = t==='obs'?'block':'none';
-    document.getElementById("btnExc").className = t==='exc'?'active':'';
-    document.getElementById("btnObs").className = t==='obs'?'active':'';
-  }
-
-  // ==========================
-  //  ASISTENCIA
-  // ==========================
-  async function activarFormularioExcusa() {
-    const di = document.getElementById("docExc").value.trim();
-    const est = estudiantesValidos.find(e => e.doc === di);
-    if(!est) return alert("Documento no encontrado en la base de datos.");
-    
-    // CORRECCIÓN CHECK
-    if(document.getElementById("chkRemExc").checked) {
-      localStorage.setItem("padre_doc", di);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    estActualDoc = di;
-    document.getElementById("loginExc").style.display="none";
-    document.getElementById("formExc").style.display="block";
-    document.getElementById("nombreExc").innerText=est.nombre;
-
-    const snapC = await db.collection("configuracionGlobal").doc("asistencia").get();
-    periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
-    document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis;
-
-    consultarStats(di);
-    initPad('sigExc');
-  }
-
-  async function consultarStats(di) {
-    const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get();
-    let f=0, e=0;
-    cacheFechas.I = [];
-    cacheFechas.E = [];
-    snap.forEach(d => {
-      const reg = (d.data().detalles || []).find(x => x.doc === di);
-      if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); }
-      if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); }
-    });
-    document.getElementById("statFallas").innerText = f;
-    document.getElementById("statExcusas").innerText = e;
-  }
-
-  function mostrarListadoFechas(tipo) {
-    const arr = (tipo === 'I') ? cacheFechas.I : cacheFechas.E;
-    document.getElementById("txtTituloModalFechas").innerText = (tipo === 'I') ? "FECHAS DE FALLAS" : "FECHAS DE EXCUSAS";
-    const container = document.getElementById("containerListaFechas");
-    if(arr.length === 0) container.innerHTML = "<li style='justify-content:center; color:#999;'>No hay registros en este periodo.</li>";
-    else container.innerHTML = arr.map(f => `<li>📅 ${f}</li>`).join("");
-    document.getElementById("modalFechas").style.display = "flex";
-  }
-  function cerrarModalFechas() { document.getElementById("modalFechas").style.display = "none"; }
-
-  async function enviarExcusa() {
-    const fecha = document.getElementById("fechaExc").value;
-    const motivo = document.getElementById("motivoExc").value;
-    const detalle = document.getElementById("detalleExc").value;
-    const p = pads.get('sigExc');
-    if(!fecha || !motivo || !detalle.trim() || !p?.hasData) return alert("⚠️ Todos los campos son obligatorios (Fecha, Motivo, Detalle y Firma).");
-
-    await db.collection("excusasInasistencia").add({
-      documentoEstudiante: estActualDoc,
-      fechaInasistencia: fecha,
-      motivoTipo: motivo,
-      motivoDetalle: detalle,
-      firmaAcudiente: p.c.toDataURL(),
-      timestamp: new Date().toISOString()
-    });
-    document.getElementById("successAsis").style.display="flex";
-  }
-
-  // ==========================
-  //  OBSERVACIONES
-  // ==========================
-  async function buscarObservaciones() {
-    const docId = document.getElementById("docObs").value.trim();
-    const out = document.getElementById("resultadoObs");
-    if(!docId) return alert("Ingrese documento.");
-    if(!estudiantesValidos.find(e => e.doc === docId)) return alert("Documento no encontrado.");
-    
-    // CORRECCIÓN CHECK
-    if(document.getElementById("chkRemObs").checked) {
-      localStorage.setItem("padre_doc", docId);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    out.innerHTML = "<p style='text-align:center;'>Buscando...</p>";
-    const cSnap = await db.collection("configuracionCiclos").doc(docId).get();
-    const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1;
-
-    db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => {
-      let obsList = [];
-      snap.forEach(d => { if(d.data().ciclo == cAct) obsList.push({ id: d.id, ...d.data() }); });
-
-      obsList.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
-
-      if(obsList.length === 0) {
-        out.innerHTML = `<p style='text-align:center;'>No hay anotaciones pendientes para el ciclo #${cAct}</p>`;
-        return;
-      }
-
-      let html = `<p style="font-size:11px; font-weight:bold; color:#1b5e20; margin-bottom:10px;">CICLO ACTUAL: #${cAct}</p>`;
-
-      const cards = obsList.map((r, index) => {
-        const num = index + 1;
-        let titulo = `OBSERVACIÓN N° ${num}`;
-        let color = "#2e7d32";
-        if (num === 2) { color = "#f97316"; titulo = `OBSERVACIÓN N° ${num}`; }
-        else if (num >= 3) { color = "#d32f2f"; titulo = "CITACIÓN"; }
-
-        const firmado = !!r.firmaAcudiente;
-        return `<div class="card" style="border: 2px solid ${color};">
-          <div class="top" style="background:${color}">
-            <span>${titulo}</span>
-            <span>${firmado ? 'FIRMADO' : 'PENDIENTE'}</span>
-          </div>
-          <div class="body">
-            <div style="font-size:11px; color:#666; margin-bottom:8px;"><b>Fecha:</b> ${r.fecha}</div>
-
-            <span class="obs-label" style="color:${color}">DESCRIPCIÓN DE LOS HECHOS:</span>
-            <div class="obs-content" style="border-left-color:${color}">${r.comportamiento || "Sin descripción"}</div>
-
-            <span class="obs-label" style="color:${color}">DESCARGOS DEL ESTUDIANTE:</span>
-            <div class="obs-content" style="border-left-color:${color}">${r.descargos || "Sin descargos"}</div>
-
-            <span class="obs-label" style="color:${color}">PROCEDIMIENTO SEGUIDO:</span>
-            <div class="obs-content" style="border-left-color:${color}">${r.procedimiento || "Sin procedimiento"}</div>
-
-            ${!firmado
-              ? `<div class="sig-wrap">
-                   <canvas id="cv_${r.id}"></canvas>
-                   <button class="btn" style="margin-top:10px; background:${color};" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR RECIBIDO</button>
-                 </div>`
-              : `<div style="text-align:right;"><img src="${r.firmaAcudiente}" height="45"></div>`}
-          </div>
-        </div>`;
-      });
-
-      out.innerHTML = html + cards.reverse().join('');
-      setTimeout(() => obsList.forEach(r => {
-        if(!r.firmaAcudiente && document.getElementById('cv_'+r.id)) initPad('cv_'+r.id);
-      }), 500);
-    });
-  }
-
-  async function firmarObs(id, docId, ciclo) {
-    const p = pads.get('cv_'+id);
-    if(!p?.hasData) return alert("Firme el recuadro.");
-
-    await db.collection("registrosComportamentales").doc(id).update({
-      firmaAcudiente: p.c.toDataURL(),
-      fechaFirma: new Date().toISOString()
-    });
-
-    const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).get();
-    let n = 0;
-    snap.forEach(d => { if(d.data().ciclo == ciclo) n++; });
-    mostrarSem(n);
-  }
-
-  function mostrarSem(n) {
-    const ov = document.getElementById("overlaySem");
-    const t = document.getElementById("semTitle");
-    const x = document.getElementById("semText");
-
-    const m12 = "Apreciado padre de familia:\nLe recordamos que, si su hijo(a) acumula tres observaciones, usted, como acudiente, será citado(a) a una entrevista con el docente, con el fin de fortalecer y mejorar los procesos disciplinarios y académicos del estudiante.";
-    const m3  = "Apreciado padre de familia:\nDe acuerdo con el seguimiento realizado, su hijo(a) ha acumulado tres observaciones, por lo cual usted es citado(a) a una entrevista con el docente, con el fin de analizar la situación y establecer estrategias de mejora en los procesos disciplinarios y académicos del estudiante.";
-
-    if(n===1) { ov.style.background="rgba(27,94,32,0.98)"; t.innerText="ADVERTENCIA 1"; x.innerText=m12; }
-    else if(n===2) { ov.style.background="rgba(245,124,0,0.98)"; t.innerText="ADVERTENCIA 2"; x.innerText=m12; }
-    else if(n>=3) { ov.style.background="rgba(211,47,47,0.98)"; t.innerText="CITACIÓN"; x.innerText=m3; }
-    ov.style.display = "flex";
-  }
-
-  // ==========================
-  //  SOPORTE
-  // ==========================
-  function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
-  function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
-
-  function autenticarSoporte() {
-    const ds = document.getElementById("docSoporte").value.trim();
-    const e = estudiantesValidos.find(x => x.doc === ds);
-    if(!e) return alert("No válido.");
-    
-    // CORRECCIÓN CHECK
-    if(document.getElementById("chkRemSop").checked) {
-      localStorage.setItem("padre_doc", ds);
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    estSop = e;
-    document.getElementById("sop_auth").style.display="none";
-    document.getElementById("sop_menu").style.display="block";
-  }
-
-  function irAFormSop() {
-    document.getElementById("sop_menu").style.display = "none";
-    document.getElementById("sop_form").style.display = "block";
-    document.getElementById("msg_fecha").valueAsDate = new Date();
-    setTimeout(() => initPad('sigSoporte'), 200);
-  }
-
-  function irAMenuSop() {
-    document.getElementById("sop_form").style.display = "none";
-    document.getElementById("sop_history").style.display = "none";
-    document.getElementById("sop_menu").style.display = "block";
-  }
-
-  function irAHistorialSop() {
-    document.getElementById("sop_menu").style.display = "none";
-    document.getElementById("sop_history").style.display = "block";
-
-    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estSop.doc).onSnapshot(snap => {
-      let html = "";
-      snap.forEach(d => {
-        const m = d.data();
-        html += `<div style="background:#f8f9fa; padding:12px; border-radius:10px; border-left:4px solid #1b5e20; margin-bottom:10px; font-size:13px;">
-          <div style="font-size:11px; color:#666; margin-bottom:5px;">${m.fechaMsg}</div>
-          <div style="font-weight:bold; margin-bottom:5px;">${m.asunto}</div>
-          <div style="margin-bottom:8px;">${m.mensaje}</div>
-          ${m.respuestaDocente
-            ? `<div style="background:#e8f5e9; padding:8px; border-radius:6px; color:#2e7d32; font-weight:bold;">Respuesta: ${m.respuestaDocente}</div>`
-            : '<div style="color:#f57c00; font-size:11px;">Pendiente de respuesta...</div>'}
-        </div>`;
-      });
-      document.getElementById("listaMensajesSop").innerHTML = html || "<p style='text-align:center;'>No hay mensajes.</p>";
-    });
-  }
-
-  async function enviarMensajeSoporte() {
-    const p = pads.get('sigSoporte');
-    if(!p?.hasData) return alert("Firme el mensaje.");
-
-    await db.collection("comunicacionPadres").add({
-      documentoEstudiante: estSop.doc,
-      nombreEstudiante: estSop.nombre,
-      asunto: document.getElementById("msg_asunto").value,
-      mensaje: document.getElementById("msg_texto").value,
-      fechaMsg: document.getElementById("msg_fecha").value,
-      timestamp: new Date().toISOString()
-    });
-
-    document.getElementById("modalSoporte").style.display="none";
-    document.getElementById("successMsg").style.display="flex";
-    irAMenuSop();
-  }
-
-  function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
-
-  // ==========================
-  //  ALERTA ACADÉMICA (LÓGICA NUEVA)
-  // ==========================
-  function abrirAlertaAcademica() {
-    const saved = localStorage.getItem("padre_doc");
-    // Siempre mostramos el modal, pero si hay guardado, lo pre-llenamos y marcamos check
-    if (saved) {
-      document.getElementById("docAlertaInput").value = saved;
-      document.getElementById("chkRemAlerta").checked = true;
-    } else {
-      document.getElementById("docAlertaInput").value = "";
-      document.getElementById("chkRemAlerta").checked = false;
-    }
-    document.getElementById("modalLoginAlerta").style.display = "flex";
-  }
-
-  function cerrarLoginAlerta() {
-    document.getElementById("modalLoginAlerta").style.display = "none";
-  }
-
-  function procesarLoginAlerta() {
-    const docInput = document.getElementById("docAlertaInput").value.trim();
-    if (!docInput) return alert("Ingrese el documento.");
-
-    const est = estudiantesValidos.find(e => e.doc === docInput);
-    if (!est) return alert("Documento no encontrado en la base de datos.");
-
-    // CORRECCIÓN CHECK ALERTA
-    if (document.getElementById("chkRemAlerta").checked) {
-      localStorage.setItem("padre_doc", docInput);
-      // Sincronizar con otros inputs
-      document.getElementById("docExc").value = docInput;
-      document.getElementById("docObs").value = docInput;
-      document.getElementById("docSoporte").value = docInput;
-    } else {
-      localStorage.removeItem("padre_doc");
-    }
-
-    docAlertaActual = docInput;
-    cerrarLoginAlerta();
-    iniciarCargaAlerta();
-  }
-
-  async function iniciarCargaAlerta() {
-    await cargarPeriodoNotasActual();
-    await cargarNotasBajasPeriodo(docAlertaActual);
-  }
-
-  async function cargarPeriodoNotasActual() {
-    try {
-      const snap = await db.collection("configuracionGlobal").doc("notas").get();
-      periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1;
-    } catch(e) {
-      periodoNotasActual = 1;
-    }
-  }
-
-  async function cargarNotasBajasPeriodo(docEst) {
-    const est = estudiantesValidos.find(e => e.doc === docEst);
-    const nombre = est ? est.nombre : docEst;
-
-    document.getElementById("aaNombre").innerText = nombre;
-    document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`;
-    document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#64748b;font-weight:800;padding:18px;">Cargando...</div>`;
-
-    document.getElementById("modalAlertaAcad").style.display = "flex";
-
-    try {
-      const snap = await db.collection("notasAcademicas")
-        .where("documentoEstudiante", "==", docEst)
-        .where("periodo", "==", periodoNotasActual)
-        .get();
-
-      let items = [];
-      snap.forEach(d => {
-        const r = d.data() || {};
-        let n = r.nota;
-        if (typeof n === "string") n = parseFloat(n.replace(",", "."));
-        if (typeof n !== "number" || isNaN(n)) return;
-
-        if (n < 3) {
-          items.push({
-            area: (r.area || "").toString().toUpperCase(),
-            actividad: (r.actividad || r.nombreActividad || "Actividad").toString(),
-            nota: n,
-            observacion: (r.observacion || r.obs || "").toString().trim()
-          });
-        }
-      });
-
-      if (items.length === 0) {
-        document.getElementById("aaLista").innerHTML =
-          `<div style="text-align:center;color:#0f172a;font-weight:900;padding:14px;">
-             ✅ No hay notas en desempeño bajo en este periodo.
-           </div>`;
-        return;
-      }
-
-      items.sort((a,b) => (a.area+a.actividad).localeCompare(b.area+b.actividad));
-
-      document.getElementById("aaLista").innerHTML = items.map(it => `
-        <div class="aa-item">
-          <div class="aa-top">
-            <div style="min-width:0;">
-              <div class="aa-title">${it.actividad}</div>
-              <div class="aa-meta">${it.area}</div>
-            </div>
-            <div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div>
-          </div>
-
-          <div class="aa-obs-label">Observación</div>
-          <div class="aa-obs">${it.observacion ? it.observacion : "Sin observación registrada."}</div>
+  // --- ASISTENCIA (Render con documento pequeño) ---
+  window.renderAsistencia = () => {
+    const list = document.getElementById('attendanceList'); if(!list) return;
+    let html = '';
+    estudiantesBase.forEach(e => {
+      const s = asistenciaTemp[e.doc] || 'P';
+      let fCount = 0;
+      localAsistenciaCompleta.forEach(r => { if(r.periodo == periodoActualAsis) { const reg = r.detalles?.find(x => x.doc === e.doc); if(reg && (reg.estado==='I'||reg.estado==='E')) fCount++; } });
+      html += `<div class="student-card">
+        <div class="stu-info">
+            <span class="stu-name">${e.nombre}</span>
+            <span class="stu-doc">CC. ${e.doc}</span>
+            <span class="stu-faltas">${fCount} FALTAS</span>
         </div>
-      `).join("");
+        <div class="stu-btns">
+            <button class="att-btn ${s==='P'?'active-p':''}" onclick="setAtt('${e.doc}','P')">P</button>
+            <button class="att-btn ${s==='E'?'active-e':''}" onclick="setAtt('${e.doc}','E')">E</button>
+            <button class="att-btn ${s==='I'?'active-i':''}" onclick="setAtt('${e.doc}','I')">I</button>
+        </div>
+      </div>`;
+    });
+    list.innerHTML = html;
+  };
+  window.setAtt = (d, s) => { asistenciaTemp[d] = s; window.renderAsistencia(); };
+  window.cargarAsistenciaDelDia = async () => { const f = document.getElementById('fechaAsistencia').value; const s = await getDoc(doc(db, "controlAsistencia", f)); asistenciaTemp = (s.exists() && s.data().detalles) ? s.data().detalles.reduce((acc,d)=>({...acc,[d.doc]:d.estado}),{}) : {}; window.renderAsistencia(); };
+  window.guardarAsistencia = async () => { const f = document.getElementById('fechaAsistencia').value; if(!f) return alert("Fecha?"); const det = estudiantesBase.map(e => ({doc:e.doc, nombre:e.nombre, estado:asistenciaTemp[e.doc]||'P'})); await setDoc(doc(db, "controlAsistencia", f), { fecha:f, detalles:det, periodo: periodoActualAsis }); alert("✅ Guardado."); };
+  window.descargarReporteMensualAsis = async () => {
+    const mes = document.getElementById('mesSeleccionadoAsis').value; const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a4');
+    pdf.setFillColor(27, 94, 32); pdf.rect(0, 0, 297, 30, 'F');
+    pdf.setTextColor(255, 255, 255); pdf.setFontSize(16); pdf.text("REPORTE MENSUAL DE ASISTENCIA - 2026", 148, 15, { align: "center" });
+    const dias = localAsistenciaCompleta.filter(d => d.fecha?.startsWith(`2026-${mes}`));
+    if(dias.length===0) return alert("Sin datos.");
+    dias.sort((a,b) => a.fecha.localeCompare(b.fecha));
+    const head = [["Estudiante", ...dias.map(x => x.fecha.split("-")[2]), "P", "E", "I"]];
+    const body = [...estudiantesBase].map(est => {
+      let p=0, e=0, i=0; const row = [est.nombre];
+      dias.forEach(dia => { const st = dia.detalles?.find(x => x.doc === est.doc)?.estado || '-'; row.push(st); if (st==='P') p++; if (st==='E') e++; if (st==='I') i++; });
+      return [...row, p, e, i];
+    });
+    pdf.autoTable({ startY: 35, head, body, theme: 'grid', styles: { fontSize: 6.5 }, headStyles: { fillColor: [27, 94, 32] } }); pdf.save(`Asistencia_Mes_${mes}.pdf`);
+  };
+  window.resetearFaltasPeriodo = async () => {
+    const pass = prompt("Clave para nuevo periodo (9218):");
+    if(pass === "9218") {
+        const confirmar = confirm(`¿Iniciar Periodo #${periodoActualAsis + 1}? Se reiniciarán las faltas.`);
+        if(confirmar) {
+            periodoActualAsis++;
+            await setDoc(doc(db, "configuracionGlobal", "asistencia"), { periodoActual: periodoActualAsis });
+            document.getElementById('periodoActualLabel').innerText = `Periodo Actual: #${periodoActualAsis}`;
+            alert(`✅ Periodo #${periodoActualAsis} iniciado.`); window.renderAsistencia();
+        }
+    } else if (pass !== null) alert("❌ Clave incorrecta.");
+  };
 
-    } catch (err) {
-      document.getElementById("aaLista").innerHTML =
-        `<div style="text-align:center;color:#b71c1c;font-weight:900;padding:14px;">
-           No se pudo cargar la alerta académica.<br>
-           Revise si existe la colección <b>notasAcademicas</b> y el periodo actual.
-         </div>`;
+  // --- OBSERVACIONES (VARIABLES UNIFICADAS) ---
+  window.guardarRegistroObs = async (e) => {
+    e.preventDefault(); const dId = document.getElementById('selectEstudianteObs').value;
+    const editId = document.getElementById('editId').value;
+    const cSnap = await getDoc(doc(db, "configuracionCiclos", dId)); const cAct = cSnap.exists() ? (cSnap.data().cicloActual || 1) : 1;
+    const data = { documentoEstudiante: dId, tipo: document.getElementById('tipoRegistro').value, fecha: document.getElementById('fecha').value, comportamiento: document.getElementById('comportamiento').value, descargos: document.getElementById('descargos').value, procedimiento: document.getElementById('procedimiento').value, ciclo: cAct, timestamp: new Date().toISOString() };
+    if (pads.get('sigStudent')?.hasData) data.firmaEstudiante = pads.get('sigStudent').canvas.toDataURL();
+    if (pads.get('sigTeacher')?.hasData) data.firmaDocente = pads.get('sigTeacher').canvas.toDataURL();
+    if (editId) { await updateDoc(doc(db, "registrosComportamentales", editId), data); alert("Actualizado."); }
+    else { data.firmaAcudiente = null; await addDoc(collection(db, "registrosComportamentales"), data); alert("Guardado."); }
+    document.getElementById('formRegistro').reset(); document.getElementById('editId').value = ""; document.getElementById('btnSubmitObs').innerText = "ENVIAR REGISTRO";
+    limpiarPad('sigStudent'); limpiarPad('sigTeacher');
+    if(document.getElementById('historialObs').style.display==='block') cargarListaObs();
+  };
+
+  window.cargarListaObs = async () => {
+    const dId = document.getElementById('selectEstudianteObs').value; const cont = document.getElementById('listaRegistros'); if(!dId) return;
+    onSnapshot(collection(db, "registrosComportamentales"), (snap) => {
+        let html = ""; let list = [];
+        snap.forEach(d => { if(d.data().documentoEstudiante == dId) list.push({id: d.id, ...d.data()}); });
+        list.sort((a,b) => b.timestamp.localeCompare(a.timestamp));
+        list.forEach(r => {
+            html += `<div class="obs-item">
+                <b>${r.fecha} (Ciclo #${r.ciclo})</b><br>${r.comportamiento}
+                <div class="obs-sigs-preview">
+                    <div class="sig-thumb"><span>Estudiante</span>${r.firmaEstudiante?`<img src="${r.firmaEstudiante}">`:'-'}</div>
+                    <div class="sig-thumb"><span>Docente</span>${r.firmaDocente?`<img src="${r.firmaDocente}">`:'-'}</div>
+                    <div class="sig-thumb"><span>Padre</span>${r.firmaAcudiente?`<img src="${r.firmaAcudiente}">`:'-'}</div>
+                </div>
+                <div class="obs-controls">
+                    <button class="btn-edit" onclick="window.editarObs('${r.id}')">EDITAR</button>
+                    <button class="btn-delete" onclick="window.eliminarObs('${r.id}')">ELIMINAR</button>
+                </div>
+            </div>`;
+        });
+        cont.innerHTML = html || "Sin registros.";
+    });
+  };
+
+  window.editarObs = async (id) => { const s = await getDoc(doc(db, "registrosComportamentales", id)); if(!s.exists()) return; const d = s.data(); document.getElementById('editId').value = id; document.getElementById('tipoRegistro').value = d.tipo; document.getElementById('fecha').value = d.fecha; document.getElementById('comportamiento').value = d.comportamiento; document.getElementById('descargos').value = d.descargos; document.getElementById('procedimiento').value = d.procedimiento; document.getElementById('btnSubmitObs').innerText = "ACTUALIZAR REGISTRO"; window.scrollTo(0, 0); };
+  window.eliminarObs = async (id) => { if(confirm("¿Eliminar?")) await deleteDoc(doc(db, "registrosComportamentales", id)); };
+  window.resetearCicloEstudiante = async () => {
+    const dId = document.getElementById('selectEstudianteObs').value; if(!dId) return alert("Seleccione estudiante.");
+    const pass = prompt("Clave reinicio (9218):");
+    if(pass === "9218") {
+        const s = await getDoc(doc(db, "configuracionCiclos", dId));
+        const n = s.exists() ? (s.data().cicloActual + 1) : 2;
+        await setDoc(doc(db, "configuracionCiclos", dId), { cicloActual: n });
+        alert(`Ciclo #${n} iniciado.`); cargarListaObs();
     }
+  };
+  window.descargarPDFUnificado = async () => {
+    const dId = document.getElementById('selectEstudianteObs').value; if(!dId) return alert("Seleccione.");
+    const est = estudiantesBase.find(e => e.doc === dId);
+    const cicloSnap = await getDoc(doc(db, "configuracionCiclos", dId)); const cAct = cicloSnap.exists() ? (cicloSnap.data().cicloActual || 1) : 1;
+    try {
+        const snapshot = await getDocs(collection(db, "registrosComportamentales"));
+        let registros = []; snapshot.forEach(d => { const r = d.data(); if(r.documentoEstudiante == dId && r.ciclo == cAct) registros.push(r); });
+        if(registros.length === 0) return alert("Sin registros.");
+        registros.sort((a,b) => a.fecha.localeCompare(b.fecha));
+        const { jsPDF } = window.jspdf; const pdf = new jsPDF();
+        pdf.setFillColor(27, 94, 32); pdf.rect(0, 0, 210, 35, 'F');
+        pdf.setTextColor(255, 255, 255); pdf.setFontSize(14); pdf.setFont("helvetica", "bold");
+        pdf.text("INSTITUCIÓN EDUCATIVA DE MARÍA", 105, 15, { align: "center" });
+        pdf.setFontSize(10); pdf.text(`SEGUIMIENTO UNIFICADO - CICLO #${cAct}`, 105, 25, { align: "center" });
+        try { pdf.addImage('escudo.png', 'PNG', 15, 2, 30, 30); } catch(e){}
+        pdf.setTextColor(0,0,0); pdf.setFontSize(11);
+        pdf.text(`Estudiante: ${est?.nombre || dId}`, 20, 45);
+        pdf.text(`Documento: ${dId}`, 20, 52);
+        const rows = registros.map(r => [r.fecha, r.tipo, r.comportamiento, r.descargos, r.procedimiento]);
+        pdf.autoTable({ startY: 60, head: [['Fecha', 'Tipo', 'Situación', 'Descargos', 'Procedimiento']], body: rows, theme: 'grid', headStyles: { fillColor: [27, 94, 32] }, styles: { fontSize: 8 } });
+        let currentY = pdf.lastAutoTable.finalY + 15;
+        for(let i = 0; i < 3; i++) {
+            const r = registros[i]; if(currentY > 230) { pdf.addPage(); currentY = 20; }
+            pdf.setFontSize(9); pdf.setFont("helvetica", "bold"); pdf.text(`BLOQUE FIRMAS #${i+1}`, 20, currentY); currentY += 5;
+            if(r) {
+                if(r.firmaEstudiante) try { pdf.addImage(r.firmaEstudiante, 'PNG', 20, currentY, 40, 15); } catch(e){}
+                if(r.firmaDocente) try { pdf.addImage(r.firmaDocente, 'PNG', 85, currentY, 40, 15); } catch(e){}
+                if(r.firmaAcudiente) try { pdf.addImage(r.firmaAcudiente, 'PNG', 150, currentY, 40, 15); } catch(e){}
+            }
+            currentY += 15; pdf.line(20, currentY, 70, currentY); pdf.line(85, currentY, 135, currentY); pdf.line(150, currentY, 200, currentY);
+            pdf.setFontSize(7); pdf.text("Estudiante", 20, currentY + 4); pdf.text("Docente", 85, currentY + 4); pdf.text("Acudiente", 150, currentY + 4); currentY += 15;
+        }
+        pdf.save(`Unificado_${dId}.pdf`);
+    } catch (error) { alert("Error PDF."); }
+  };
+
+  // --- EXCUSAS (Variable corregida) ---
+  const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  function fechaLarga(fStr) {
+      if(!fStr) return ""; const partes = fStr.split('-');
+      return `${partes[2]} de ${meses[parseInt(partes[1])-1]} de ${partes[0]}`;
+  }
+  function fechaActualLarga() {
+      const today = new Date();
+      return `${today.getDate()} de ${meses[today.getMonth()]} de ${today.getFullYear()}`;
   }
 
-  function cerrarModalAlertaAcad() {
-    document.getElementById("modalAlertaAcad").style.display = "none";
-    document.getElementById("overlayAcad").style.display = "flex";
+  window.descargarPDFExcusaCarta = (id) => {
+    const ex = localExcusas.find(x => x.id === id); if(!ex) return;
+    const est = estudiantesBase.find(e => e.doc === ex.documentoEstudiante);
+    const { jsPDF } = window.jspdf; const pdf = new jsPDF();
+    
+    // Encabezado
+    pdf.setFillColor(141, 182, 0); pdf.rect(0, 0, 210, 40, 'F');
+    try { pdf.addImage('escudo.png', 'PNG', 15, 5, 30, 30); } catch(e){}
+    pdf.setTextColor(255, 255, 255); pdf.setFont("helvetica", "bold"); pdf.setFontSize(14);
+    pdf.text("INSTITUCIÓN EDUCATIVA DE MARÍA", 120, 18, { align: "center" });
+    pdf.setFontSize(12); pdf.text("Sede Rural Santa Juana", 120, 26, { align: "center" });
+    pdf.setFontSize(11); pdf.text("Registro y Control de Asistencia Escolar 2026", 120, 34, { align: "center" });
+
+    // Cuerpo
+    pdf.setTextColor(0, 0, 0); pdf.setFontSize(14); pdf.setFont("helvetica", "normal");
+    
+    // Fecha de diligenciamiento (HOY o Timestamp si existiera, usamos HOY para el PDF generado)
+    pdf.text(`Santa Juana, Yarumal ${fechaActualLarga()}`, 20, 60);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Señor", 20, 75);
+    pdf.text("Oscar Evelio Barrientos", 20, 81);
+    pdf.text("Docente.", 20, 87);
+    
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Cordial saludo.", 20, 100);
+    
+    pdf.setFont("helvetica", "bold");
+    pdf.text(`Asunto: Justificación de inasistencia - ${est?.nombre || ex.documentoEstudiante}`, 20, 115);
+    
+    pdf.text("Fecha de inasistencia:", 20, 128);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${fechaLarga(ex.fechaInasistencia)}`, 85, 128);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Motivo:", 20, 136);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${ex.motivoTipo}`, 45, 136);
+
+    // TEXTO SIN ETIQUETA "DETALLE"
+    const txt = `${ex.motivoDetalle || ''}`;
+    pdf.text(pdf.splitTextToSize(txt, 170), 20, 148);
+    
+    pdf.text("Gracias De antemano por su atención prestada.", 20, 180);
+    
+    if(ex.firmaAcudiente) { try { pdf.addImage(ex.firmaAcudiente, 'PNG', 80, 195, 50, 25); } catch(e){} }
+    pdf.text("__________________________", 105, 225, { align: "center" }); 
+    pdf.setFont("helvetica", "bold"); pdf.text("ACUDIENTE", 105, 232, { align: "center" });
+    pdf.save(`Excusa_${id}.pdf`);
+  };
+  
+  window.eliminarExcusa = async (id) => { if(confirm("¿Eliminar excusa?")) { await deleteDoc(doc(db, "excusasInasistencia", id)); alert("Eliminada."); } };
+
+  window.filtrarExcusas = () => {
+    const list = document.getElementById('listaExcusas'); const search = document.getElementById('searchExcInput').value.toLowerCase();
+    list.innerHTML = localExcusas.filter(ex => ex.documentoEstudiante.includes(search)).map(ex => {
+        const est = estudiantesBase.find(e => e.doc === ex.documentoEstudiante);
+        return `<div class="excusa-card"><div class="excusa-header"><span class="excusa-name">${est?.nombre || ex.documentoEstudiante}</span><span class="excusa-date">${ex.fechaInasistencia}</span></div><div class="excusa-body"><b>${ex.motivoTipo}:</b> ${ex.motivoDetalle}</div><div style="display:flex; justify-content:space-between; align-items:center;">${ex.firmaAcudiente ? `<img src="${ex.firmaAcudiente}" height="35" style="border:1px solid #eee; background:#fff; border-radius:4px;">` : '<span></span>'}<div style="display:flex; gap:5px;"><button class="btn-pdf-carta" onclick="window.descargarPDFExcusaCarta('${ex.id}')">📄 PDF</button><button class="btn-delete-exc" onclick="window.eliminarExcusa('${ex.id}')">Eliminar</button></div></div></div>`;
+    }).join('') || "No hay resultados.";
+  };
+
+  // --- CORRESPONDENCIA ---
+  function cargarCorrespondencia() {
+    onSnapshot(collection(db, "comunicacionPadres"), (snap) => {
+        let html = ""; snap.forEach(d => {
+            const m = d.data(); const id = d.id;
+            html += `<div class="msg-card"><div style="display:flex; justify-content:space-between; align-items:center;"><b style="font-size:13px;">${m.nombreEstudiante}</b><div style="display:flex; gap:5px; align-items:center;"><small>${m.fechaMsg}</small><button class="btn-delete-msg" onclick="window.eliminarMsg('${id}')">✕</button></div></div><div style="font-size:12px; margin:8px 0;"><b>${m.asunto}:</b> ${m.mensaje}</div><div style="background:#f3e5f5; padding:10px; border-radius:10px;">${m.respuestaDocente ? `<b>Respuesta:</b> ${m.respuestaDocente}` : `<textarea id="rep_${id}" rows="2"></textarea><button class="btn-action btn-slate" style="margin-top:5px; font-size:11px;" onclick="responderMsg('${id}')">RESPONDER</button>`}</div></div>`;
+        });
+        document.getElementById('listaCorrespondencia').innerHTML = html || "Sin mensajes.";
+    });
   }
+  window.responderMsg = async (id) => { const t = document.getElementById(`rep_${id}`).value; await updateDoc(doc(db, "comunicacionPadres", id), { respuestaDocente: t }); alert("✅ Respondido."); };
+  window.eliminarMsg = async (id) => { if(confirm("¿Eliminar mensaje?")) await deleteDoc(doc(db, "comunicacionPadres", id)); };
 
-  function cerrarMensajeAlerta() {
-    document.getElementById("overlayAcad").style.display = "none";
-  }
+  function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=140*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2; ctx.lineCap="round"; let draw=false; const getPos=(e)=>{ const rect=c.getBoundingClientRect(); return { x: (e.touches?e.touches[0].clientX:e.clientX)-rect.left, y: (e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{draw=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!draw)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true, canvas:c});}); window.addEventListener("mouseup",()=>draw=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); draw=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!draw)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true, canvas:c});}); c.addEventListener("touchend",()=>draw=false); pads.set(id,{hasData:false, canvas:c}); }
+  window.limpiarPad = (id) => { const p = pads.get(id); if(p) { p.canvas.getContext("2d").clearRect(0,0,p.canvas.width, p.canvas.height); pads.set(id, {hasData:false, canvas:p.canvas}); } };
+  window.toggleHistorial = (id) => { const el=document.getElementById(id); el.style.display = (el.style.display==='block')?'none':'block'; };
+  window.toggleHistorialObs = () => { const el = document.getElementById('historialObs'); el.style.display = (el.style.display==='block')?'none':'block'; if(el.style.display==='block') cargarListaObs(); };
+  window.actualizarHistorialObs = () => { if(document.getElementById('historialObs').style.display==='block') cargarListaObs(); };
 
-  // ==========================
-  //  PAD (FIRMAS)
-  // ==========================
-  function initPad(id){
-    const c=document.getElementById(id);
-    if(!c) return;
-    const ctx=c.getContext("2d");
-    const r=window.devicePixelRatio||1;
-    c.width=c.offsetWidth*r;
-    c.height=150*r;
-    ctx.setTransform(r,0,0,r,0,0);
-    ctx.lineWidth=2.5;
-    ctx.lineCap="round";
-    let d=false;
-    const gP=(e)=>{
-      const rect=c.getBoundingClientRect();
-      return {
-        x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left,
-        y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top
-      };
-    };
-    c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);});
-    c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});});
-    window.addEventListener("mouseup",()=>d=false);
-
-    c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);});
-    c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});});
-    c.addEventListener("touchend",()=>d=false);
-
-    pads.set(id,{hasData:false,c});
-  }
-
-  function limpiarPad(id) {
-    const p=pads.get(id);
-    if(p){
-      p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height);
-      pads.set(id,{c:p.c,hasData:false});
-    }
-  }
+  window.onload = async () => { 
+    document.getElementById('fechaAsistencia').valueAsDate = new Date(); document.getElementById('fecha').valueAsDate = new Date(); 
+    const sel = document.getElementById('selectEstudianteObs'); estudiantesBase.forEach(e => { const opt = document.createElement('option'); opt.value = e.doc; opt.textContent = e.nombre; sel.appendChild(opt); }); 
+    const sP = await getDoc(doc(db, "configuracionGlobal", "asistencia")); if (sP.exists()) { periodoActualAsis = sP.data().periodoActual || 1; document.getElementById('periodoActualLabel').innerText = `Periodo Actual: #${periodoActualAsis}`; }
+    onSnapshot(collection(db, "controlAsistencia"), (snap) => { localAsistenciaCompleta = []; snap.forEach(d => localAsistenciaCompleta.push(d.data())); window.renderAsistencia(); }); 
+    onSnapshot(collection(db, "excusasInasistencia"), (snap) => { localExcusas = []; snap.forEach(d => localExcusas.push({id:d.id, ...d.data()})); window.filtrarExcusas(); }); 
+    window.cargarAsistenciaDelDia(); 
+  };
 </script>
 </body>
 </html>
