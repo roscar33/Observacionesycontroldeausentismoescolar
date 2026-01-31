@@ -177,26 +177,26 @@
     box-shadow: 0 4px 0 #263238; cursor: pointer;
   }
 
-  /* BOTÓN PIZARRA (ESTILO MADERA) */
+  /* BOTÓN PIZARRA TRADICIONAL */
   .btn-pizarra {
-    display: block; width: 92%; margin: 0 auto;
-    padding: 18px; 
-    /* Gradiente madera */
-    background: linear-gradient(180deg, #8d6e63 0%, #6d4c41 100%);
-    color: #fff; font-weight: 900;
-    border: 4px solid #5d4037; /* Borde madera oscura */
-    border-radius: 16px; 
-    font-size: 16px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    box-shadow: 0 6px 0 #4e342e; /* Sombra madera oscura */
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 92%; height: 120px; margin: 0 auto;
+    background: #213c1c; /* Verde pizarra tradicional */
+    border: 8px solid #5d4037; /* Marco madera */
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 0 50px rgba(0,0,0,0.4);
+    cursor: pointer; position: relative; overflow: hidden;
   }
-  .btn-pizarra:active {
-    transform: translateY(2px);
-    box-shadow: 0 3px 0 #4e342e;
+  .btn-pizarra::before {
+    content: "✍️ Pizarra Escolar";
+    font-family: 'Great Vibes', cursive; color: rgba(255,255,255,0.9);
+    font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   }
+  .btn-pizarra::after {
+    content: ""; position: absolute; top: 10%; left: 5%; width: 90%; height: 2px;
+    background: rgba(255,255,255,0.08); filter: blur(1.5px);
+  }
+  .btn-pizarra:active { transform: scale(0.98); }
 
   /* MODAL LOGIN ALERTA */
   #modalLoginAlerta {
@@ -204,9 +204,10 @@
     background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
   }
   
+  /* BOTÓN INGRESAR VERDE OSCURO */
   .btn-consultar-madera {
-    background: #6d4c41; color: white; width:100%; border:none; padding:15px; 
-    font-weight:900; border-radius:50px; box-shadow: 0 4px 0 #4e342e;
+    background: #1b5e20; color: white; width:100%; border:none; padding:15px; 
+    font-weight:900; border-radius:50px; box-shadow: 0 4px 0 #145018;
     cursor:pointer;
   }
 
@@ -523,7 +524,7 @@
 
   <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
 
-  <button class="btn-pizarra" onclick="abrirAlertaAcademica()">📝 Pizarra Escolar</button>
+  <div class="btn-pizarra" onclick="abrirAlertaAcademica()"></div>
 
   <div id="modalLoginAlerta">
     <div class="modal-aa-box" style="padding: 20px; max-width: 340px;">
@@ -533,11 +534,11 @@
       <input id="docAlertaInput" type="number" placeholder="Digite documento..." style="margin-bottom:10px;">
       
       <div class="remember-box" style="margin-bottom:20px;">
-        <input type="checkbox" id="chkRemAlerta">
+        <input type="checkbox" id="chkRemAlerta" checked>
         <label for="chkRemAlerta" style="font-size:13px;">Recordar documento</label>
       </div>
 
-      <button class="btn-consultar-madera" onclick="procesarLoginAlerta()">CONSULTAR</button>
+      <button class="btn-consultar-madera" onclick="procesarLoginAlerta()">INGRESAR</button>
       <button onclick="cerrarLoginAlerta()" style="background:transparent; border:none; color:#666; width:100%; margin-top:10px; font-weight:bold; font-size:12px;">CANCELAR</button>
     </div>
   </div>
@@ -612,7 +613,7 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
   let docAlertaActual = "";
   let periodoNotasActual = 1;
   let gradoEstudianteActual = "";
-  let cacheTareasAgenda = []; // Cache para generar PDF
+  let cacheTareasAgenda = []; 
   
   // Variables para la pregunta
   let currentTaskId = null;
@@ -621,19 +622,35 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
   // Asignar jsPDF globalmente
   window.jsPDF = window.jspdf.jsPDF;
 
+  // ==========================
+  //  GESTIÓN DE DOCUMENTO (RECORDAR)
+  // ==========================
   window.onload = function() {
     const saved = localStorage.getItem("padre_doc");
+    const checkIds = ["chkRemExc", "chkRemObs", "chkRemSop", "chkRemAlerta"];
+    const inputIds = ["docExc", "docObs", "docSoporte", "docAlertaInput"];
+
     if(saved) {
-      document.getElementById("docExc").value = saved;
-      document.getElementById("docObs").value = saved;
-      document.getElementById("docSoporte").value = saved;
-      document.getElementById("docAlertaInput").value = saved;
-      
-      ["chkRemExc", "chkRemObs", "chkRemSop", "chkRemAlerta"].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.checked = true;
-      });
+      inputIds.forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = saved; });
+      checkIds.forEach(id => { if(document.getElementById(id)) document.getElementById(id).checked = true; });
     }
+
+    // Funcionalidad: Al desactivar cualquier check, se borra de inmediato el dato del sistema
+    checkIds.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) {
+        el.addEventListener('change', function() {
+          if(!this.checked) {
+            localStorage.removeItem("padre_doc");
+            // Sincronizar todos los checks a desactivado
+            checkIds.forEach(cid => { if(document.getElementById(cid)) document.getElementById(cid).checked = false; });
+          } else {
+            // Sincronizar todos los checks a activado
+            checkIds.forEach(cid => { if(document.getElementById(cid)) document.getElementById(cid).checked = true; });
+          }
+        });
+      }
+    });
   };
 
   // Helper para formato de fecha: "Viernes, 30 de Enero de 2026"
@@ -642,6 +659,20 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const fecha = new Date(fechaStr + "T00:00:00"); 
     const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return fecha.toLocaleDateString('es-ES', opciones);
+  }
+
+  // --- FUNCIÓN AUXILIAR PARA YOUTUBE ---
+  function getYouTubeEmbedUrl(url) {
+    if (!url) return null;
+    let videoId = '';
+    try {
+      if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1].split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+      }
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    } catch (e) { return null; }
   }
 
   function switchTab(t) {
@@ -659,7 +690,7 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const est = estudiantesValidos.find(e => e.doc === di);
     if(!est) return alert("Documento no encontrado en la base de datos.");
     
-    // CORRECCIÓN CHECK
+    // GUARDADO / BORRADO AL CONTINUAR
     if(document.getElementById("chkRemExc").checked) {
       localStorage.setItem("padre_doc", di);
     } else {
@@ -730,7 +761,7 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     if(!docId) return alert("Ingrese documento.");
     if(!estudiantesValidos.find(e => e.doc === docId)) return alert("Documento no encontrado.");
     
-    // CORRECCIÓN CHECK
+    // GUARDADO / BORRADO AL CONTINUAR
     if(document.getElementById("chkRemObs").checked) {
       localStorage.setItem("padre_doc", docId);
     } else {
@@ -836,7 +867,7 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     const e = estudiantesValidos.find(x => x.doc === ds);
     if(!e) return alert("No válido.");
     
-    // CORRECCIÓN CHECK
+    // GUARDADO / BORRADO AL CONTINUAR
     if(document.getElementById("chkRemSop").checked) {
       localStorage.setItem("padre_doc", ds);
     } else {
@@ -912,7 +943,7 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
       document.getElementById("chkRemAlerta").checked = true;
     } else {
       document.getElementById("docAlertaInput").value = "";
-      document.getElementById("chkRemAlerta").checked = false;
+      document.getElementById("chkRemAlerta").checked = true; 
     }
     document.getElementById("modalLoginAlerta").style.display = "flex";
   }
@@ -934,11 +965,9 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     }
     gradoEstudianteActual = est.grado;
 
+    // GUARDADO / BORRADO AL CONTINUAR
     if (document.getElementById("chkRemAlerta").checked) {
       localStorage.setItem("padre_doc", docInput);
-      document.getElementById("docExc").value = docInput;
-      document.getElementById("docObs").value = docInput;
-      document.getElementById("docSoporte").value = docInput;
     } else {
       localStorage.removeItem("padre_doc");
     }
@@ -949,18 +978,11 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
   }
 
   async function iniciarCargaAlerta() {
-    // Resetear vistas a la primera pestaña
     switchTabAlerta('notas'); 
     document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre;
-    
     await cargarPeriodoNotasActual();
-    
-    // Cargar Notas
     cargarNotasBajasPeriodo(docAlertaActual);
-    
-    // Cargar Agenda (CON FIX DE ÍNDICE Y FECHA FORMATEADA)
     cargarAgendaEscolar(gradoEstudianteActual); 
-    
     document.getElementById("modalAlertaAcad").style.display = "flex";
   }
 
@@ -973,7 +995,6 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
     }
   }
 
-  // Carga las Notas Bajas (Tab 1)
   async function cargarNotasBajasPeriodo(docEst) {
     document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`;
     document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#64748b;font-weight:800;padding:18px;">Cargando...</div>`;
@@ -990,228 +1011,95 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
         let n = r.nota;
         if (typeof n === "string") n = parseFloat(n.replace(",", "."));
         if (typeof n !== "number" || isNaN(n)) return;
-
-        if (n < 3) {
-          items.push({
-            area: (r.area || "").toString().toUpperCase(),
-            actividad: (r.actividad || r.nombreActividad || "Actividad").toString(),
-            nota: n,
-            observacion: (r.observacion || r.obs || "").toString().trim()
-          });
-        }
+        if (n < 3) items.push({ area: (r.area || "").toUpperCase(), actividad: (r.actividad || r.nombreActividad || "Actividad"), nota: n, observacion: (r.observacion || r.obs || "").trim() });
       });
 
       if (items.length === 0) {
-        document.getElementById("aaLista").innerHTML =
-          `<div style="text-align:center;color:#0f172a;font-weight:900;padding:14px;">
-             ✅ No hay notas en desempeño bajo en este periodo.
-           </div>`;
+        document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#0f172a;font-weight:900;padding:14px;">✅ No hay notas en desempeño bajo en este periodo.</div>`;
         return;
       }
 
       items.sort((a,b) => (a.area+a.actividad).localeCompare(b.area+b.actividad));
-
       document.getElementById("aaLista").innerHTML = items.map(it => `
         <div class="aa-item">
           <div class="aa-top">
-            <div style="min-width:0;">
-              <div class="aa-title">${it.actividad}</div>
-              <div class="aa-meta">${it.area}</div>
-            </div>
+            <div style="min-width:0;"><div class="aa-title">${it.actividad}</div><div class="aa-meta">${it.area}</div></div>
             <div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div>
           </div>
-
           <div class="aa-obs-label">Observación</div>
           <div class="aa-obs">${it.observacion ? it.observacion : "Sin observación registrada."}</div>
-        </div>
-      `).join("");
+        </div>`).join("");
 
     } catch (err) {
-      document.getElementById("aaLista").innerHTML =
-        `<div style="text-align:center;color:#b71c1c;font-weight:900;padding:14px;">
-           Error cargando notas.
-         </div>`;
+      document.getElementById("aaLista").innerHTML = `<div style="text-align:center;color:#b71c1c;font-weight:900;padding:14px;">Error cargando notas.</div>`;
     }
   }
 
-  // FUNCIÓN PARA OBTENER COLOR POR ÁREA
   function getAreaStyle(areaName) {
     const a = (areaName || '').toUpperCase();
-    let style = { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' }; // Default gris
-
-    if(a.includes('MATEMATICAS')) style = { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' }; // Azul
-    else if(a.includes('ESPAÑOL') || a.includes('LENGUAJE')) style = { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' }; // Rojo
-    else if(a.includes('NATURALES')) style = { border: '#059669', badge: '#d1fae5', text: '#047857' }; // Verde
-    else if(a.includes('SOCIALES')) style = { border: '#d97706', badge: '#fef3c7', text: '#b45309' }; // Naranja
-    else if(a.includes('INGLES')) style = { border: '#7c3aed', badge: '#ede9fe', text: '#6d28d9' }; // Violeta
-    else if(a.includes('TECNOLOGIA')) style = { border: '#2563eb', badge: '#dbeafe', text: '#1d4ed8' }; // Azul Oscuro
-    else if(a.includes('ARTISTICA')) style = { border: '#db2777', badge: '#fce7f3', text: '#be185d' }; // Rosa
-    else if(a.includes('FISICA')) style = { border: '#ca8a04', badge: '#fef9c3', text: '#a16207' }; // Amarillo Oscuro
-    else if(a.includes('RELIGION') || a.includes('ETICA')) style = { border: '#0d9488', badge: '#ccfbf1', text: '#0f766e' }; // Verde Azulado
-
+    let style = { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' };
+    if(a.includes('MATEMATICAS')) style = { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' };
+    else if(a.includes('ESPAÑOL') || a.includes('LENGUAJE')) style = { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' };
+    else if(a.includes('NATURALES')) style = { border: '#059669', badge: '#d1fae5', text: '#047857' };
+    else if(a.includes('SOCIALES')) style = { border: '#d97706', badge: '#fef3c7', text: '#b45309' };
+    else if(a.includes('INGLES')) style = { border: '#7c3aed', badge: '#ede9fe', text: '#6d28d9' };
     return style;
   }
 
-  // Carga la Agenda (Tab 2) - VERSIÓN CORREGIDA, FORMATEADA Y CON RESPUESTA
   async function cargarAgendaEscolar(grado) {
     const div = document.getElementById("aaAgendaLista");
     div.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">Cargando tareas de ${grado}...</div>`;
 
     try {
-      // 1. Tareas Activas
-      const snap = await db.collection("agendaEscolar")
-        .where("gradeLevel", "==", grado)
-        .where("archived", "==", false)
-        .limit(20)
-        .get();
+      const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).limit(20).get();
+      if (snap.empty) { div.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">No hay tareas pendientes.</div>`; cacheTareasAgenda = []; return; }
 
-      if (snap.empty) {
-        div.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">No hay tareas pendientes para ${grado}.</div>`;
-        cacheTareasAgenda = []; // Limpiar cache
-        return;
-      }
-
-      // 2. Mensajes del estudiante (Para buscar respuestas)
-      const msgsSnap = await db.collection("mensajesAgenda")
-        .where("studentDoc", "==", docAlertaActual)
-        .get();
-      
-      const respuestasMap = {}; // Mapa taskId -> {pregunta, respuesta}
-      msgsSnap.forEach(doc => {
-        const m = doc.data();
-        respuestasMap[m.taskId] = { pregunta: m.pregunta, respuesta: m.respuesta };
-      });
+      const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
+      const respuestasMap = {};
+      msgsSnap.forEach(doc => { const m = doc.data(); respuestasMap[m.taskId] = { pregunta: m.pregunta, respuesta: m.respuesta }; });
 
       let tareas = [];
       snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-
-      // Filtrar
-      const tareasFiltradas = tareas.filter(t => {
-        if (!t.targetStudent) return true; 
-        return t.targetStudent === docAlertaActual;
-      });
-
-      // Ordenar
+      const tareasFiltradas = tareas.filter(t => !t.targetStudent || t.targetStudent === docAlertaActual);
       tareasFiltradas.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      
-      // Guardar en cache global para el PDF
       cacheTareasAgenda = tareasFiltradas;
-
-      if (tareasFiltradas.length === 0) {
-        div.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">No hay tareas asignadas para ti.</div>`;
-        return;
-      }
 
       let html = "";
       tareasFiltradas.forEach(t => {
         const infoMsg = respuestasMap[t.id];
-        const colors = getAreaStyle(t.area); // Obtener colores según materia
+        const colors = getAreaStyle(t.area);
+        const videoEmbed = getYouTubeEmbedUrl(t.videoLink);
         
-        let btnHtml = '';
-        let replyHtml = '';
+        const videoHtml = videoEmbed ? `<div style="margin-top:12px; border-radius:12px; overflow:hidden; aspect-ratio: 16/9; border: 1px solid #ddd; background:#000;"><iframe width="100%" height="100%" src="${videoEmbed}" frameborder="0" allowfullscreen></iframe></div>` : '';
+        const driveHtml = t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="margin-top:10px; background:#0284c7; box-shadow: 0 4px 0 #01579b; font-size:12px; padding:12px;">📂 Descargar Recurso / Guía (Drive)</button></a>` : '';
 
-        if (infoMsg) {
-          if (infoMsg.respuesta) {
-            // Ya hay respuesta
-            replyHtml = `<div class="reply-box"><span class="reply-label">Respuesta del Profe:</span>${infoMsg.respuesta}</div>`;
-            btnHtml = `<span style="font-size:11px; color:#059669; font-weight:bold;">✅ Resuelto</span>`;
-          } else {
-            // Esperando respuesta
-            btnHtml = `<span style="font-size:11px; color:#f59e0b; font-weight:bold;">⏳ Esperando respuesta...</span>`;
-          }
-        } else {
-          // No ha preguntado
-          btnHtml = `<button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Duda</button>`;
-        }
+        let btnHtml = infoMsg ? (infoMsg.respuesta ? `<span style="font-size:11px; color:#059669; font-weight:bold;">✅ Resuelto</span>` : `<span style="font-size:11px; color:#f59e0b; font-weight:bold;">⏳ Esperando...</span>`) : `<button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Duda</button>`;
+        let replyHtml = (infoMsg && infoMsg.respuesta) ? `<div class="reply-box"><span class="reply-label">Respuesta del Profe:</span>${infoMsg.respuesta}</div>` : '';
 
-        html += `
-          <div class="agenda-card" style="border-left-color: ${colors.border};">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-               <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
-            </div>
-            
-            <div class="agenda-date-container">
-               <span class="agenda-date-label">📅 FECHA DE ENTREGA:</span>
-               <span class="agenda-date-value">${formatearFecha(t.date)}</span>
-            </div>
-            
-            <div class="agenda-title">${t.title}</div>
-            <div class="agenda-desc">${t.description || ''}</div>
-            ${replyHtml}
-            <div style="text-align:right; margin-top:8px;">
-               ${btnHtml}
-            </div>
-          </div>
-        `;
+        html += `<div class="agenda-card" style="border-left-color: ${colors.border};">
+            <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
+            <div class="agenda-date-container"><span class="agenda-date-label">📅 FECHA DE ENTREGA:</span><span class="agenda-date-value">${formatearFecha(t.date)}</span></div>
+            <div class="agenda-title">${t.title}</div><div class="agenda-desc">${t.description || ''}</div>
+            ${videoHtml}${driveHtml}${replyHtml}
+            <div style="text-align:right; margin-top:12px;">${btnHtml}</div>
+          </div>`;
       });
       div.innerHTML = html;
-
-    } catch (e) {
-      console.error(e);
-      div.innerHTML = `<div style="text-align:center; color:red; padding:10px; font-size:12px;">Error de conexión.</div>`;
-    }
+    } catch (e) { div.innerHTML = `<div style="text-align:center; color:red; padding:10px;">Error de conexión.</div>`; }
   }
 
-  // --- FUNCIÓN DESCARGAR PDF ---
   function descargarAgendaPDF() {
-    if(!cacheTareasAgenda || cacheTareasAgenda.length === 0) {
-      alert("No hay tareas para descargar.");
-      return;
-    }
-
+    if(!cacheTareasAgenda || cacheTareasAgenda.length === 0) return alert("No hay tareas.");
     const doc = new window.jsPDF();
     const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-    const nombreEstudiante = est ? est.nombre : "Estudiante";
-
-    // Encabezado
-    doc.setFontSize(14);
-    doc.setTextColor(27, 94, 32); // Verde oscuro
-    doc.setFont("helvetica", "bold");
-    doc.text("INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Santa Juana", 105, 15, { align: "center" });
-    
-    doc.setFontSize(12);
-    doc.setTextColor(50);
-    doc.text(`AGENDA DE TAREAS - GRADO ${gradoEstudianteActual.toUpperCase()}`, 105, 23, { align: "center" });
-    doc.setFontSize(10);
-    doc.text(`Estudiante: ${nombreEstudiante}`, 105, 29, { align: "center" });
-
-    // Preparar datos tabla
-    const bodyData = cacheTareasAgenda.map(t => [
-      t.area || "General",
-      t.title + "\n" + (t.description || ""), // Título + Descripción
-      formatearFecha(t.date)
-    ]);
-
-    doc.autoTable({
-      startY: 35,
-      head: [['ASIGNATURA', 'ACTIVIDAD / DETALLE', 'ENTREGA']],
-      body: bodyData,
-      theme: 'grid',
-      headStyles: { 
-        fillColor: [27, 94, 32], // Verde
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      columnStyles: {
-        0: { cellWidth: 35, fontStyle: 'bold' }, // Asignatura
-        1: { cellWidth: 'auto' }, // Detalle
-        2: { cellWidth: 40, halign: 'center' } // Fecha
-      },
-      styles: {
-        fontSize: 10,
-        cellPadding: 4,
-        overflow: 'linebreak'
-      }
-    });
-
-    const fechaHoy = new Date().toLocaleDateString('es-ES').replace(/\//g, '-');
-    doc.save(`Agenda_${nombreEstudiante}_${fechaHoy}.pdf`);
+    doc.setFontSize(14); doc.setTextColor(27, 94, 32); doc.text("INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Santa Juana", 105, 15, { align: "center" });
+    const bodyData = cacheTareasAgenda.map(t => [t.area || "General", t.title + "\n" + (t.description || ""), formatearFecha(t.date)]);
+    doc.autoTable({ startY: 35, head: [['ASIGNATURA', 'ACTIVIDAD', 'ENTREGA']], body: bodyData, theme: 'grid', headStyles: { fillColor: [27, 94, 32] } });
+    doc.save(`Agenda_${est ? est.nombre : 'Estudiante'}.pdf`);
   }
 
-  // --- LÓGICA DE PREGUNTAS ---
   function prepararPregunta(taskId, taskTitle) {
-    currentTaskId = taskId;
-    currentTaskTitle = taskTitle;
+    currentTaskId = taskId; currentTaskTitle = taskTitle;
     document.getElementById("tituloTareaPregunta").innerText = taskTitle;
     document.getElementById("textoPregunta").value = "";
     document.getElementById("modalPreguntaTarea").style.display = "flex";
@@ -1220,86 +1108,40 @@ Si su hijo(a) no asistió a una jornada académica, deberá presentar la excusa 
   async function enviarPregunta() {
     const texto = document.getElementById("textoPregunta").value.trim();
     if (!texto) return alert("Escriba su pregunta.");
-
     const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-
     try {
-      await db.collection("mensajesAgenda").add({
-        taskId: currentTaskId,
-        taskTitle: currentTaskTitle,
-        studentDoc: docAlertaActual,
-        studentName: est ? est.nombre : "Desconocido",
-        pregunta: texto,
-        timestamp: new Date().toISOString(),
-        read: false
-      });
-      alert("✅ Pregunta enviada al docente.");
+      await db.collection("mensajesAgenda").add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: est ? est.nombre : "Desconocido", pregunta: texto, timestamp: new Date().toISOString(), read: false });
+      alert("✅ Pregunta enviada.");
       document.getElementById("modalPreguntaTarea").style.display = "none";
-      // Recargar para ver el estado "Esperando..."
       cargarAgendaEscolar(gradoEstudianteActual);
-    } catch (e) {
-      alert("Error al enviar.");
-    }
+    } catch (e) { alert("Error."); }
   }
 
-  function cerrarModalAlertaAcad() {
-    document.getElementById("modalAlertaAcad").style.display = "none";
-    if(document.getElementById("tab-notas").classList.contains("active")) {
-        document.getElementById("overlayAcad").style.display = "flex";
-    }
-  }
-
-  function cerrarMensajeAlerta() {
-    document.getElementById("overlayAcad").style.display = "none";
-  }
-
+  function cerrarModalAlertaAcad() { document.getElementById("modalAlertaAcad").style.display = "none"; if(document.getElementById("tab-notas").classList.contains("active")) document.getElementById("overlayAcad").style.display = "flex"; }
+  function cerrarMensajeAlerta() { document.getElementById("overlayAcad").style.display = "none"; }
   function switchTabAlerta(tab) {
     document.getElementById("view-aa-notas").className = tab === 'notas' ? 'active' : '';
     document.getElementById("view-aa-agenda").className = tab === 'agenda' ? 'active' : '';
-    
     document.getElementById("tab-notas").className = tab === 'notas' ? 'aa-tab-btn active' : 'aa-tab-btn';
     document.getElementById("tab-agenda").className = tab === 'agenda' ? 'aa-tab-btn active' : 'aa-tab-btn';
   }
 
-  // ==========================
-  //  PAD (FIRMAS)
-  // ==========================
   function initPad(id){
-    const c=document.getElementById(id);
-    if(!c) return;
-    const ctx=c.getContext("2d");
-    const r=window.devicePixelRatio||1;
-    c.width=c.offsetWidth*r;
-    c.height=150*r;
-    ctx.setTransform(r,0,0,r,0,0);
-    ctx.lineWidth=2.5;
-    ctx.lineCap="round";
-    let d=false;
-    const gP=(e)=>{
-      const rect=c.getBoundingClientRect();
-      return {
-        x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left,
-        y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top
-      };
-    };
+    const c=document.getElementById(id); if(!c) return;
+    const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1;
+    c.width=c.offsetWidth*r; c.height=150*r; ctx.setTransform(r,0,0,r,0,0);
+    ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false;
+    const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; };
     c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);});
     c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});});
     window.addEventListener("mouseup",()=>d=false);
-
     c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);});
     c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});});
     c.addEventListener("touchend",()=>d=false);
-
     pads.set(id,{hasData:false,c});
   }
 
-  function limpiarPad(id) {
-    const p=pads.get(id);
-    if(p){
-      p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height);
-      pads.set(id,{c:p.c,hasData:false});
-    }
-  }
+  function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
 </script>
 </body>
-  </html>
+</html>
