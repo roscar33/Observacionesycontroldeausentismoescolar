@@ -521,7 +521,13 @@
     const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); });
     
     let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-    const filtered = tareas.filter(t => !t.targetStudent || t.targetStudent === docAlertaActual).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    // SOLUCIÓN DEFINITIVA DE PRIVACIDAD: Filtramos estrictamente por 'publico === true' y 'status !== draft'
+    const filtered = tareas.filter(t => 
+        (!t.targetStudent || t.targetStudent === docAlertaActual) && 
+        t.publico === true && 
+        t.status !== 'draft'
+    ).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    
     cacheTareasAgenda = filtered;
     
     if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; }
@@ -639,3 +645,5 @@
 </script>
 </body>
 </html>
+
+
