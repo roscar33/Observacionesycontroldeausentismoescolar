@@ -159,40 +159,25 @@
   .agenda-title { font-size: 16px; font-weight: 900; color: #334155; margin-bottom: 6px; line-height: 1.3; }
   .agenda-desc { font-size: 13px; color: #475569; white-space: pre-wrap; line-height: 1.5; margin-bottom: 8px; }
 
-  /* ALERTA UI */
-  .aa-student{ font-weight: 900; color:#5d4037; margin-bottom: 10px; font-size: 15px; text-align: center; }
-  .aa-badge{
-    display:block; width: fit-content; margin: 0 auto 15px; font-size: 10px; font-weight: 900; 
-    padding: 4px 12px; border-radius: 999px;
-    background:#efebe9; color:#5d4037; border: 1px solid #d7ccc8;
+  /* CHAT PERSISTENTE UI */
+  .chat-container {
+    margin-top: 10px; max-height: 200px; overflow-y: auto; 
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; 
+    padding: 10px; display: flex; flex-direction: column; gap: 8px;
   }
-  .aa-item{
-    border: 1px solid #eee; border-radius: 14px; padding: 12px; margin-bottom: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  .chat-bubble {
+    max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: 12px; line-height: 1.4;
   }
-  .aa-top{ display:flex; justify-content: space-between; gap: 10px; align-items:flex-start; }
-  .aa-title{ font-weight: 900; color:#0f172a; font-size: 13px; line-height: 1.2; }
-  .aa-meta{ font-size: 11px; color:#64748b; margin-top: 3px; font-weight: 700; }
-  .aa-score{
-    min-width: 66px; text-align:center; font-weight: 900; font-size: 18px;
-    color:#b71c1c; background:#fee2e2; border-radius: 12px; padding: 6px 10px;
-    border: 1px solid #fecaca;
-  }
-  .aa-obs-label{ margin-top: 10px; font-size: 11px; font-weight: 900; color:#1b5e20; text-transform: uppercase; letter-spacing: 0.5px; }
-  .aa-obs{ margin-top: 6px; background:#f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; font-size: 13px; color:#0f172a; }
-
-  .reply-box {
-    margin-top: 10px; padding: 10px; background: #ecfdf5; border: 1px solid #a7f3d0;
-    border-radius: 8px; font-size: 13px; color: #065f46;
-  }
-  .reply-label { font-weight: 900; font-size: 11px; display: block; margin-bottom: 4px; color: #059669; }
+  .chat-bubble.user { align-self: flex-end; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; border-bottom-right-radius: 2px; }
+  .chat-bubble.docente { align-self: flex-start; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; border-bottom-left-radius: 2px; }
+  .chat-role { display: block; font-size: 9px; font-weight: 900; text-transform: uppercase; margin-bottom: 2px; opacity: 0.7; }
 
   /* FIRMAS & BOTONES */
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
   canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
   .btn-ask {
     background: #f1f5f9; color: #475569; font-weight: bold; font-size: 11px;
-    border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px;
+    border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 20px;
     cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
     transition: 0.2s;
   }
@@ -468,7 +453,6 @@
     document.getElementById("pizarraBottomBtn").style.display = t==='piz'?'none':'flex';
   }
 
-  // ASISTENCIA
   async function activarFormularioExcusa() {
     const di = document.getElementById("docExc").value.trim(); const est = estudiantesValidos.find(e => e.doc === di);
     if(!est) return alert("Documento no encontrado.");
@@ -487,7 +471,6 @@
   function cerrarModalFechas() { document.getElementById("modalFechas").style.display="none"; }
   async function enviarExcusa() { const p=pads.get('sigExc'); if(!p?.hasData) return alert("Firme el recuadro."); await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: document.getElementById("fechaExc").value, motivoTipo: document.getElementById("motivoExc").value, motivoDetalle: document.getElementById("detalleExc").value, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); document.getElementById("successAsis").style.display="flex"; }
 
-  // OBSERVACIONES
   async function buscarObservaciones() {
     const docId = document.getElementById("docObs").value.trim(); if(!docId || !estudiantesValidos.find(e => e.doc === docId)) return alert("No encontrado.");
     if(document.getElementById("chkRemObs").checked) localStorage.setItem("padre_doc", docId);
@@ -507,7 +490,6 @@
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  // PIZARRA
   function procesarLoginAlerta() {
     const di=document.getElementById("docAlertaInput").value.trim(); const est=estudiantesValidos.find(e=>e.doc===di);
     if(!est) return alert("Documento no encontrado."); docAlertaActual=di; gradoEstudianteActual=est.grado;
@@ -529,18 +511,37 @@
     div.innerHTML = items.map(it => `<div class="aa-item"><div class="aa-top"><div><div class="aa-title">${it.actividad}</div><div class="aa-meta">${it.area}</div></div><div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="aa-obs-label" style="color:#1b5e20; font-weight:900; font-size:11px; margin-top:10px;">OBSERVACIÓN:</div><div class="aa-obs">${it.observacion || "Sin registro"}</div></div>`).join("");
   }
 
-  // --- COMPONENTE DE AGENDA ACTUALIZADO ---
+  // --- AGENDA CON CHAT PERSISTENTE ---
   async function cargarAgendaEscolar(grado) {
     const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda...";
     const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get();
+    
+    // Obtenemos los hilos de conversación de este estudiante
     const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
-    const resMap = {}; msgsSnap.forEach(doc => { const m = doc.data(); resMap[m.taskId] = m; });
+    const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); });
+    
     let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
     const filtered = tareas.filter(t => !t.targetStudent || t.targetStudent === docAlertaActual).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
     cacheTareasAgenda = filtered;
+    
     if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; }
+    
     div.innerHTML = filtered.map(t => {
-      const info = resMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink);
+      const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink);
+      
+      let chatHtml = "";
+      if (conv && conv.conversacion) {
+        chatHtml = `<div class="chat-container">`;
+        conv.conversacion.forEach(m => {
+          chatHtml += `
+            <div class="chat-bubble ${m.rol}">
+              <span class="chat-role">${m.rol === 'docente' ? 'Profe' : 'Tú'}</span>
+              ${m.texto}
+            </div>`;
+        });
+        chatHtml += `</div>`;
+      }
+
       return `<div class="agenda-card" style="border-left-color: ${colors.border};">
         <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
         <div class="agenda-date-container"><span class="agenda-date-label">📅 FECHA DE ENTREGA:</span><span class="agenda-date-value">${formatearFecha(t.date)}</span></div>
@@ -548,10 +549,8 @@
         
         ${videoUrl ? `<div style="margin-top:12px; border-radius:12px; overflow:hidden; aspect-ratio: 16/9; border: 1px solid #ddd; background:#000;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
         
-        <!-- BOTÓN DE DESCARGA DE MATERIAL DRIVE -->
         ${t.pdfLink ? `
           <div style="margin-top:15px; background: #f0fdf4; border: 1px dashed #22c55e; padding: 12px; border-radius: 12px;">
-            <p style="margin:0 0 8px 0; font-size:10px; font-weight:900; color:#15803d; text-transform:uppercase;">Recurso de apoyo disponible:</p>
             <a href="${t.pdfLink}" target="_blank" style="text-decoration:none;">
               <button class="btn" style="margin-top:0; background:#1b5e20; box-shadow: 0 4px 0 #0d3b10; font-size:12px; padding:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
                 📂 DESCARGAR MATERIAL (PDF)
@@ -560,8 +559,11 @@
           </div>
         ` : ''}
 
-        ${info && info.respuesta ? `<div class="reply-box"><span class="reply-label">Respuesta del Profe:</span>${info.respuesta}</div>` : ''}
-        <div style="text-align:right; margin-top:12px;">${info ? '<span style="color:#059669; font-weight:bold; font-size:11px;">✅ Resuelto</span>' : `<button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Duda</button>`}</div>
+        ${chatHtml}
+
+        <div style="text-align:right; margin-top:12px;">
+          <button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 ${conv ? 'Seguir hablando' : 'Duda'}</button>
+        </div>
       </div>`;
     }).join("");
   }
@@ -575,11 +577,38 @@
   }
 
   function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "block"; }
+  
   async function enviarPregunta() {
     const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda.");
     const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-    await db.collection("mensajesAgenda").add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: est.nombre, pregunta: txt, timestamp: new Date().toISOString(), read: false });
-    alert("Duda enviada."); document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual);
+    
+    const mRef = db.collection("mensajesAgenda");
+    const query = await mRef.where("taskId", "==", currentTaskId).where("studentDoc", "==", docAlertaActual).get();
+    const newMsg = { rol: 'user', texto: txt, timestamp: new Date().toISOString() };
+
+    if (!query.empty) {
+      await mRef.doc(query.docs[0].id).update({
+        conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg),
+        lastUpdate: new Date().toISOString(),
+        read: false
+      });
+    } else {
+      await mRef.add({
+        taskId: currentTaskId,
+        taskTitle: currentTaskTitle,
+        studentDoc: docAlertaActual,
+        studentName: est.nombre,
+        conversacion: [newMsg],
+        lastUpdate: new Date().toISOString(),
+        read: false,
+        periodo: periodoNotasActual
+      });
+    }
+    
+    alert("Duda enviada."); 
+    document.getElementById("textoPregunta").value = "";
+    document.getElementById("modalPreguntaTarea").style.display = "none"; 
+    cargarAgendaEscolar(gradoEstudianteActual);
   }
 
   function switchTabAlerta(tab) {
@@ -589,7 +618,6 @@
     document.getElementById("tab-agenda").className = tab === 'agenda' ? 'aa-tab-btn active' : 'aa-tab-btn';
   }
 
-  // SOPORTE
   function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
   function autenticarSoporte() { const ds=document.getElementById("docSoporte").value.trim(); const e=estudiantesValidos.find(x=>x.doc===ds); if(e){ estSop=e; document.getElementById("sop_auth").style.display="none"; document.getElementById("sop_menu").style.display="block"; } else alert("No encontrado."); }
@@ -604,7 +632,6 @@
   }
   async function enviarMensajeSoporte() { const p=pads.get('sigSoporte'); if(!p?.hasData) return alert("Firme el mensaje."); await db.collection("comunicacionPadres").add({ documentoEstudiante: estSop.doc, nombreEstudiante: estSop.nombre, asunto: document.getElementById("msg_asunto").value, mensaje: document.getElementById("msg_texto").value, timestamp: new Date().toISOString() }); document.getElementById("modalSoporte").style.display="none"; document.getElementById("successMsg").style.display="flex"; }
   function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
-  function cerrarMensajeAlerta() { document.getElementById("overlayAcad").style.display = "none"; }
 
   // FIRMAS
   function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=150*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
@@ -612,4 +639,3 @@
 </script>
 </body>
 </html>
-
