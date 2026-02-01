@@ -125,6 +125,66 @@
   #tab-notas.active { background: #b71c1c; border-bottom: 4px solid #fff; color: #fff; }
   #tab-agenda.active { background: rgba(255,255,255,0.2); color: white; border-bottom: 4px solid #fff; }
 
+  /* ESTILOS REFINADOS PARA ALERTA ACADÉMICA */
+  .aa-item {
+    background: #fff;
+    border: 1.5px solid #fee2e2;
+    border-left: 6px solid #dc2626;
+    border-radius: 16px;
+    margin-bottom: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+  .aa-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .aa-meta {
+    font-size: 10px;
+    font-weight: 800;
+    color: #991b1b;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+  .aa-title {
+    font-size: 15px;
+    font-weight: 900;
+    color: #1e293b;
+    line-height: 1.2;
+  }
+  .aa-score {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1.5px solid #fecaca;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 900;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05);
+  }
+  .aa-obs-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.5;
+  }
+  .aa-obs-header {
+    display: block;
+    font-weight: 800;
+    color: #1b5e20;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
   #view-aa-notas, #view-aa-agenda { display: none; }
   #view-aa-notas.active, #view-aa-agenda.active { display: block; animation: fadeIn 0.3s; }
   @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
@@ -356,9 +416,9 @@
         <button id="tab-notas" class="aa-tab-btn active" onclick="switchTabAlerta('notas')">⚠️ Alerta Académica</button>
         <button id="tab-agenda" class="aa-tab-btn" onclick="switchTabAlerta('agenda')">📅 Agenda de Tareas</button>
       </div>
-      <div class="aa-student" id="aaNombre"></div>
-      <div class="aa-badge" id="aaBadge"></div>
-      <div id="view-aa-notas" class="active"><div id="aaLista"></div></div>
+      <div class="aa-student" id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px; color:#1e293b; font-size:14px; text-transform:uppercase;"></div>
+      <div class="aa-badge" id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content; font-weight:800;"></div>
+      <div id="view-aa-notas" class="active" style="padding-top:5px;"><div id="aaLista"></div></div>
       <div id="view-aa-agenda">
         <button onclick="descargarAgendaPDF()" class="btn-download-pdf">📄 Descargar Tareas en PDF</button>
         <div id="aaAgendaLista"></div>
@@ -499,16 +559,31 @@
   async function iniciarCargaAlerta() { document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; await cargarPeriodoNotasActual(); cargarNotasBajasPeriodo(docAlertaActual); cargarAgendaEscolar(gradoEstudianteActual); }
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
   
+  // --- REDISEÑO INSTITUCIONAL DE ALERTA ACADÉMICA ---
   async function cargarNotasBajasPeriodo(docEst) {
     document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`;
     const div = document.getElementById("aaLista"); div.innerHTML = "Cargando...";
     const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get();
     let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); });
     if (items.length === 0) { 
-        div.innerHTML = `<div style="text-align:center;color:#0f172a;font-weight:900;padding:14px;">✅ No hay notas en desempeño bajo en este periodo.</div>`; 
+        div.innerHTML = `<div style="text-align:center;color:#475569;font-weight:700;padding:40px 20px; background:#f8fafc; border-radius:16px; border: 2px dashed #cbd5e1;">✅ No se registran notas en desempeño bajo para este estudiante en el periodo vigente.</div>`; 
         return; 
     }
-    div.innerHTML = items.map(it => `<div class="aa-item"><div class="aa-top"><div><div class="aa-title">${it.actividad}</div><div class="aa-meta">${it.area}</div></div><div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="aa-obs-label" style="color:#1b5e20; font-weight:900; font-size:11px; margin-top:10px;">OBSERVACIÓN:</div><div class="aa-obs">${it.observacion || "Sin registro"}</div></div>`).join("");
+    div.innerHTML = items.map(it => `
+      <div class="aa-item">
+        <div class="aa-top">
+          <div style="flex: 1; padding-right: 12px;">
+            <div class="aa-meta">${it.area}</div>
+            <div class="aa-title">${it.actividad}</div>
+          </div>
+          <div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div>
+        </div>
+        <div class="aa-obs-box">
+          <span class="aa-obs-header">Comentario del Docente:</span>
+          ${it.observacion || "No se registró una observación detallada para esta actividad."}
+        </div>
+      </div>
+    `).join("");
   }
 
   // --- AGENDA CON CHAT PERSISTENTE ---
@@ -645,3 +720,4 @@
 </script>
 </body>
 </html>
+
