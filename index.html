@@ -521,11 +521,11 @@
     const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); });
     
     let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-    // SOLUCIÓN DEFINITIVA DE PRIVACIDAD: Filtramos estrictamente por 'publico === true' y 'status !== draft'
+    // SOLUCIÓN FINAL: Solo muestra si status NO es 'draft' Y si publico NO es false.
     const filtered = tareas.filter(t => 
         (!t.targetStudent || t.targetStudent === docAlertaActual) && 
-        t.publico === true && 
-        t.status !== 'draft'
+        t.status !== 'draft' && 
+        t.publico !== false
     ).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
     
     cacheTareasAgenda = filtered;
@@ -645,5 +645,3 @@
 </script>
 </body>
 </html>
-
-
