@@ -105,7 +105,7 @@
     animation: slideUp 0.3s ease-out;
   }
 
-  /* ESTILOS DE TEXTO PIZARRA REFORZADOS */
+  /* ESTILOS DE TEXTO PIZARRA */
   .agenda-task-desc {
     font-size: 14px;
     color: #334155;
@@ -120,8 +120,6 @@
   .caps-highlight {
     color: #d32f2f;
     font-weight: 900;
-    text-decoration: underline decoration-thickness: 1px;
-    text-underline-offset: 2px;
   }
   .bullet-row {
     display: flex;
@@ -140,6 +138,34 @@
     margin-bottom: 12px;
   }
 
+  /* FILTROS DE AGENDA */
+  .agenda-filters {
+    background: #f1f5f9;
+    padding: 12px;
+    border-radius: 14px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .filter-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+  }
+  .filter-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    background: white;
+    margin-bottom: 0 !important;
+  }
+
   .btn-back {
     background: #f1f5f9;
     border: none;
@@ -152,7 +178,7 @@
     cursor: pointer;
   }
 
-  /* BOTONES Y CAMPOS */
+  /* BOTONES Y CAMPOS (INTACTOS) */
   input, textarea, select {
     width: 100%; padding: 14px; margin-bottom: 15px;
     border-radius: 12px; border: 2px solid #ddd;
@@ -219,6 +245,7 @@
 
 <body>
 
+  <!-- CABECERA PERMANENTE -->
   <div class="header" id="mainHeader">
     <img src="escudo.png" alt="Escudo">
     <div class="header-text">
@@ -228,6 +255,7 @@
     </div>
   </div>
 
+  <!-- SECCIÓN LOGIN -->
   <div id="login-section">
     <div class="login-card">
       <p style="font-weight:900; color:#1b5e20; margin-bottom:15px; text-transform:uppercase;">Acceso para Acudientes</p>
@@ -240,6 +268,7 @@
     </div>
   </div>
 
+  <!-- DASHBOARD PRINCIPAL -->
   <div id="main-dashboard">
     <button class="card-btn" onclick="navegarA('exc')">
       <div class="icon-circle blue-bg">📋</div>
@@ -262,6 +291,8 @@
     <button class="btn" style="grid-column: span 2; background:#455a64; box-shadow:0 4px 0 #263238; margin-top:10px;" onclick="abrirSoporte()">💬 SOPORTE Y COMUNICACIÓN</button>
   </div>
 
+  <!-- VISTAS INTERNAS -->
+  
   <div id="view-exc" class="container">
     <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
     <div id="formExc">
@@ -305,8 +336,18 @@
       </div>
       <div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px; color:#1e293b; font-size:14px; text-transform:uppercase;"></div>
       <div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content; font-weight:800;"></div>
+      
       <div id="view-aa-notas" class="active"><div id="aaLista"></div></div>
+      
       <div id="view-aa-agenda" style="display:none;">
+        <div class="agenda-filters">
+          <span class="filter-label">Ordenar por fecha de entrega:</span>
+          <select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)">
+            <option value="prox">Más próximas primero (Urgente)</option>
+            <option value="lejos">Más lejanas primero (Futuras)</option>
+            <option value="creado">Recientes creadas primero</option>
+          </select>
+        </div>
         <button onclick="descargarAgendaPDF()" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; border-radius:12px; font-weight:900; margin-bottom:15px; box-shadow:0 4px 0 #b91c1c;">📄 Descargar Agenda PDF</button>
         <div id="aaAgendaLista"></div>
       </div>
@@ -409,42 +450,31 @@
     document.getElementById("main-dashboard").style.display = "grid";
   }
 
-  // --- FUNCIÓN DE FORMATEO REFORZADA (PIZARRA) ---
+  // FUNCIÓN DE FORMATEO REFORZADA (PIZARRA)
   function formatTaskDescription(text) {
     if (!text) return "Sin descripción detallada.";
-    
-    // Dividimos por líneas reales para procesar cada una
     const lines = text.split('\n');
     let finalHtml = '';
-
     lines.forEach(line => {
       let trimmedLine = line.trim();
       if (!trimmedLine) {
         finalHtml += '<div class="paragraph-spacer"></div>';
         return;
       }
-
-      // 1. Detectar si la línea es una viñeta (inicia con -, *, •, o punto)
-      // Usamos una regex que busca el símbolo al inicio, permitiendo espacios opcionales
       const bulletMatch = trimmedLine.match(/^[-*•]\s*(.*)/);
-      
       if (bulletMatch) {
-        // Es una viñeta: Extraemos el contenido después del símbolo
         let content = bulletMatch[1];
-        // Procesamos mayúsculas dentro de la viñeta
         content = content.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>');
         finalHtml += `<div class="bullet-row"><span class="bullet-dot">●</span><span>${content}</span></div>`;
       } else {
-        // Es texto normal: Procesamos mayúsculas
         let content = trimmedLine.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>');
         finalHtml += `<span>${content}</span><br>`;
       }
     });
-
     return finalHtml;
   }
 
-  // --- LÓGICA ORIGINAL (SIN CAMBIOS) ---
+  // --- LÓGICA ORIGINAL (MANTENIDA) ---
   function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
   function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
   function getAreaStyle(a) { 
@@ -482,7 +512,7 @@
       if(obsL.length === 0) { out.innerHTML = `<div style='text-align:center; padding:20px;'>No hay anotaciones en el ciclo #${cAct}</div>`; return; }
       out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => {
         let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32");
-        return `<div style="border:1.5px solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`;
+        return `<div style="border:1.5 solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`;
       }).join("");
       setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500);
     });
@@ -503,17 +533,30 @@
     const div = document.getElementById("aaLista"); div.innerHTML = "Cargando...";
     const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get();
     let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); });
-    if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Sin alertas.</div>`; return; }
-    div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5px solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5px solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:10px; font-size:12px;">${it.observacion || "Sin comentario."}</div></div>`).join("");
+    if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Todo al día.</div>`; return; }
+    div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5 solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5 solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:10px; font-size:12px;">${it.observacion || "Sin comentario."}</div></div>`).join("");
   }
 
+  // --- FUNCIÓN DE AGENDA CON ORDENAMIENTO ---
   async function cargarAgendaEscolar(grado) {
     const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda...";
     const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get();
     const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
     const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); });
+    
     let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-    const filtered = tareas.filter(t => (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    let filtered = tareas.filter(t => (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false);
+
+    // Aplicar Ordenamiento
+    const order = document.getElementById("agendaSortOrder").value;
+    if(order === "prox") {
+      filtered.sort((a,b) => (a.date || "").localeCompare(b.date || ""));
+    } else if (order === "lejos") {
+      filtered.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+    } else {
+      filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    }
+
     cacheTareasAgenda = filtered;
     if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; }
     
@@ -524,15 +567,13 @@
       return `
         <div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
           <span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span>
-          <div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#64748b;">📅 Fecha de entrega: ${formatearFecha(t.date)}</div>
+          <div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#c62828;">📅 Entrega: ${formatearFecha(t.date)}</div>
           <div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div>
-          
           <div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>
-
           ${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
           ${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}
           ${chatHtml}
-          <div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1px solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Chat</button></div>
+          <div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1.5 solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Chat</button></div>
         </div>`;
     }).join("");
   }
@@ -583,4 +624,3 @@
 </script>
 </body>
 </html>
-
