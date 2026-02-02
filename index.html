@@ -12,9 +12,9 @@
 
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 140px; user-select: none; }
+  body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 40px; user-select: none; }
 
-  /* CABECERA */
+  /* CABECERA PERMANENTE (ESTILO ORIGINAL) */
   .header {
     background: #1b5e20;
     color: #fff;
@@ -25,6 +25,9 @@
     align-items: center;
     gap: 12px;
     text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
   .header img {
     width: 70px;
@@ -37,37 +40,124 @@
   .header h4 { margin: 0; font-weight: 500; color: #a5d6a7; font-size: 11px; margin-top: 2px; }
   .header p { margin: 0; font-size: 11px; opacity: 0.9; font-style: italic; margin-top: 2px; color: #fff; }
 
-  /* MENÚ PRINCIPAL */
-  .menu {
-    display: flex; justify-content: space-around; gap: 10px;
-    background: #2e7d32; padding: 8px; margin: -25px auto 20px;
-    width: 92%; border-radius: 999px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    position: relative; z-index: 10;
+  /* LOGIN GLOBAL */
+  #login-section {
+    padding: 40px 20px;
+    text-align: center;
   }
-  .menu button {
-    flex: 1; border: none; padding: 12px; border-radius: 999px;
-    font-weight: 800; background: rgba(255,255,255,0.1);
-    color: #fff; cursor: pointer; font-size: 13px; transition: 0.3s;
+  .login-card {
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    max-width: 400px;
+    margin: 20px auto;
   }
-  .menu button.active { background: #fff; color: #1b5e20; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-  /* CONTENEDOR GENERAL */
+  /* DASHBOARD DE TARJETAS */
+  #main-dashboard {
+    display: none;
+    padding: 0 20px;
+    margin-top: 40px; 
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .card-btn {
+    background: white;
+    border-radius: 30px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .card-btn:active { transform: scale(0.95); }
+  .card-btn.full { grid-column: span 2; padding: 30px 20px; }
+  
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin-bottom: 12px;
+  }
+  .blue-bg { background: #e3f2fd; }
+  .orange-bg { background: #fff3e0; }
+  .purple-bg { background: #f3e5f5; }
+
+  .card-label { font-weight: 900; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-info { font-size: 10px; color: #94a3b8; margin-top: 4px; font-weight: 600; }
+
+  /* CONTENEDORES DE SECCIÓN */
   .container {
-    background: #fff; width: 92%; margin: 10px auto;
-    padding: 20px 16px; border-radius: 18px;
+    background: #fff; width: 92%; margin: 30px auto;
+    padding: 20px 16px; border-radius: 24px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    display: none;
+    animation: slideUp 0.3s ease-out;
   }
 
-  /* INPUTS Y BOTONES */
+  /* ESTILOS DE TEXTO PIZARRA REFORZADOS */
+  .agenda-task-desc {
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.6;
+    margin-top: 10px;
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    word-break: break-word;
+  }
+  .caps-highlight {
+    color: #d32f2f;
+    font-weight: 900;
+    text-decoration: underline decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .bullet-row {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    padding-left: 5px;
+  }
+  .bullet-dot {
+    color: #2e7d32;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .paragraph-spacer {
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .btn-back {
+    background: #f1f5f9;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  /* BOTONES Y CAMPOS */
   input, textarea, select {
     width: 100%; padding: 14px; margin-bottom: 15px;
     border-radius: 12px; border: 2px solid #ddd;
     font-size: 16px; background: #f9f9f9; outline: none;
   }
-  .remember-box { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 14px; color: #555; }
-  .remember-box input { width: auto; margin: 0; }
-
   .btn {
     width: 100%; padding: 15px; background: #1b5e20; color: #fff;
     font-weight: 800; border: none; border-radius: 14px; cursor: pointer;
@@ -76,225 +166,19 @@
   .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
   .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
 
-  /* ASISTENCIA */
-  .att-summary { display: flex; gap: 10px; margin-bottom: 15px; }
-  .att-box {
-    flex: 1; text-align: center; padding: 10px 5px; border-radius: 12px;
-    color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    cursor: pointer; transition: transform 0.1s;
-  }
-  .att-box:active { transform: scale(0.95); }
-
-  /* OBSERVACIONES */
-  .card {
-    margin-top: 15px; border-radius: 16px; overflow: hidden;
-    border: 1px solid #eee; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-  .card .top {
-    padding: 10px 12px; font-weight: 900; color: #fff;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .card .body { padding: 15px; font-size: 14px; color: #333; line-height: 1.5; }
-  .obs-label {
-    font-weight: 800; display: block; margin-top: 12px;
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .obs-content {
-    background: #fcfcfc; padding: 10px; border-radius: 8px;
-    border-left: 4px solid #ccc; margin-bottom: 5px; font-size: 13px;
-  }
-
-  /* PIZARRA INTEGRADA UI */
-  .pizarra-header-ui {
-    background: #6d4c41; color: white; padding: 15px;
-    border-radius: 14px 14px 0 0; text-align: center;
-    font-weight: 900; font-size: 18px; margin: -20px -16px 15px;
-  }
-  .btn-consultar-madera {
-    background: #1b5e20; color: white; width:100%; border:none; padding:15px; 
-    font-weight:900; border-radius:50px; box-shadow: 0 4px 0 #145018;
-    cursor:pointer;
-  }
-  .aa-tabs { display: flex; background: #5d4037; padding: 10px 5px 0 5px; margin: 0 -16px 15px; }
-  .aa-tab-btn {
-    flex: 1; background: rgba(255,255,255,0.1); border: none; color: #d7ccc8; 
-    padding: 14px; font-weight: bold; font-size: 13px; cursor: pointer;
-    border-radius: 8px 8px 0 0; transition: 0.3s; margin-right: 2px;
-  }
-  #tab-notas { background: #c62828; color: white; }
-  #tab-notas.active { background: #b71c1c; border-bottom: 4px solid #fff; color: #fff; }
-  #tab-agenda.active { background: rgba(255,255,255,0.2); color: white; border-bottom: 4px solid #fff; }
-
-  /* ESTILOS REFINADOS PARA ALERTA ACADÉMICA */
-  .aa-item {
-    background: #fff;
-    border: 1.5px solid #fee2e2;
-    border-left: 6px solid #dc2626;
-    border-radius: 16px;
-    margin-bottom: 18px;
-    padding: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    position: relative;
-  }
-  .aa-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-  }
-  .aa-meta {
-    font-size: 10px;
-    font-weight: 800;
-    color: #991b1b;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 4px;
-  }
-  .aa-title {
-    font-size: 15px;
-    font-weight: 900;
-    color: #1e293b;
-    line-height: 1.2;
-  }
-  .aa-score {
-    background: #fef2f2;
-    color: #b91c1c;
-    border: 1.5px solid #fecaca;
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-weight: 900;
-    font-size: 18px;
-    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05);
-  }
-  .aa-obs-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 12px;
-    font-size: 12px;
-    color: #475569;
-    line-height: 1.5;
-  }
-  .aa-obs-header {
-    display: block;
-    font-weight: 800;
-    color: #1b5e20;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
-  }
-
-  #view-aa-notas, #view-aa-agenda { display: none; }
-  #view-aa-notas.active, #view-aa-agenda.active { display: block; animation: fadeIn 0.3s; }
-  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-  /* AGENDA UI */
-  .btn-download-pdf {
-    width: 100%; background: #ef4444; color: white; border: none; padding: 12px;
-    border-radius: 12px; font-weight: 900; font-size: 13px; margin-bottom: 15px;
-    cursor: pointer; box-shadow: 0 4px 0 #b91c1c; display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-download-pdf:active { transform: translateY(2px); box-shadow: 0 2px 0 #b91c1c; }
-
-  .agenda-card {
-    border: 1px solid #e2e8f0; border-left: 5px solid #0284c7; 
-    border-radius: 12px; padding: 14px; margin-bottom: 12px; background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    position: relative;
-  }
-  .agenda-area-badge {
-    font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 6px;
-    text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px;
-  }
-  .agenda-date-container {
-    background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
-    padding: 6px 10px; margin-bottom: 10px; display: inline-block;
-  }
-  .agenda-date-label {
-    display: block; font-size: 9px; font-weight: 800; color: #b91c1c; 
-    text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px;
-  }
-  .agenda-date-value { font-size: 13px; font-weight: 900; color: #991b1b; text-transform: capitalize; }
-  .agenda-title { font-size: 16px; font-weight: 900; color: #334155; margin-bottom: 6px; line-height: 1.3; }
-  .agenda-desc { font-size: 13px; color: #475569; white-space: pre-wrap; line-height: 1.5; margin-bottom: 8px; }
-
-  /* CHAT PERSISTENTE UI */
-  .chat-container {
-    margin-top: 10px; max-height: 200px; overflow-y: auto; 
-    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; 
-    padding: 10px; display: flex; flex-direction: column; gap: 8px;
-  }
-  .chat-bubble {
-    max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: 12px; line-height: 1.4;
-  }
-  .chat-bubble.user { align-self: flex-end; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; border-bottom-right-radius: 2px; }
-  .chat-bubble.docente { align-self: flex-start; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; border-bottom-left-radius: 2px; }
-  .chat-role { display: block; font-size: 9px; font-weight: 900; text-transform: uppercase; margin-bottom: 2px; opacity: 0.7; }
-
-  /* FIRMAS & BOTONES */
+  /* CANVAS Y PIZARRA */
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
   canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
-  .btn-ask {
-    background: #f1f5f9; color: #475569; font-weight: bold; font-size: 11px;
-    border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 20px;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
-    transition: 0.2s;
-  }
+  .pizarra-header-ui { background: #6d4c41; color: white; padding: 15px; border-radius: 14px 14px 0 0; text-align: center; font-weight: 900; font-size: 18px; margin: -20px -16px 15px; }
 
-  /* OTROS ELEMENTOS */
-  .btn-support-trigger {
-    display: block; width: 92%; margin: 0 auto 12px;
-    padding: 15px; background: #455a64; color: #fff; font-weight: 800;
-    border: none; border-radius: 50px; font-size: 14px;
-    box-shadow: 0 4px 0 #263238; cursor: pointer;
-  }
-  .btn-pizarra {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    width: 92%; height: 120px; margin: 0 auto;
-    background: #213c1c; border: 8px solid #5d4037; border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 0 50px rgba(0,0,0,0.4);
-    cursor: pointer; position: relative; overflow: hidden;
-  }
-  .btn-pizarra::before {
-    content: "✍️ Pizarra Escolar";
-    font-family: 'Great Vibes', cursive; color: rgba(255,255,255,0.9);
-    font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  }
+  /* PIE DE PÁGINA */
+  .footer-container { margin-top: 30px; text-align: center; padding: 20px; }
+  .footer-text { font-family: 'Great Vibes', cursive; font-size: 32px; color: #1b5e20; }
 
-  /* FOOTER */
-  .footer-container {
-    margin-top: 40px; padding: 40px 20px;
-    display: flex; justify-content: center; align-items: center;
-    position: relative; overflow: visible; flex-direction: column; gap: 5px;
-  }
-  .footer-blob {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 320px; height: 140px;
-    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(200, 230, 201, 0.6) 40%, rgba(165, 214, 167, 0.3) 70%, rgba(255, 255, 255, 0) 100%);
-    filter: blur(25px); border-radius: 50%; z-index: 0; pointer-events: none;
-  }
-  .footer-text {
-    position: relative; z-index: 1; font-family: 'Great Vibes', cursive;
-    font-size: 32px; color: #1b5e20; text-align: center;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
-    letter-spacing: 1px;
-  }
-  .copyright-text {
-    position: relative; z-index: 1; font-size: 10px;
-    color: #1b5e20; opacity: 0.7; text-align: center;
-    font-family: system-ui, sans-serif; margin-top: 5px;
-  }
-
-  /* MODALES */
-  #modalSoporte, #modalFechas, #modalPreguntaTarea { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
-  #modalSoporte { background: #fff; overflow-y: auto; }
-  #modalFechas { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
-  #modalPreguntaTarea { background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; z-index: 4000; }
+  /* OVERLAYS */
   .success-overlay {
     display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 3000; color:white; text-align:center; padding: 40px 24px;
+    z-index: 5000; color:white; text-align:center; padding: 40px 24px;
     justify-content:center; align-items:center; flex-direction:column;
     backdrop-filter: blur(8px);
   }
@@ -304,6 +188,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
 <script>
+  // CONFIGURACIÓN FIREBASE (MANTENIDA)
   const firebaseConfig = {
     apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8",
     authDomain: "diariodeprocesos-6f78d.firebaseapp.com",
@@ -334,39 +219,59 @@
 
 <body>
 
-  <div class="header">
+  <div class="header" id="mainHeader">
     <img src="escudo.png" alt="Escudo">
     <div class="header-text">
-      <h2>INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Rural Santa Juana. - Primaria.</h2>
-      <h4>Sistema Integrado de Gestión Escolar María Juana.</h4>
-      <p>Docente: Oscar Barrientos. 2026</p>
+      <h2 id="inst-title">INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Rural Santa Juana. - Primaria.</h2>
+      <h4 id="inst-sub">Sistema Integrado de Gestión Escolar María Juana.</h4>
+      <p id="inst-doc">Docente: Oscar Barrientos. 2026</p>
     </div>
   </div>
 
-  <div class="menu">
-    <button id="btnExc" class="active" onclick="switchTab('exc')">Excusas / Asistencia</button>
-    <button id="btnObs" onclick="switchTab('obs')">Observaciones</button>
-  </div>
-
-  <!-- VISTA EXCUSAS -->
-  <div id="view-exc" class="container">
-    <div id="loginExc">
-      <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-      <input id="docExc" type="number" placeholder="Digite documento..." inputmode="numeric">
-      <div class="remember-box">
-        <input type="checkbox" id="chkRemExc">
-        <label for="chkRemExc">Recordar documento</label>
+  <div id="login-section">
+    <div class="login-card">
+      <p style="font-weight:900; color:#1b5e20; margin-bottom:15px; text-transform:uppercase;">Acceso para Acudientes</p>
+      <input id="globalDocInput" type="number" placeholder="Ingrese documento del estudiante..." inputmode="numeric">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:13px; color:#555;">
+        <input type="checkbox" id="chkGlobalSave">
+        <label for="chkGlobalSave">Mantener sesión iniciada</label>
       </div>
-      <button class="btn" onclick="activarFormularioExcusa()">CONTINUAR</button>
+      <button class="btn" onclick="iniciarSesionApp()">INGRESAR AL SISTEMA</button>
     </div>
-    <div id="formExc" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
+  </div>
+
+  <div id="main-dashboard">
+    <button class="card-btn" onclick="navegarA('exc')">
+      <div class="icon-circle blue-bg">📋</div>
+      <span class="card-label">Asistencia</span>
+      <span class="card-info">Fallas y Excusas</span>
+    </button>
+    
+    <button class="card-btn" onclick="navegarA('obs')">
+      <div class="icon-circle orange-bg">✍️</div>
+      <span class="card-label">Observador</span>
+      <span class="card-info">Conducta Escolar</span>
+    </button>
+    
+    <button class="card-btn full" onclick="navegarA('piz')">
+      <div class="icon-circle purple-bg">🏫</div>
+      <span class="card-label">Pizarra Escolar</span>
+      <span class="card-info">Alertas, Notas y Agenda</span>
+    </button>
+
+    <button class="btn" style="grid-column: span 2; background:#455a64; box-shadow:0 4px 0 #263238; margin-top:10px;" onclick="abrirSoporte()">💬 SOPORTE Y COMUNICACIÓN</button>
+  </div>
+
+  <div id="view-exc" class="container">
+    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
+    <div id="formExc">
       <div id="nombreExc" style="text-align:center; font-weight:900; color:#1b5e20; margin-bottom:5px;"></div>
       <div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin-bottom:15px; border-radius:4px;"></div>
-      <div class="att-summary">
-        <div class="att-box" style="background:#ef4444;" onclick="mostrarListadoFechas('I')">
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#ef4444;" onclick="mostrarListadoFechas('I')">
           <span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS
         </div>
-        <div class="att-box" style="background:#f97316;" onclick="mostrarListadoFechas('E')">
+        <div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#f97316;" onclick="mostrarListadoFechas('E')">
           <span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS
         </div>
       </div>
@@ -377,7 +282,7 @@
       </select>
       <textarea id="detalleExc" placeholder="Describa el motivo..."></textarea>
       <div class="sig-wrap">
-        <p style="text-align:center; font-weight:bold; font-size:12px;">FIRMA ACUDIENTE</p>
+        <p style="text-align:center; font-weight:bold; font-size:12px; margin-top:0;">FIRMA ACUDIENTE</p>
         <canvas id="sigExc"></canvas>
         <button class="btn sec" style="padding:6px; font-size:10px;" onclick="limpiarPad('sigExc')">Borrar</button>
       </div>
@@ -385,114 +290,161 @@
     </div>
   </div>
 
-  <!-- VISTA OBSERVACIONES -->
-  <div id="view-obs" class="container" style="display:none;">
-    <p style="font-weight:bold; color:#1b5e20; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-    <input id="docObs" type="number" placeholder="Digite documento..." inputmode="numeric">
-    <div class="remember-box">
-      <input type="checkbox" id="chkRemObs">
-      <label for="chkRemObs">Recordar documento</label>
-    </div>
-    <button class="btn" onclick="buscarObservaciones()">VER OBSERVACIONES</button>
-    <div id="resultadoObs" style="margin-top:20px;"></div>
+  <div id="view-obs" class="container">
+    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
+    <div id="resultadoObs"></div>
   </div>
 
-  <!-- VISTA PIZARRA INTEGRADA -->
-  <div id="view-piz" class="container" style="display:none;">
-    <div id="loginAlertaFlow">
+  <div id="view-piz" class="container">
+    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
+    <div id="contentAlertaFlow">
       <div class="pizarra-header-ui">✍️ Pizarra Escolar</div>
-      <p style="font-weight:bold; color:#5d4037; margin-bottom:5px;">DOCUMENTO DEL ESTUDIANTE</p>
-      <input id="docAlertaInput" type="number" placeholder="Digite documento..." inputmode="numeric">
-      <div class="remember-box">
-        <input type="checkbox" id="chkRemAlerta">
-        <label for="chkRemAlerta">Recordar documento</label>
+      <div style="display:flex; background:#5d4037; padding:10px 5px 0 5px; margin:0 -20px 15px;">
+        <button id="tab-notas" style="flex:1; border:none; padding:14px; font-weight:bold; border-radius:8px 8px 0 0;" class="active" onclick="switchTabAlerta('notas')">⚠️ Alertas</button>
+        <button id="tab-agenda" style="flex:1; border:none; padding:14px; font-weight:bold; border-radius:8px 8px 0 0;" onclick="switchTabAlerta('agenda')">📅 Agenda</button>
       </div>
-      <button class="btn-consultar-madera" onclick="procesarLoginAlerta()">INGRESAR A LA PIZARRA</button>
-      <button onclick="switchTab('exc')" style="background:transparent; border:none; color:#666; width:100%; margin-top:10px; font-weight:bold; font-size:12px;">SALIR</button>
-    </div>
-    <div id="contentAlertaFlow" style="display:none;">
-      <div class="pizarra-header-ui">✍️ Pizarra Escolar</div>
-      <div class="aa-tabs">
-        <button id="tab-notas" class="aa-tab-btn active" onclick="switchTabAlerta('notas')">⚠️ Alerta Académica</button>
-        <button id="tab-agenda" class="aa-tab-btn" onclick="switchTabAlerta('agenda')">📅 Agenda de Tareas</button>
-      </div>
-      <div class="aa-student" id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px; color:#1e293b; font-size:14px; text-transform:uppercase;"></div>
-      <div class="aa-badge" id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content; font-weight:800;"></div>
-      <div id="view-aa-notas" class="active" style="padding-top:5px;"><div id="aaLista"></div></div>
-      <div id="view-aa-agenda">
-        <button onclick="descargarAgendaPDF()" class="btn-download-pdf">📄 Descargar Tareas en PDF</button>
+      <div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px; color:#1e293b; font-size:14px; text-transform:uppercase;"></div>
+      <div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content; font-weight:800;"></div>
+      <div id="view-aa-notas" class="active"><div id="aaLista"></div></div>
+      <div id="view-aa-agenda" style="display:none;">
+        <button onclick="descargarAgendaPDF()" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; border-radius:12px; font-weight:900; margin-bottom:15px; box-shadow:0 4px 0 #b91c1c;">📄 Descargar Agenda PDF</button>
         <div id="aaAgendaLista"></div>
       </div>
-      <button onclick="location.reload()" style="background:transparent; border:none; color:#5d4037; width:100%; margin-top:20px; font-weight:bold; font-size:13px; text-decoration:underline;">SALIR DE LA PIZARRA</button>
     </div>
   </div>
-
-  <button class="btn-support-trigger" onclick="abrirSoporte()">💬 Comunicación y Soporte</button>
-  <div id="pizarraBottomBtn" class="btn-pizarra" onclick="switchTab('piz')"></div>
 
   <div class="footer-container">
-    <div class="footer-blob"></div>
     <div class="footer-text">Familia y escuela caminamos juntos</div>
-    <div class="copyright-text">© 2026 Santa Juana Digital</div>
+    <div style="font-size:10px; color:#1b5e20; opacity:0.7; margin-top:5px;">© 2026 Santa Juana Digital</div>
   </div>
 
-  <!-- MODAL SOPORTE -->
-  <div id="modalSoporte">
-    <div class="modal-header" style="background:#263238; color:white; padding:20px; text-align:center;">
+  <!-- MODALES -->
+  <div id="modalSoporte" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9000; overflow-y:auto;">
+    <div style="background:#263238; color:white; padding:20px; text-align:center; position:sticky; top:0;">
       <button onclick="cerrarSoporte()" style="position:absolute; left:15px; top:18px; background:none; border:none; color:white; font-size:24px;">✕</button>
-      Soporte
+      Soporte Técnico
     </div>
-    <div class="modal-body" style="padding:20px;">
-      <div id="sop_auth" style="text-align:center;"><input id="docSoporte" type="number" placeholder="Documento"><button class="btn" onclick="autenticarSoporte()">INGRESAR</button></div>
-      <div id="sop_menu" style="display:none; text-align:center;">
+    <div style="padding:20px;">
+      <div id="sop_menu" style="text-align:center;">
         <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank"><button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS ASAMBLEAS</button></a>
         <a href="https://roscar33.github.io/Horario/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button></a>
         <a href="https://roscar33.github.io/Utiles2026/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES</button></a>
         <button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button>
         <button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button>
       </div>
-      <div id="sop_form" style="display:none; text-align:left;">
-        <input id="msg_fecha" type="date"><input id="msg_asunto" type="text" placeholder="Asunto"><textarea id="msg_texto" rows="4"></textarea>
-        <div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar</button></div>
-        <button class="btn" onclick="enviarMensajeSoporte()">ENVIAR</button>
-      </div>
+      <div id="sop_form" style="display:none;"><input id="msg_fecha" type="date"><input id="msg_asunto" type="text" placeholder="Asunto"><textarea id="msg_texto" rows="4"></textarea><div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar</button></div><button class="btn" onclick="enviarMensajeSoporte()">ENVIAR</button></div>
       <div id="sop_history" style="display:none;"><div id="listaMensajesSop"></div><button class="btn sec" onclick="irAMenuSop()">VOLVER</button></div>
     </div>
   </div>
 
-  <div id="modalPreguntaTarea">
-    <div class="container" style="max-width:320px; margin-top:20vh; border-radius:20px;">
-      <h3 style="text-align:center; color:#1b5e20;">Duda sobre Tarea</h3>
-      <p id="tituloTareaPregunta" style="text-align:center; font-size:12px; font-weight:bold;"></p>
+  <div id="modalPreguntaTarea" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9500; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;">
+    <div style="background:white; padding:25px; border-radius:24px; width:100%; max-width:350px;">
+      <h3 style="color:#1b5e20;">Duda sobre Tarea</h3>
+      <p id="tituloTareaPregunta" style="font-size:12px; font-weight:bold;"></p>
       <textarea id="textoPregunta" rows="4"></textarea>
       <div style="display:flex; gap:10px;"><button class="btn sec" onclick="document.getElementById('modalPreguntaTarea').style.display='none'">Cerrar</button><button class="btn" onclick="enviarPregunta()">Enviar</button></div>
     </div>
   </div>
 
-  <div id="overlaySem" class="success-overlay">
-    <div class="alert-box-ui"><h2 id="semTitle">ADVERTENCIA</h2><p id="semText" style="white-space:pre-line;"></p><button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button></div>
+  <div id="modalFechas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9600; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;">
+    <div style="background:white; border-radius:24px; width:100%; max-width:320px; overflow:hidden;"><div id="txtTituloModalFechas" style="background:#1b5e20; color:white; padding:15px; font-weight:900;"></div><ul id="containerListaFechas" style="list-style:none; padding:15px; text-align:left; margin:0; max-height:300px; overflow-y:auto;"></ul><button class="btn" style="border-radius:0;" onclick="cerrarModalFechas()">CERRAR</button></div>
   </div>
+
+  <!-- OVERLAYS ÉXITO -->
   <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
-    <h2>✅ ¡Envío Exitoso!</h2><p>Póngase al día con sus procesos.</p><button class="btn-entendido" onclick="location.reload()">ENTENDIDO</button>
+    <h2>✅ ¡Envío Exitoso!</h2><p>Póngase al día con sus procesos.</p><button class="btn" style="background:white; color:#1b5e20; width:fit-content;" onclick="location.reload()">ENTENDIDO</button>
   </div>
   <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
-    <h2>✅ Mensaje Enviado</h2><p>Docente responderá pronto.</p><button class="btn-entendido" style="color:#0277bd;" onclick="cerrarSuccessMsg()">ENTENDIDO</button>
+    <h2>✅ Mensaje Enviado</h2><p>Docente responderá pronto.</p><button class="btn" style="background:white; color:#0277bd; width:fit-content;" onclick="cerrarSuccessMsg()">ENTENDIDO</button>
   </div>
-  <div id="modalFechas"><div class="modal-fechas-box"><div class="modal-fechas-header" id="txtTituloModalFechas"></div><ul id="containerListaFechas" class="modal-fechas-list"></ul><button class="btn-close-fechas" onclick="cerrarModalFechas()">CERRAR</button></div></div>
+  <div id="overlaySem" class="success-overlay" style="background: rgba(0,0,0,0.9);">
+    <div style="background:white; padding:30px; border-radius:24px; color:#333; width:90%;"><h2 style="color:#d32f2f;">ADVERTENCIA</h2><p id="semText" style="white-space:pre-line;"></p><button class="btn" onclick="location.reload()">ENTENDIDO</button></div>
+  </div>
 
 <script>
   let estActualDoc = ""; let periodoAsis = 1; let estSop = null; const pads = new Map(); let cacheFechas = { I: [], E: [] };
   let docAlertaActual = ""; let periodoNotasActual = 1; let gradoEstudianteActual = ""; let cacheTareasAgenda = []; let currentTaskId = null; let currentTaskTitle = null;
   window.jsPDF = window.jspdf.jsPDF;
 
+  // LÓGICA DE LOGIN UNIFICADO
   window.onload = function() {
     const saved = localStorage.getItem("padre_doc");
     if(saved) {
-      ["docExc", "docObs", "docAlertaInput", "docSoporte"].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = saved; });
-      ["chkRemExc", "chkRemObs", "chkRemAlerta"].forEach(id => { if(document.getElementById(id)) document.getElementById(id).checked = true; });
+      document.getElementById("globalDocInput").value = saved;
+      document.getElementById("chkGlobalSave").checked = true;
     }
   };
 
+  function iniciarSesionApp() {
+    const doc = document.getElementById("globalDocInput").value.trim();
+    const est = estudiantesValidos.find(e => e.doc === doc);
+    if(!est) return alert("Documento no encontrado.");
+
+    if(document.getElementById("chkGlobalSave").checked) localStorage.setItem("padre_doc", doc);
+    
+    estActualDoc = doc;
+    docAlertaActual = doc;
+    gradoEstudianteActual = est.grado;
+    estSop = est;
+
+    document.getElementById("inst-title").innerText = est.nombre;
+    document.getElementById("inst-sub").innerText = "GRADO: " + est.grado;
+    document.getElementById("inst-doc").innerHTML = "Sede Santa Juana · <span style='color:yellow;'>Sesión Iniciada</span>";
+
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("main-dashboard").style.display = "grid";
+  }
+
+  function navegarA(seccion) {
+    document.getElementById("main-dashboard").style.display = "none";
+    document.getElementById("view-" + seccion).style.display = "block";
+    window.scrollTo(0,0);
+    if(seccion === 'exc') activarFormularioExcusa();
+    if(seccion === 'obs') buscarObservaciones();
+    if(seccion === 'piz') iniciarCargaAlerta();
+  }
+
+  function volverAlMenu() {
+    document.querySelectorAll('.container').forEach(c => c.style.display = "none");
+    document.getElementById("main-dashboard").style.display = "grid";
+  }
+
+  // --- FUNCIÓN DE FORMATEO REFORZADA (PIZARRA) ---
+  function formatTaskDescription(text) {
+    if (!text) return "Sin descripción detallada.";
+    
+    // Dividimos por líneas reales para procesar cada una
+    const lines = text.split('\n');
+    let finalHtml = '';
+
+    lines.forEach(line => {
+      let trimmedLine = line.trim();
+      if (!trimmedLine) {
+        finalHtml += '<div class="paragraph-spacer"></div>';
+        return;
+      }
+
+      // 1. Detectar si la línea es una viñeta (inicia con -, *, •, o punto)
+      // Usamos una regex que busca el símbolo al inicio, permitiendo espacios opcionales
+      const bulletMatch = trimmedLine.match(/^[-*•]\s*(.*)/);
+      
+      if (bulletMatch) {
+        // Es una viñeta: Extraemos el contenido después del símbolo
+        let content = bulletMatch[1];
+        // Procesamos mayúsculas dentro de la viñeta
+        content = content.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>');
+        finalHtml += `<div class="bullet-row"><span class="bullet-dot">●</span><span>${content}</span></div>`;
+      } else {
+        // Es texto normal: Procesamos mayúsculas
+        let content = trimmedLine.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>');
+        finalHtml += `<span>${content}</span><br>`;
+      }
+    });
+
+    return finalHtml;
+  }
+
+  // --- LÓGICA ORIGINAL (SIN CAMBIOS) ---
   function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
   function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
   function getAreaStyle(a) { 
@@ -504,22 +456,11 @@
     return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' };
   }
 
-  function switchTab(t) {
-    document.getElementById("view-exc").style.display = t==='exc'?'block':'none';
-    document.getElementById("view-obs").style.display = t==='obs'?'block':'none';
-    document.getElementById("view-piz").style.display = t==='piz'?'block':'none';
-    document.getElementById("btnExc").className = t==='exc'?'active':'';
-    document.getElementById("btnObs").className = t==='obs'?'active':'';
-    document.getElementById("pizarraBottomBtn").style.display = t==='piz'?'none':'flex';
-  }
-
   async function activarFormularioExcusa() {
-    const di = document.getElementById("docExc").value.trim(); const est = estudiantesValidos.find(e => e.doc === di);
-    if(!est) return alert("Documento no encontrado.");
-    if(document.getElementById("chkRemExc").checked) localStorage.setItem("padre_doc", di);
-    estActualDoc = di; document.getElementById("loginExc").style.display="none"; document.getElementById("formExc").style.display="block"; document.getElementById("nombreExc").innerText=est.nombre;
+    const est = estudiantesValidos.find(e => e.doc === estActualDoc);
+    document.getElementById("nombreExc").innerText=est.nombre;
     const snapC = await db.collection("configuracionGlobal").doc("asistencia").get(); periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
-    document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis; consultarStats(di); initPad('sigExc');
+    document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis; consultarStats(estActualDoc); initPad('sigExc');
   }
   async function consultarStats(di) {
     const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get();
@@ -527,22 +468,21 @@
     snap.forEach(d => { const reg = (d.data().detalles || []).find(x => x.doc === di); if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); } if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); } });
     document.getElementById("statFallas").innerText=f; document.getElementById("statExcusas").innerText=e;
   }
-  function mostrarListadoFechas(tipo) { const arr=(tipo==='I')?cacheFechas.I:cacheFechas.E; document.getElementById("txtTituloModalFechas").innerText=(tipo==='I')?"FECHAS DE FALLAS":"FECHAS DE EXCUSAS"; const c=document.getElementById("containerListaFechas"); c.innerHTML=arr.length?arr.map(f=>`<li>📅 ${formatearFecha(f)}</li>`).join(""):"<li style='justify-content:center; color:#999;'>Sin registros.</li>"; document.getElementById("modalFechas").style.display="flex"; }
+  function mostrarListadoFechas(tipo) { const arr=(tipo==='I')?cacheFechas.I:cacheFechas.E; document.getElementById("txtTituloModalFechas").innerText=(tipo==='I')?"FECHAS DE FALLAS":"FECHAS DE EXCUSAS"; const c=document.getElementById("containerListaFechas"); c.innerHTML=arr.length?arr.map(f=>`<li>📅 ${formatearFecha(f)}</li>`).join(""):"<li>Sin registros.</li>"; document.getElementById("modalFechas").style.display="flex"; }
   function cerrarModalFechas() { document.getElementById("modalFechas").style.display="none"; }
   async function enviarExcusa() { const p=pads.get('sigExc'); if(!p?.hasData) return alert("Firme el recuadro."); await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: document.getElementById("fechaExc").value, motivoTipo: document.getElementById("motivoExc").value, motivoDetalle: document.getElementById("detalleExc").value, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); document.getElementById("successAsis").style.display="flex"; }
 
   async function buscarObservaciones() {
-    const docId = document.getElementById("docObs").value.trim(); if(!docId || !estudiantesValidos.find(e => e.doc === docId)) return alert("No encontrado.");
-    if(document.getElementById("chkRemObs").checked) localStorage.setItem("padre_doc", docId);
-    const out = document.getElementById("resultadoObs"); out.innerHTML = "Buscando...";
+    const docId = estActualDoc;
+    const out = document.getElementById("resultadoObs"); out.innerHTML = "Cargando...";
     const cSnap = await db.collection("configuracionCiclos").doc(docId).get(); const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1;
     db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => {
       let list = []; snap.forEach(d => { if(d.data().ciclo == cAct) list.push({ id: d.id, ...d.data() }); });
       let obsL = list.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
-      if(obsL.length === 0) { out.innerHTML = `<p style='text-align:center;'>No hay anotaciones para el ciclo #${cAct}</p>`; return; }
+      if(obsL.length === 0) { out.innerHTML = `<div style='text-align:center; padding:20px;'>No hay anotaciones en el ciclo #${cAct}</div>`; return; }
       out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => {
         let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32");
-        return `<div class="card" style="border: 2px solid ${color};"><div class="top" style="background:${color}"><span>OBSERVACIÓN N° ${n}</span></div><div class="body"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><span class="obs-label">HECHOS:</span><div class="obs-content">${r.comportamiento}</div><span class="obs-label">DESCARGOS:</span><div class="obs-content">${r.descargos || "N/A"}</div><span class="obs-label">PROCEDIMIENTO:</span><div class="obs-content">${r.procedimiento || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<img src="${r.firmaAcudiente}" height="45">`}</div></div>`;
+        return `<div style="border:1.5px solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`;
       }).join("");
       setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500);
     });
@@ -550,102 +490,50 @@
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  function procesarLoginAlerta() {
-    const di=document.getElementById("docAlertaInput").value.trim(); const est=estudiantesValidos.find(e=>e.doc===di);
-    if(!est) return alert("Documento no encontrado."); docAlertaActual=di; gradoEstudianteActual=est.grado;
-    if(document.getElementById("chkRemAlerta").checked) localStorage.setItem("padre_doc", di);
-    document.getElementById("loginAlertaFlow").style.display="none"; document.getElementById("contentAlertaFlow").style.display="block"; iniciarCargaAlerta();
+  async function iniciarCargaAlerta() { 
+    document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; 
+    await cargarPeriodoNotasActual(); 
+    cargarNotasBajasPeriodo(docAlertaActual); 
+    cargarAgendaEscolar(gradoEstudianteActual); 
   }
-  async function iniciarCargaAlerta() { document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; await cargarPeriodoNotasActual(); cargarNotasBajasPeriodo(docAlertaActual); cargarAgendaEscolar(gradoEstudianteActual); }
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
   
-  // --- REDISEÑO INSTITUCIONAL DE ALERTA ACADÉMICA ---
   async function cargarNotasBajasPeriodo(docEst) {
     document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`;
     const div = document.getElementById("aaLista"); div.innerHTML = "Cargando...";
     const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get();
     let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); });
-    if (items.length === 0) { 
-        div.innerHTML = `<div style="text-align:center;color:#475569;font-weight:700;padding:40px 20px; background:#f8fafc; border-radius:16px; border: 2px dashed #cbd5e1;">✅ No se registran notas en desempeño bajo para este estudiante en el periodo vigente.</div>`; 
-        return; 
-    }
-    div.innerHTML = items.map(it => `
-      <div class="aa-item">
-        <div class="aa-top">
-          <div style="flex: 1; padding-right: 12px;">
-            <div class="aa-meta">${it.area}</div>
-            <div class="aa-title">${it.actividad}</div>
-          </div>
-          <div class="aa-score">${it.nota.toFixed(1).replace(".", ",")}</div>
-        </div>
-        <div class="aa-obs-box">
-          <span class="aa-obs-header">Comentario del Docente:</span>
-          ${it.observacion || "No se registró una observación detallada para esta actividad."}
-        </div>
-      </div>
-    `).join("");
+    if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Sin alertas.</div>`; return; }
+    div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5px solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5px solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:10px; font-size:12px;">${it.observacion || "Sin comentario."}</div></div>`).join("");
   }
 
-  // --- AGENDA CON CHAT PERSISTENTE ---
   async function cargarAgendaEscolar(grado) {
     const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda...";
     const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get();
-    
-    // Obtenemos los hilos de conversación de este estudiante
     const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
     const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); });
-    
     let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-    // SOLUCIÓN FINAL: Solo muestra si status NO es 'draft' Y si publico NO es false.
-    const filtered = tareas.filter(t => 
-        (!t.targetStudent || t.targetStudent === docAlertaActual) && 
-        t.status !== 'draft' && 
-        t.publico !== false
-    ).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-    
+    const filtered = tareas.filter(t => (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
     cacheTareasAgenda = filtered;
-    
     if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; }
     
     div.innerHTML = filtered.map(t => {
       const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink);
+      let chatHtml = ""; if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; }
       
-      let chatHtml = "";
-      if (conv && conv.conversacion) {
-        chatHtml = `<div class="chat-container">`;
-        conv.conversacion.forEach(m => {
-          chatHtml += `
-            <div class="chat-bubble ${m.rol}">
-              <span class="chat-role">${m.rol === 'docente' ? 'Profe' : 'Tú'}</span>
-              ${m.texto}
-            </div>`;
-        });
-        chatHtml += `</div>`;
-      }
+      return `
+        <div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+          <span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span>
+          <div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#64748b;">📅 Fecha de entrega: ${formatearFecha(t.date)}</div>
+          <div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div>
+          
+          <div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>
 
-      return `<div class="agenda-card" style="border-left-color: ${colors.border};">
-        <span class="agenda-area-badge" style="background:${colors.badge}; color:${colors.text}">${t.area || 'General'}</span>
-        <div class="agenda-date-container"><span class="agenda-date-label">📅 FECHA DE ENTREGA:</span><span class="agenda-date-value">${formatearFecha(t.date)}</span></div>
-        <div class="agenda-title">${t.title}</div><div class="agenda-desc">${t.description || ''}</div>
-        
-        ${videoUrl ? `<div style="margin-top:12px; border-radius:12px; overflow:hidden; aspect-ratio: 16/9; border: 1px solid #ddd; background:#000;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
-        
-        ${t.pdfLink ? `
-          <div style="margin-top:15px; background: #f0fdf4; border: 1px dashed #22c55e; padding: 12px; border-radius: 12px;">
-            <a href="${t.pdfLink}" target="_blank" style="text-decoration:none;">
-              <button class="btn" style="margin-top:0; background:#1b5e20; box-shadow: 0 4px 0 #0d3b10; font-size:12px; padding:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                📂 DESCARGAR MATERIAL (PDF)
-              </button>
-            </a>
-          </div>
-        ` : ''}
-
-        ${chatHtml}
-
-        <div style="text-align:right; margin-top:12px;">
-          <button class="btn-ask" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 ${conv ? 'Seguir hablando' : 'Duda'}</button>
-        </div>
-      </div>`;
+          ${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
+          ${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}
+          ${chatHtml}
+          <div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1px solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Chat</button></div>
+        </div>`;
     }).join("");
   }
 
@@ -657,65 +545,40 @@
     doc.save(`Agenda_${docAlertaActual}.pdf`);
   }
 
-  function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "block"; }
-  
+  function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "flex"; }
   async function enviarPregunta() {
     const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda.");
-    const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-    
     const mRef = db.collection("mensajesAgenda");
     const query = await mRef.where("taskId", "==", currentTaskId).where("studentDoc", "==", docAlertaActual).get();
     const newMsg = { rol: 'user', texto: txt, timestamp: new Date().toISOString() };
-
-    if (!query.empty) {
-      await mRef.doc(query.docs[0].id).update({
-        conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg),
-        lastUpdate: new Date().toISOString(),
-        read: false
-      });
-    } else {
-      await mRef.add({
-        taskId: currentTaskId,
-        taskTitle: currentTaskTitle,
-        studentDoc: docAlertaActual,
-        studentName: est.nombre,
-        conversacion: [newMsg],
-        lastUpdate: new Date().toISOString(),
-        read: false,
-        periodo: periodoNotasActual
-      });
-    }
-    
-    alert("Duda enviada."); 
-    document.getElementById("textoPregunta").value = "";
-    document.getElementById("modalPreguntaTarea").style.display = "none"; 
-    cargarAgendaEscolar(gradoEstudianteActual);
+    if (!query.empty) { await mRef.doc(query.docs[0].id).update({ conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg), lastUpdate: new Date().toISOString(), read: false }); } 
+    else { await mRef.add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: estSop.nombre, conversacion: [newMsg], lastUpdate: new Date().toISOString(), read: false, periodo: periodoNotasActual }); }
+    alert("Duda enviada."); document.getElementById("textoPregunta").value = ""; document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual);
   }
 
   function switchTabAlerta(tab) {
-    document.getElementById("view-aa-notas").className = tab === 'notas' ? 'active' : '';
-    document.getElementById("view-aa-agenda").className = tab === 'agenda' ? 'active' : '';
-    document.getElementById("tab-notas").className = tab === 'notas' ? 'aa-tab-btn active' : 'aa-tab-btn';
-    document.getElementById("tab-agenda").className = tab === 'agenda' ? 'aa-tab-btn active' : 'aa-tab-btn';
+    document.getElementById("view-aa-notas").style.display = tab === 'notas' ? 'block' : 'none';
+    document.getElementById("view-aa-agenda").style.display = tab === 'agenda' ? 'block' : 'none';
+    document.getElementById("tab-notas").classList.toggle('active', tab === 'notas');
+    document.getElementById("tab-agenda").classList.toggle('active', tab === 'agenda');
   }
 
   function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
-  function autenticarSoporte() { const ds=document.getElementById("docSoporte").value.trim(); const e=estudiantesValidos.find(x=>x.doc===ds); if(e){ estSop=e; document.getElementById("sop_auth").style.display="none"; document.getElementById("sop_menu").style.display="block"; } else alert("No encontrado."); }
   function irAFormSop() { document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_form").style.display="block"; initPad('sigSoporte'); }
   function irAMenuSop() { document.getElementById("sop_form").style.display="none"; document.getElementById("sop_history").style.display="none"; document.getElementById("sop_menu").style.display="block"; }
   function irAHistorialSop() { 
     document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_history").style.display="block"; 
-    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estSop.doc).onSnapshot(snap => {
-      let h = ""; snap.forEach(d => { const m = d.data(); h += `<div style="background:#f1f1f1; padding:12px; border-radius:10px; margin-bottom:10px;"><b>${m.asunto}</b><br>${m.mensaje}</div>`; });
-      document.getElementById("listaMensajesSop").innerHTML = h || "Sin mensajes.";
+    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estActualDoc).onSnapshot(snap => {
+      let h = ""; snap.forEach(d => { const m = d.data(); h += `<div style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom:12px;"><b>${m.asunto}</b><br><p>${m.mensaje}</p></div>`; });
+      document.getElementById("listaMensajesSop").innerHTML = h || "Sin registros.";
     });
   }
-  async function enviarMensajeSoporte() { const p=pads.get('sigSoporte'); if(!p?.hasData) return alert("Firme el mensaje."); await db.collection("comunicacionPadres").add({ documentoEstudiante: estSop.doc, nombreEstudiante: estSop.nombre, asunto: document.getElementById("msg_asunto").value, mensaje: document.getElementById("msg_texto").value, timestamp: new Date().toISOString() }); document.getElementById("modalSoporte").style.display="none"; document.getElementById("successMsg").style.display="flex"; }
+  async function enviarMensajeSoporte() { const p=pads.get('sigSoporte'); if(!p?.hasData) return alert("Firme el mensaje."); await db.collection("comunicacionPadres").add({ documentoEstudiante: estActualDoc, nombreEstudiante: estSop.nombre, asunto: document.getElementById("msg_asunto").value, mensaje: document.getElementById("msg_texto").value, timestamp: new Date().toISOString() }); document.getElementById("modalSoporte").style.display="none"; document.getElementById("successMsg").style.display="flex"; }
   function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
 
   // FIRMAS
-  function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=150*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
+  function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=160*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
 </script>
 </body>
