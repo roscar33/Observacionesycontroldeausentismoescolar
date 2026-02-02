@@ -1,3 +1,4 @@
+// version 2
 // Service Worker sencillo para que la PWA funcione bien
 const CACHE_NAME = "acudiente-v1";
 
