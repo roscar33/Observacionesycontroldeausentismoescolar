@@ -5,221 +5,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
 <title>Seguimiento Escolares · Primaria 2026</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Kalam:wght@700&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #dff5e1; padding-bottom: 40px; user-select: none; }
 
-  /* CABECERA PERMANENTE (ESTILO ORIGINAL) */
-  .header {
-    background: #1b5e20;
-    color: #fff;
-    padding: 20px 16px 35px;
-    border-radius: 0 0 30px 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-align: left;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  .header img {
-    width: 70px;
-    height: auto;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-    flex-shrink: 0;
-  }
+  /* CABECERA */
+  .header { background: #1b5e20; color: #fff; padding: 20px 16px 35px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; }
+  .header img { width: 70px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); flex-shrink: 0; }
   .header-text { display: flex; flex-direction: column; gap: 2px; }
   .header h2 { margin: 0; font-size: 13px; line-height: 1.2; font-weight: 800; text-transform: uppercase; }
   .header h4 { margin: 0; font-weight: 500; color: #a5d6a7; font-size: 11px; margin-top: 2px; }
   .header p { margin: 0; font-size: 11px; opacity: 0.9; font-style: italic; margin-top: 2px; color: #fff; }
 
-  /* LOGIN GLOBAL */
-  #login-section {
-    padding: 40px 20px;
-    text-align: center;
-  }
-  .login-card {
-    background: #fff;
-    padding: 30px 20px;
-    border-radius: 24px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    max-width: 400px;
-    margin: 20px auto;
-  }
+  /* LOGIN */
+  #login-section { padding: 40px 20px; text-align: center; }
+  .login-card { background: #fff; padding: 30px 20px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); max-width: 400px; margin: 20px auto; }
 
-  /* DASHBOARD DE TARJETAS */
-  #main-dashboard {
-    display: none;
-    padding: 0 20px;
-    margin-top: 40px; 
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .card-btn {
-    background: white;
-    border-radius: 30px;
-    padding: 25px 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
+  /* DASHBOARD */
+  #main-dashboard { display: none; padding: 0 20px; margin-top: 40px; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card-btn { background: white; border-radius: 30px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: none; cursor: pointer; transition: transform 0.2s ease; }
   .card-btn:active { transform: scale(0.95); }
   .card-btn.full { grid-column: span 2; padding: 30px 20px; }
-  
-  .icon-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    margin-bottom: 12px;
-  }
-  .blue-bg { background: #e3f2fd; }
-  .orange-bg { background: #fff3e0; }
-  .purple-bg { background: #f3e5f5; }
-
+  .icon-circle { width: 60px; height: 60px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 12px; }
+  .blue-bg { background: #e3f2fd; } .orange-bg { background: #fff3e0; } .purple-bg { background: #f3e5f5; }
   .card-label { font-weight: 900; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
   .card-info { font-size: 10px; color: #94a3b8; margin-top: 4px; font-weight: 600; }
 
-  /* CONTENEDORES DE SECCIÓN */
-  .container {
-    background: #fff; width: 92%; margin: 30px auto;
-    padding: 20px 16px; border-radius: 24px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    display: none;
-    animation: slideUp 0.3s ease-out;
-  }
-
-  /* ESTILOS DE TEXTO PIZARRA */
-  .agenda-task-desc {
-    font-size: 14px;
-    color: #334155;
-    line-height: 1.6;
-    margin-top: 10px;
-    background: #f8fafc;
-    padding: 18px;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    word-break: break-word;
-  }
-  .caps-highlight {
-    color: #d32f2f;
-    font-weight: 900;
-  }
-  .bullet-row {
-    display: flex;
-    gap: 10px;
-    margin: 8px 0;
-    padding-left: 5px;
-  }
-  .bullet-dot {
-    color: #2e7d32;
-    font-weight: 900;
-    font-size: 18px;
-    line-height: 1;
-  }
-  .paragraph-spacer {
-    display: block;
-    margin-bottom: 12px;
-  }
-
-  /* FILTROS DE AGENDA */
-  .agenda-filters {
-    background: #f1f5f9;
-    padding: 12px;
-    border-radius: 14px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .filter-label {
-    font-size: 11px;
-    font-weight: 800;
-    color: #475569;
-    text-transform: uppercase;
-  }
-  .filter-select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1.5px solid #cbd5e1;
-    font-size: 13px;
-    font-weight: 600;
-    color: #1e293b;
-    background: white;
-    margin-bottom: 0 !important;
-  }
-
-  .btn-back {
-    background: #f1f5f9;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #64748b;
-    margin-bottom: 20px;
-    cursor: pointer;
-  }
-
-  /* BOTONES Y CAMPOS (INTACTOS) */
-  input, textarea, select {
-    width: 100%; padding: 14px; margin-bottom: 15px;
-    border-radius: 12px; border: 2px solid #ddd;
-    font-size: 16px; background: #f9f9f9; outline: none;
-  }
-  .btn {
-    width: 100%; padding: 15px; background: #1b5e20; color: #fff;
-    font-weight: 800; border: none; border-radius: 14px; cursor: pointer;
-    font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px;
-  }
-  .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; }
-  .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
-
-  /* CANVAS Y PIZARRA */
+  /* CONTENEDORES */
+  .container { background: #fff; width: 92%; margin: 30px auto; padding: 20px 16px; border-radius: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: none; animation: slideUp 0.3s ease-out; }
+  .btn-back { background: #f1f5f9; border: none; padding: 10px 20px; border-radius: 50px; font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 20px; cursor: pointer; }
+  
+  /* ELEMENTOS UI */
+  input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; outline: none; }
+  .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; }
+  .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; } .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
   canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
   .pizarra-header-ui { background: #6d4c41; color: white; padding: 15px; border-radius: 14px 14px 0 0; text-align: center; font-weight: 900; font-size: 18px; margin: -20px -16px 15px; }
-
-  /* PIE DE PÁGINA */
   .footer-container { margin-top: 30px; text-align: center; padding: 20px; }
   .footer-text { font-family: 'Great Vibes', cursive; font-size: 32px; color: #1b5e20; }
+  .success-overlay { display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 5000; color:white; text-align:center; padding: 40px 24px; justify-content:center; align-items:center; flex-direction:column; backdrop-filter: blur(8px); }
 
-  /* OVERLAYS */
-  .success-overlay {
-    display:none; position: fixed; top:0; left:0; width:100%; height:100%;
-    z-index: 5000; color:white; text-align:center; padding: 40px 24px;
-    justify-content:center; align-items:center; flex-direction:column;
-    backdrop-filter: blur(8px);
+  /* AGENDA TEXTO */
+  .agenda-task-desc { font-size: 14px; color: #334155; line-height: 1.6; margin-top: 10px; background: #f8fafc; padding: 18px; border-radius: 16px; border: 1px solid #e2e8f0; word-break: break-word; }
+  .caps-highlight { color: #d32f2f; font-weight: 900; }
+  .bullet-row { display: flex; gap: 10px; margin: 8px 0; padding-left: 5px; }
+  .bullet-dot { color: #2e7d32; font-weight: 900; font-size: 18px; line-height: 1; }
+  .paragraph-spacer { display: block; margin-bottom: 12px; }
+  .agenda-filters { background: #f1f5f9; padding: 12px; border-radius: 14px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
+  .filter-label { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; }
+  .filter-select { width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; color: #1e293b; background: white; margin-bottom: 0 !important; }
+
+  /* ========================================= */
+  /* PERIÓDICO ESCOLAR (CORCHO + MULTIMEDIA)   */
+  /* ========================================= */
+  .tablero-container { grid-column: 1 / -1; margin-top: 20px; margin-bottom: 20px; }
+  .tablero-titulo { text-align: center; font-weight: 900; color: #5d4037; margin-bottom: 10px; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .tablero-cork {
+    background: #d7b594; background-image: radial-gradient(#bc9a7a 10%, transparent 10%); background-size: 10px 10px;
+    padding: 20px 10px; border-radius: 20px; 
+    
+    /* GRID 2 COLUMNAS */
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; 
+    
+    justify-content: center;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1); min-height: 250px; border: 8px solid #8d6e63;
   }
+  .sticky-note {
+    width: 100%; min-height: 140px; padding: 15px; position: relative; box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+    transform: rotate(-1deg); transition: transform 0.2s; display: flex; flex-direction: column; justify-content: center;
+    text-align: center; word-break: break-word; cursor: pointer;
+    font-family: 'Kalam', cursive; font-size: 15px; color: #1e3a8a; line-height: 1.1;
+  }
+  .sticky-note:active { transform: scale(0.95); }
+  .sticky-note:nth-child(even) { transform: rotate(1.5deg); }
+  .sticky-note:nth-child(3n) { transform: rotate(-1.5deg); }
+  
+  .note-pink { background: #fbcfe8 !important; } .note-blue { background: #bae6fd !important; } .note-green { background: #bbf7d0 !important; } .note-yellow { background: #fef08a !important; }
+  .note-pin { width: 14px; height: 14px; background: #ef4444; border-radius: 50%; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); box-shadow: 1px 1px 3px rgba(0,0,0,0.3); border: 1px solid #b91c1c; }
+
+  /* FOTOS EN NOTA PEQUEÑA */
+  .polaroid-frame { background: white; padding: 5px 5px 15px 5px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 5px; transform: rotate(-2deg); }
+  .polaroid-img { width: 100%; height: 80px; object-fit: cover; display: block; }
+  .video-indicator { position: absolute; top: 10px; right: 10px; font-size: 24px; color: #d32f2f; filter: drop-shadow(0 2px 2px rgba(255,255,255,0.8)); }
+
+  /* RÓTULO ESTILO STICKER */
+  .heart-badge {
+    position: absolute; top: -6px; right: -6px;
+    background: #fff0f5; /* Fondo rosita muy claro */
+    color: #b71c1c; /* Texto rojo oscuro */
+    border: 1px solid #ffcdd2;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px; /* Tamaño base */
+    font-weight: 900;
+    transform: rotate(5deg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 10;
+    font-family: system-ui, sans-serif;
+    display: flex; align-items: center; gap: 3px;
+    white-space: nowrap; max-width: 95%; overflow: hidden;
+  }
+
+  /* BOTÓN ME GUSTA */
+  .like-btn {
+    position: absolute; bottom: 5px; right: 5px; background: none; border: none;
+    font-size: 18px; cursor: pointer; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    z-index: 20; padding: 5px; transition: transform 0.2s;
+  }
+  .like-btn:active { transform: scale(1.3); }
+
+  /* ESTILOS DEL MODAL ZOOM */
+  #modal-aviso-zoom { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 20px; animation: fadeIn 0.2s; }
+  .note-large {
+    width: 100%; max-width: 350px; 
+    padding: 30px 20px; font-family: 'Kalam', cursive;
+    font-size: 22px; color: #1e3a8a; border-radius: 5px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    transform: rotate(-1deg); display: flex; flex-direction: column; align-items: center;
+  }
+  .zoom-photo { width: 100%; border-radius: 4px; margin-bottom: 15px; border: 8px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+  .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; width: 100%; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
+  .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+  
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
 </style>
 
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
 <script>
-  // CONFIGURACIÓN FIREBASE (MANTENIDA)
-  const firebaseConfig = {
-    apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8",
-    authDomain: "diariodeprocesos-6f78d.firebaseapp.com",
-    projectId: "diariodeprocesos-6f78d"
-  };
+  const firebaseConfig = { apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8", authDomain: "diariodeprocesos-6f78d.firebaseapp.com", projectId: "diariodeprocesos-6f78d" };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
@@ -245,17 +166,15 @@
 
 <body>
 
-  <!-- CABECERA PERMANENTE -->
   <div class="header" id="mainHeader">
     <img src="escudo.png" alt="Escudo">
     <div class="header-text">
-      <h2 id="inst-title">INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Rural Santa Juana. - Primaria.</h2>
+      <h2 id="inst-title">INSTITUCIÓN EDUCATIVA DE MARÍA - Sede Rural Santa Juana.</h2>
       <h4 id="inst-sub">Sistema Integrado de Gestión Escolar María Juana.</h4>
       <p id="inst-doc">Docente: Oscar Barrientos. 2026</p>
     </div>
   </div>
 
-  <!-- SECCIÓN LOGIN -->
   <div id="login-section">
     <div class="login-card">
       <p style="font-weight:900; color:#1b5e20; margin-bottom:15px; text-transform:uppercase;">Acceso para Acudientes</p>
@@ -268,360 +187,211 @@
     </div>
   </div>
 
-  <!-- DASHBOARD PRINCIPAL -->
   <div id="main-dashboard">
-    <button class="card-btn" onclick="navegarA('exc')">
-      <div class="icon-circle blue-bg">📋</div>
-      <span class="card-label">Asistencia</span>
-      <span class="card-info">Fallas y Excusas</span>
-    </button>
-    
-    <button class="card-btn" onclick="navegarA('obs')">
-      <div class="icon-circle orange-bg">✍️</div>
-      <span class="card-label">Observador</span>
-      <span class="card-info">Conducta Escolar</span>
-    </button>
-    
-    <button class="card-btn full" onclick="navegarA('piz')">
-      <div class="icon-circle purple-bg">🏫</div>
-      <span class="card-label">Pizarra Escolar</span>
-      <span class="card-info">Alertas, Notas y Agenda</span>
-    </button>
+    <button class="card-btn" onclick="navegarA('exc')"><div class="icon-circle blue-bg">📋</div><span class="card-label">Asistencia</span><span class="card-info">Fallas y Excusas</span></button>
+    <button class="card-btn" onclick="navegarA('obs')"><div class="icon-circle orange-bg">✍️</div><span class="card-label">Observador</span><span class="card-info">Conducta Escolar</span></button>
+    <button class="card-btn full" onclick="navegarA('piz')"><div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span></button>
 
-    <button class="btn" style="grid-column: span 2; background:#455a64; box-shadow:0 4px 0 #263238; margin-top:10px;" onclick="abrirSoporte()">💬 SOPORTE Y COMUNICACIÓN</button>
+    <div class="tablero-container">
+      <div class="tablero-titulo">📰 Periódico Escolar</div>
+      <div id="dashboard-avisos" class="tablero-cork">
+        <p style="color:white; font-size:12px;">Cargando avisos...</p>
+      </div>
+    </div>
+
+    <button class="btn" style="grid-column: span 2; background:#455a64;" onclick="abrirSoporte()">💬 SOPORTE Y COMUNICACIÓN</button>
   </div>
 
-  <!-- VISTAS INTERNAS -->
-  
-  <div id="view-exc" class="container">
-    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
-    <div id="formExc">
-      <div id="nombreExc" style="text-align:center; font-weight:900; color:#1b5e20; margin-bottom:5px;"></div>
-      <div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin-bottom:15px; border-radius:4px;"></div>
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#ef4444;" onclick="mostrarListadoFechas('I')">
-          <span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS
-        </div>
-        <div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#f97316;" onclick="mostrarListadoFechas('E')">
-          <span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS
-        </div>
-      </div>
-      <input id="fechaExc" type="date">
-      <select id="motivoExc">
-        <option value="">Seleccione Motivo...</option>
-        <option>Enfermedad</option><option>Cita médica</option><option>Calamidad Doméstica</option><option>Otro</option>
-      </select>
-      <textarea id="detalleExc" placeholder="Describa el motivo..."></textarea>
-      <div class="sig-wrap">
-        <p style="text-align:center; font-weight:bold; font-size:12px; margin-top:0;">FIRMA ACUDIENTE</p>
-        <canvas id="sigExc"></canvas>
-        <button class="btn sec" style="padding:6px; font-size:10px;" onclick="limpiarPad('sigExc')">Borrar</button>
-      </div>
-      <button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button>
+  <div id="view-exc" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="formExc"><div id="nombreExc" style="text-align:center; font-weight:900;"></div><div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin:10px 0; border-radius:4px;"></div><div style="display:flex; gap:10px; margin-bottom:15px;"><div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#ef4444;" onclick="mostrarListadoFechas('I')"><span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS</div><div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#f97316;" onclick="mostrarListadoFechas('E')"><span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS</div></div><input id="fechaExc" type="date"><select id="motivoExc"><option value="">Motivo...</option><option>Enfermedad</option><option>Cita médica</option><option>Otro</option></select><textarea id="detalleExc" placeholder="Motivo..."></textarea><div class="sig-wrap"><canvas id="sigExc"></canvas><button class="btn sec" onclick="limpiarPad('sigExc')">Borrar</button></div><button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button></div></div>
+  <div id="view-obs" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="resultadoObs"></div></div>
+  <div id="view-piz" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div class="pizarra-header-ui">🏫 Pizarra Escolar</div><div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;"><button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button><button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('agenda')">📅 Agenda</button></div><div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div><div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div><div id="view-aa-notas"><div id="aaLista"></div></div><div id="view-aa-agenda" style="display:none;"><div class="agenda-filters"><span class="filter-label">Ordenar:</span><select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)"><option value="prox">Más próximas</option><option value="lejos">Más lejanas</option><option value="creado">Recientes</option></select></div><button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button><div id="aaAgendaLista"></div></div></div>
+
+  <div id="modal-aviso-zoom" onclick="cerrarNotaGrande()">
+    <div id="zoom-content" class="note-large" onclick="event.stopPropagation()">
+      <div class="note-pin"></div>
+      <div id="zoom-multimedia"></div>
+      <div id="zoom-text"></div>
+      <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto;" onclick="cerrarNotaGrande()">CERRAR</button>
     </div>
   </div>
 
-  <div id="view-obs" class="container">
-    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
-    <div id="resultadoObs"></div>
-  </div>
+  <div class="footer-container"><div class="footer-text">Familia y escuela caminamos juntos</div><div style="font-size:10px; color:#1b5e20; opacity:0.7;">© 2026 Santa Juana Digital</div></div>
 
-  <div id="view-piz" class="container">
-    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar al Menú</button>
-    <div id="contentAlertaFlow">
-      <div class="pizarra-header-ui">✍️ Pizarra Escolar</div>
-      <div style="display:flex; background:#5d4037; padding:10px 5px 0 5px; margin:0 -20px 15px;">
-        <button id="tab-notas" style="flex:1; border:none; padding:14px; font-weight:bold; border-radius:8px 8px 0 0;" class="active" onclick="switchTabAlerta('notas')">⚠️ Alertas</button>
-        <button id="tab-agenda" style="flex:1; border:none; padding:14px; font-weight:bold; border-radius:8px 8px 0 0;" onclick="switchTabAlerta('agenda')">📅 Agenda</button>
-      </div>
-      <div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px; color:#1e293b; font-size:14px; text-transform:uppercase;"></div>
-      <div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content; font-weight:800;"></div>
-      
-      <div id="view-aa-notas" class="active"><div id="aaLista"></div></div>
-      
-      <div id="view-aa-agenda" style="display:none;">
-        <div class="agenda-filters">
-          <span class="filter-label">Ordenar por fecha de entrega:</span>
-          <select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)">
-            <option value="prox">Más próximas primero (Urgente)</option>
-            <option value="lejos">Más lejanas primero (Futuras)</option>
-            <option value="creado">Recientes creadas primero</option>
-          </select>
-        </div>
-        <button onclick="descargarAgendaPDF()" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; border-radius:12px; font-weight:900; margin-bottom:15px; box-shadow:0 4px 0 #b91c1c;">📄 Descargar Agenda PDF</button>
-        <div id="aaAgendaLista"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-container">
-    <div class="footer-text">Familia y escuela caminamos juntos</div>
-    <div style="font-size:10px; color:#1b5e20; opacity:0.7; margin-top:5px;">© 2026 Santa Juana Digital</div>
-  </div>
-
-  <!-- MODALES -->
-  <div id="modalSoporte" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9000; overflow-y:auto;">
-    <div style="background:#263238; color:white; padding:20px; text-align:center; position:sticky; top:0;">
-      <button onclick="cerrarSoporte()" style="position:absolute; left:15px; top:18px; background:none; border:none; color:white; font-size:24px;">✕</button>
-      Soporte Técnico
-    </div>
-    <div style="padding:20px;">
-      <div id="sop_menu" style="text-align:center;">
-        <a href="https://roscar33.github.io/Asistenciapapas/" target="_blank"><button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS ASAMBLEAS</button></a>
-        <a href="https://roscar33.github.io/Horario/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button></a>
-        <a href="https://roscar33.github.io/Utiles2026/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES</button></a>
-        <button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button>
-        <button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button>
-      </div>
-      <div id="sop_form" style="display:none;"><input id="msg_fecha" type="date"><input id="msg_asunto" type="text" placeholder="Asunto"><textarea id="msg_texto" rows="4"></textarea><div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar</button></div><button class="btn" onclick="enviarMensajeSoporte()">ENVIAR</button></div>
-      <div id="sop_history" style="display:none;"><div id="listaMensajesSop"></div><button class="btn sec" onclick="irAMenuSop()">VOLVER</button></div>
-    </div>
-  </div>
-
-  <div id="modalPreguntaTarea" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9500; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;">
-    <div style="background:white; padding:25px; border-radius:24px; width:100%; max-width:350px;">
-      <h3 style="color:#1b5e20;">Duda sobre Tarea</h3>
-      <p id="tituloTareaPregunta" style="font-size:12px; font-weight:bold;"></p>
-      <textarea id="textoPregunta" rows="4"></textarea>
-      <div style="display:flex; gap:10px;"><button class="btn sec" onclick="document.getElementById('modalPreguntaTarea').style.display='none'">Cerrar</button><button class="btn" onclick="enviarPregunta()">Enviar</button></div>
-    </div>
-  </div>
-
-  <div id="modalFechas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9600; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;">
-    <div style="background:white; border-radius:24px; width:100%; max-width:320px; overflow:hidden;"><div id="txtTituloModalFechas" style="background:#1b5e20; color:white; padding:15px; font-weight:900;"></div><ul id="containerListaFechas" style="list-style:none; padding:15px; text-align:left; margin:0; max-height:300px; overflow-y:auto;"></ul><button class="btn" style="border-radius:0;" onclick="cerrarModalFechas()">CERRAR</button></div>
-  </div>
-
-  <!-- OVERLAYS ÉXITO -->
-  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);">
-    <h2>✅ ¡Envío Exitoso!</h2><p>Póngase al día con sus procesos.</p><button class="btn" style="background:white; color:#1b5e20; width:fit-content;" onclick="location.reload()">ENTENDIDO</button>
-  </div>
-  <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);">
-    <h2>✅ Mensaje Enviado</h2><p>Docente responderá pronto.</p><button class="btn" style="background:white; color:#0277bd; width:fit-content;" onclick="cerrarSuccessMsg()">ENTENDIDO</button>
-  </div>
-  <div id="overlaySem" class="success-overlay" style="background: rgba(0,0,0,0.9);">
-    <div style="background:white; padding:30px; border-radius:24px; color:#333; width:90%;"><h2 style="color:#d32f2f;">ADVERTENCIA</h2><p id="semText" style="white-space:pre-line;"></p><button class="btn" onclick="location.reload()">ENTENDIDO</button></div>
-  </div>
+  <div id="modalSoporte" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9000; overflow-y:auto;"><div style="background:#263238; color:white; padding:20px; text-align:center; position:sticky; top:0;"><button onclick="cerrarSoporte()" style="position:absolute; left:15px; top:18px; background:none; border:none; color:white; font-size:24px;">✕</button>Soporte Técnico</div><div style="padding:20px;"><div id="sop_menu" style="text-align:center;"><a href="https://roscar33.github.io/Asistenciapapas/" target="_blank"><button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS ASAMBLEAS</button></a><a href="https://roscar33.github.io/Horario/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button></a><a href="https://roscar33.github.io/Utiles2026/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES</button></a><button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button><button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button></div><div id="sop_form" style="display:none;"><input id="msg_fecha" type="date"><input id="msg_asunto" type="text" placeholder="Asunto"><textarea id="msg_texto" rows="4"></textarea><div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar</button></div><button class="btn" onclick="enviarMensajeSoporte()">ENVIAR</button></div><div id="sop_history" style="display:none;"><div id="listaMensajesSop"></div><button class="btn sec" onclick="irAMenuSop()">VOLVER</button></div></div></div>
+  <div id="modalPreguntaTarea" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9500; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;"><div style="background:white; padding:25px; border-radius:24px; width:100%; max-width:350px;"><h3 style="color:#1b5e20;">Duda sobre Tarea</h3><p id="tituloTareaPregunta" style="font-size:12px; font-weight:bold;"></p><textarea id="textoPregunta" rows="4"></textarea><div style="display:flex; gap:10px;"><button class="btn sec" onclick="document.getElementById('modalPreguntaTarea').style.display='none'">Cerrar</button><button class="btn" onclick="enviarPregunta()">Enviar</button></div></div></div>
+  <div id="modalFechas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9600; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;"><div style="background:white; border-radius:24px; width:100%; max-width:320px; overflow:hidden;"><div id="txtTituloModalFechas" style="background:#1b5e20; color:white; padding:15px; font-weight:900;"></div><ul id="containerListaFechas" style="list-style:none; padding:15px; text-align:left; margin:0; max-height:300px; overflow-y:auto;"></ul><button class="btn" style="border-radius:0;" onclick="cerrarModalFechas()">CERRAR</button></div></div>
+  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);"><h2>✅ ¡Envío Exitoso!</h2><p>Póngase al día con sus procesos.</p><button class="btn" style="background:white; color:#1b5e20; width:fit-content;" onclick="location.reload()">ENTENDIDO</button></div>
+  <div id="successMsg" class="success-overlay" style="background: rgba(2, 119, 189, 0.98);"><h2>✅ Mensaje Enviado</h2><p>Docente responderá pronto.</p><button class="btn" style="background:white; color:#0277bd; width:fit-content;" onclick="cerrarSuccessMsg()">ENTENDIDO</button></div>
+  <div id="overlaySem" class="success-overlay" style="background: rgba(0,0,0,0.9);"><div style="background:white; padding:30px; border-radius:24px; color:#333; width:90%;"><h2 style="color:#d32f2f;">ADVERTENCIA</h2><p id="semText" style="white-space:pre-line;"></p><button class="btn" onclick="location.reload()">ENTENDIDO</button></div></div>
 
 <script>
   let estActualDoc = ""; let periodoAsis = 1; let estSop = null; const pads = new Map(); let cacheFechas = { I: [], E: [] };
   let docAlertaActual = ""; let periodoNotasActual = 1; let gradoEstudianteActual = ""; let cacheTareasAgenda = []; let currentTaskId = null; let currentTaskTitle = null;
   window.jsPDF = window.jspdf.jsPDF;
 
-  // LÓGICA DE LOGIN UNIFICADO
-  window.onload = function() {
-    const saved = localStorage.getItem("padre_doc");
-    if(saved) {
-      document.getElementById("globalDocInput").value = saved;
-      document.getElementById("chkGlobalSave").checked = true;
-    }
-  };
+  window.onload = function() { const saved = localStorage.getItem("padre_doc"); if(saved) { document.getElementById("globalDocInput").value = saved; document.getElementById("chkGlobalSave").checked = true; } };
 
   function iniciarSesionApp() {
-    const doc = document.getElementById("globalDocInput").value.trim();
-    const est = estudiantesValidos.find(e => e.doc === doc);
-    if(!est) return alert("Documento no encontrado.");
-
+    const doc = document.getElementById("globalDocInput").value.trim(); const est = estudiantesValidos.find(e => e.doc === doc); if(!est) return alert("Documento no encontrado.");
     if(document.getElementById("chkGlobalSave").checked) localStorage.setItem("padre_doc", doc);
+    estActualDoc = doc; docAlertaActual = doc; gradoEstudianteActual = est.grado; estSop = est;
+    document.getElementById("inst-title").innerText = est.nombre; document.getElementById("inst-sub").innerText = "GRADO: " + est.grado;
+    document.getElementById("login-section").style.display = "none"; document.getElementById("main-dashboard").style.display = "grid";
+    cargarTableroAvisos();
+  }
+
+  function navegarA(seccion) { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "none"; document.getElementById("view-" + seccion).style.display = "block"; if(seccion === 'exc') activarFormularioExcusa(); if(seccion === 'obs') buscarObservaciones(); if(seccion === 'piz') iniciarCargaAlerta(); }
+  function volverAlMenu() { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "grid"; }
+
+  // --- LÓGICA PERIÓDICO ESCOLAR (ICONOS PERSONALIZADOS Y VISIBLES) ---
+  function cargarTableroAvisos() {
+    const div = document.getElementById("dashboard-avisos");
     
-    estActualDoc = doc;
-    docAlertaActual = doc;
-    gradoEstudianteActual = est.grado;
-    estSop = est;
+    // EXTRACCIÓN DE NOMBRE INTELIGENTE (SIN APELLIDO)
+    let nombreNino = "Estudiante";
+    if (estSop && estSop.nombre) {
+        const partes = estSop.nombre.trim().split(/\s+/);
+        if (partes.length > 2) {
+            nombreNino = partes[partes.length - 1];
+        } else {
+            nombreNino = partes[0];
+        }
+        nombreNino = nombreNino.charAt(0).toUpperCase() + nombreNino.slice(1).toLowerCase();
+    }
 
-    document.getElementById("inst-title").innerText = est.nombre;
-    document.getElementById("inst-sub").innerText = "GRADO: " + est.grado;
-    document.getElementById("inst-doc").innerHTML = "Sede Santa Juana · <span style='color:yellow;'>Sesión Iniciada</span>";
+    db.collection("tableroAvisos").orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
+      div.innerHTML = "";
+      if(snap.empty) { div.innerHTML = "<div class='sticky-note note-yellow'><div class='note-pin'></div>Sin avisos.</div>"; return; }
+      
+      snap.forEach(doc => {
+        const d = doc.data();
+        
+        // 1. FILTRADO
+        const scope = d.scope || 'General';
+        const targetGrades = d.targetGrades || ['Todos'];
+        const targetDoc = d.targetStudentDoc || '';
 
-    document.getElementById("login-section").style.display = "none";
-    document.getElementById("main-dashboard").style.display = "grid";
-  }
+        const esGeneral = scope === 'General' || targetGrades.includes('Todos');
+        const esMiGrado = scope === 'Grado' && targetGrades.includes(gradoEstudianteActual);
+        const esParaMi = scope === 'Individual' && targetDoc === estActualDoc;
 
-  function navegarA(seccion) {
-    document.getElementById("main-dashboard").style.display = "none";
-    document.getElementById("view-" + seccion).style.display = "block";
-    window.scrollTo(0,0);
-    if(seccion === 'exc') activarFormularioExcusa();
-    if(seccion === 'obs') buscarObservaciones();
-    if(seccion === 'piz') iniciarCargaAlerta();
-  }
+        if (!esGeneral && !esMiGrado && !esParaMi) return;
 
-  function volverAlMenu() {
-    document.querySelectorAll('.container').forEach(c => c.style.display = "none");
-    document.getElementById("main-dashboard").style.display = "grid";
-  }
+        // 2. CONFIGURACIÓN DEL BADGE (RÓTULO) - MODIFICADO PARA VISIBILIDAD DE GRUPO
+        let badgeHtml = "";
+        
+        if (scope === 'General') { 
+             // Solo icono mundo
+             badgeHtml = `<div class="heart-badge" style="padding: 2px 4px;">🌎</div>`;
+        } 
+        else if (scope === 'Grado') { 
+             // ---> CAMBIO QUIRÚRGICO AQUÍ: Aumentar tamaño y cambiar color para visibilidad <---
+             badgeHtml = `<div class="heart-badge" style="padding: 4px 6px; font-size: 20px; background: #fff9c4; border-color: #fbc02d; color: #f57f17;">👨‍👧‍👦</div>`; 
+        } 
+        else if (scope === 'Individual') { 
+             // Icono + Nombre
+             badgeHtml = `<div class="heart-badge">👤 ${nombreNino}</div>`; 
+        }
 
-  // FUNCIÓN DE FORMATEO REFORZADA (PIZARRA)
-  function formatTaskDescription(text) {
-    if (!text) return "Sin descripción detallada.";
-    const lines = text.split('\n');
-    let finalHtml = '';
-    lines.forEach(line => {
-      let trimmedLine = line.trim();
-      if (!trimmedLine) {
-        finalHtml += '<div class="paragraph-spacer"></div>';
-        return;
-      }
-      const bulletMatch = trimmedLine.match(/^[-*•]\s*(.*)/);
-      if (bulletMatch) {
-        let content = bulletMatch[1];
-        content = content.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>');
-        finalHtml += `<div class="bullet-row"><span class="bullet-dot">●</span><span>${content}</span></div>`;
-      } else {
-        let content = trimmedLine.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>');
-        finalHtml += `<span>${content}</span><br>`;
-      }
+        // 3. BOTÓN ME GUSTA (Solo si NO es general)
+        let likeBtn = "";
+        if (scope !== 'General') {
+            const liked = (d.likes || []).includes(estActualDoc);
+            likeBtn = `<button class="like-btn" onclick="toggleLike('${doc.id}', event)">${liked ? "❤️" : "🤍"}</button>`;
+        }
+
+        // 4. MULTIMEDIA
+        let multimediaHtml = "";
+        if(d.imageUrl) multimediaHtml = `<div class="polaroid-frame"><img src="${d.imageUrl}" class="polaroid-img"></div>`;
+        if(d.videoUrl) multimediaHtml += `<div class="video-indicator">▶️</div>`;
+        
+        div.innerHTML += `
+          <div class="sticky-note note-${d.color || 'yellow'}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
+            ${badgeHtml}
+            ${likeBtn}
+            <div class="note-pin"></div>
+            ${multimediaHtml}
+            <div class="note-text">${d.mensaje}</div>
+          </div>`;
+      });
     });
-    return finalHtml;
   }
 
-  // --- LÓGICA ORIGINAL (MANTENIDA) ---
+  // --- FUNCIÓN ME GUSTA ---
+  async function toggleLike(id, e) {
+    e.stopPropagation(); 
+    const docRef = db.collection("tableroAvisos").doc(id);
+    const docSnap = await docRef.get();
+    if (!docSnap.exists) return;
+
+    const likes = docSnap.data().likes || [];
+    if (!likes.includes(estActualDoc)) {
+        await docRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(estActualDoc) });
+    }
+  }
+
+  function abrirZoom(data) {
+    const txt = document.getElementById("zoom-text");
+    const multi = document.getElementById("zoom-multimedia");
+    const content = document.getElementById("zoom-content");
+    const modal = document.getElementById("modal-aviso-zoom");
+
+    txt.innerText = data.mensaje;
+    content.className = "note-large note-" + (data.color || 'yellow');
+    multi.innerHTML = ""; 
+
+    if(data.imageUrl) {
+      multi.innerHTML = `<img src="${data.imageUrl}" class="zoom-photo">`;
+    }
+    if(data.videoUrl) {
+      const vidId = getYouTubeId(data.videoUrl);
+      if(vidId) multi.innerHTML += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+    }
+
+    modal.style.display = "flex";
+  }
+
+  function cerrarNotaGrande() {
+    document.getElementById("modal-aviso-zoom").style.display = "none";
+    document.getElementById("zoom-multimedia").innerHTML = ""; // Detener video
+  }
+
+  function getYouTubeId(url) { if(!url) return null; const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
+
+  // --- RESTO DE FUNCIONES ---
   function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
   function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
-  function getAreaStyle(a) { 
-    const area = (a || '').toUpperCase();
-    if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' };
-    if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' };
-    if(area.includes('NATURALES')) return { border: '#059669', badge: '#d1fae5', text: '#047857' };
-    if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#fef3c7', text: '#b45309' };
-    return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' };
-  }
+  function getAreaStyle(a) { const area = (a || '').toUpperCase(); if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' }; if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' }; if(area.includes('NATURALES')) return { border: '#059669', badge: '#d1fae5', text: '#047857' }; if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#fef3c7', text: '#b45309' }; return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' }; }
+  function formatTaskDescription(text) { if (!text) return "Sin descripción detallada."; const lines = text.split('\n'); let finalHtml = ''; lines.forEach(line => { let trimmedLine = line.trim(); if (!trimmedLine) { finalHtml += '<div class="paragraph-spacer"></div>'; return; } const bulletMatch = trimmedLine.match(/^[-*•]\s*(.*)/); if (bulletMatch) { let content = bulletMatch[1]; content = content.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>'); finalHtml += `<div class="bullet-row"><span class="bullet-dot">●</span><span>${content}</span></div>`; } else { let content = trimmedLine.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>'); finalHtml += `<span>${content}</span><br>`; } }); return finalHtml; }
 
-  async function activarFormularioExcusa() {
-    const est = estudiantesValidos.find(e => e.doc === estActualDoc);
-    document.getElementById("nombreExc").innerText=est.nombre;
-    const snapC = await db.collection("configuracionGlobal").doc("asistencia").get(); periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1;
-    document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis; consultarStats(estActualDoc); initPad('sigExc');
-  }
-  async function consultarStats(di) {
-    const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get();
-    let f=0, e=0; cacheFechas.I=[]; cacheFechas.E=[];
-    snap.forEach(d => { const reg = (d.data().detalles || []).find(x => x.doc === di); if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); } if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); } });
-    document.getElementById("statFallas").innerText=f; document.getElementById("statExcusas").innerText=e;
-  }
+  async function activarFormularioExcusa() { const est = estudiantesValidos.find(e => e.doc === estActualDoc); document.getElementById("nombreExc").innerText=est.nombre; const snapC = await db.collection("configuracionGlobal").doc("asistencia").get(); periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1; document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis; consultarStats(estActualDoc); initPad('sigExc'); }
+  async function consultarStats(di) { const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get(); let f=0, e=0; cacheFechas.I=[]; cacheFechas.E=[]; snap.forEach(d => { const reg = (d.data().detalles || []).find(x => x.doc === di); if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); } if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); } }); document.getElementById("statFallas").innerText=f; document.getElementById("statExcusas").innerText=e; }
   function mostrarListadoFechas(tipo) { const arr=(tipo==='I')?cacheFechas.I:cacheFechas.E; document.getElementById("txtTituloModalFechas").innerText=(tipo==='I')?"FECHAS DE FALLAS":"FECHAS DE EXCUSAS"; const c=document.getElementById("containerListaFechas"); c.innerHTML=arr.length?arr.map(f=>`<li>📅 ${formatearFecha(f)}</li>`).join(""):"<li>Sin registros.</li>"; document.getElementById("modalFechas").style.display="flex"; }
   function cerrarModalFechas() { document.getElementById("modalFechas").style.display="none"; }
   async function enviarExcusa() { const p=pads.get('sigExc'); if(!p?.hasData) return alert("Firme el recuadro."); await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: document.getElementById("fechaExc").value, motivoTipo: document.getElementById("motivoExc").value, motivoDetalle: document.getElementById("detalleExc").value, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); document.getElementById("successAsis").style.display="flex"; }
 
-  async function buscarObservaciones() {
-    const docId = estActualDoc;
-    const out = document.getElementById("resultadoObs"); out.innerHTML = "Cargando...";
-    const cSnap = await db.collection("configuracionCiclos").doc(docId).get(); const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1;
-    db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => {
-      let list = []; snap.forEach(d => { if(d.data().ciclo == cAct) list.push({ id: d.id, ...d.data() }); });
-      let obsL = list.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
-      if(obsL.length === 0) { out.innerHTML = `<div style='text-align:center; padding:20px;'>No hay anotaciones en el ciclo #${cAct}</div>`; return; }
-      out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => {
-        let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32");
-        return `<div style="border:1.5 solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`;
-      }).join("");
-      setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500);
-    });
-  }
+  async function buscarObservaciones() { const docId = estActualDoc; const out = document.getElementById("resultadoObs"); out.innerHTML = "Cargando..."; const cSnap = await db.collection("configuracionCiclos").doc(docId).get(); const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1; db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => { let list = []; snap.forEach(d => { if(d.data().ciclo == cAct) list.push({ id: d.id, ...d.data() }); }); let obsL = list.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || "")); if(obsL.length === 0) { out.innerHTML = `<div style='text-align:center; padding:20px;'>No hay anotaciones en el ciclo #${cAct}</div>`; return; } out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => { let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32"); return `<div style="border:1.5 solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`; }).join(""); setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500); }); }
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  async function iniciarCargaAlerta() { 
-    document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; 
-    await cargarPeriodoNotasActual(); 
-    cargarNotasBajasPeriodo(docAlertaActual); 
-    cargarAgendaEscolar(gradoEstudianteActual); 
-  }
+  async function iniciarCargaAlerta() { document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; await cargarPeriodoNotasActual(); cargarNotasBajasPeriodo(docAlertaActual); cargarAgendaEscolar(gradoEstudianteActual); }
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
-  
-  async function cargarNotasBajasPeriodo(docEst) {
-    document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`;
-    const div = document.getElementById("aaLista"); div.innerHTML = "Cargando...";
-    const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get();
-    let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); });
-    if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Todo al día.</div>`; return; }
-    div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5 solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5 solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:10px; font-size:12px;">${it.observacion || "Sin comentario."}</div></div>`).join("");
-  }
+  async function cargarNotasBajasPeriodo(docEst) { document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`; const div = document.getElementById("aaLista"); div.innerHTML = "Cargando..."; const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get(); let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); }); if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Todo al día.</div>`; return; } div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5 solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5 solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="agenda-task-desc" style="font-size: 12px; padding: 12px; margin-top: 10px;">${formatTaskDescription(it.observacion)}</div></div>`).join(""); }
 
-  // --- FUNCIÓN DE AGENDA CON ORDENAMIENTO ---
-  async function cargarAgendaEscolar(grado) {
-    const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda...";
-    const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get();
-    const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get();
-    const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); });
-    
-    let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() }));
-    let filtered = tareas.filter(t => (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false);
-
-    // Aplicar Ordenamiento
-    const order = document.getElementById("agendaSortOrder").value;
-    if(order === "prox") {
-      filtered.sort((a,b) => (a.date || "").localeCompare(b.date || ""));
-    } else if (order === "lejos") {
-      filtered.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
-    } else {
-      filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-    }
-
-    cacheTareasAgenda = filtered;
-    if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; }
-    
-    div.innerHTML = filtered.map(t => {
-      const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink);
-      let chatHtml = ""; if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; }
-      
-      return `
-        <div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-          <span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span>
-          <div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#c62828;">📅 Entrega: ${formatearFecha(t.date)}</div>
-          <div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div>
-          <div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>
-          ${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
-          ${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}
-          ${chatHtml}
-          <div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1.5 solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Chat</button></div>
-        </div>`;
-    }).join("");
-  }
-
-  function descargarAgendaPDF() {
-    const doc = new window.jsPDF(); const est = estudiantesValidos.find(e => e.doc === docAlertaActual);
-    doc.text("AGENDA ESCOLAR - " + (est ? est.nombre : ""), 10, 15);
-    const body = cacheTareasAgenda.map(t => [t.area || "Gral", t.title, formatearFecha(t.date)]);
-    doc.autoTable({ startY: 25, head: [['ÁREA', 'ACTIVIDAD', 'ENTREGA']], body, headStyles:{fillColor:[27,94,32]} });
-    doc.save(`Agenda_${docAlertaActual}.pdf`);
-  }
-
+  async function cargarAgendaEscolar(grado) { const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda..."; const snap = await db.collection("agendaEscolar").where("gradeLevel", "==", grado).where("archived", "==", false).get(); const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get(); const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); }); let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() })); let filtered = tareas.filter(t => (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false); const order = document.getElementById("agendaSortOrder").value; if(order === "prox") { filtered.sort((a,b) => (a.date || "").localeCompare(b.date || "")); } else if (order === "lejos") { filtered.sort((a,b) => (b.date || "").localeCompare(a.date || "")); } else { filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)); } cacheTareasAgenda = filtered; if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; } div.innerHTML = filtered.map(t => { const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink); let chatHtml = ""; if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; } return `<div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"><span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span><div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#c62828;">📅 Entrega: ${formatearFecha(t.date)}</div><div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div><div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}${chatHtml}<div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1.5 solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Chat</button></div></div>`; }).join(""); }
+  function descargarAgendaPDF() { const doc = new window.jsPDF(); const est = estudiantesValidos.find(e => e.doc === docAlertaActual); doc.text("AGENDA ESCOLAR - " + (est ? est.nombre : ""), 10, 15); const body = cacheTareasAgenda.map(t => [t.area || "Gral", t.title, formatearFecha(t.date)]); doc.autoTable({ startY: 25, head: [['ÁREA', 'ACTIVIDAD', 'ENTREGA']], body, headStyles:{fillColor:[27,94,32]} }); doc.save(`Agenda_${docAlertaActual}.pdf`); }
   function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "flex"; }
-  async function enviarPregunta() {
-    const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda.");
-    const mRef = db.collection("mensajesAgenda");
-    const query = await mRef.where("taskId", "==", currentTaskId).where("studentDoc", "==", docAlertaActual).get();
-    const newMsg = { rol: 'user', texto: txt, timestamp: new Date().toISOString() };
-    if (!query.empty) { await mRef.doc(query.docs[0].id).update({ conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg), lastUpdate: new Date().toISOString(), read: false }); } 
-    else { await mRef.add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: estSop.nombre, conversacion: [newMsg], lastUpdate: new Date().toISOString(), read: false, periodo: periodoNotasActual }); }
-    alert("Duda enviada."); document.getElementById("textoPregunta").value = ""; document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual);
-  }
-
-  function switchTabAlerta(tab) {
-    document.getElementById("view-aa-notas").style.display = tab === 'notas' ? 'block' : 'none';
-    document.getElementById("view-aa-agenda").style.display = tab === 'agenda' ? 'block' : 'none';
-    document.getElementById("tab-notas").classList.toggle('active', tab === 'notas');
-    document.getElementById("tab-agenda").classList.toggle('active', tab === 'agenda');
-  }
-
+  async function enviarPregunta() { const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda."); const mRef = db.collection("mensajesAgenda"); const query = await mRef.where("taskId", "==", currentTaskId).where("studentDoc", "==", docAlertaActual).get(); const newMsg = { rol: 'user', texto: txt, timestamp: new Date().toISOString() }; if (!query.empty) { await mRef.doc(query.docs[0].id).update({ conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg), lastUpdate: new Date().toISOString(), read: false }); } else { await mRef.add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: estSop.nombre, conversacion: [newMsg], lastUpdate: new Date().toISOString(), read: false, periodo: periodoNotasActual }); } alert("Duda enviada."); document.getElementById("textoPregunta").value = ""; document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual); }
+  function switchTabAlerta(tab) { document.getElementById("view-aa-notas").style.display = tab === 'notas' ? 'block' : 'none'; document.getElementById("view-aa-agenda").style.display = tab === 'agenda' ? 'block' : 'none'; document.getElementById("tab-notas").classList.toggle('active', tab === 'notas'); document.getElementById("tab-agenda").classList.toggle('active', tab === 'agenda'); }
   function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
   function irAFormSop() { document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_form").style.display="block"; initPad('sigSoporte'); }
   function irAMenuSop() { document.getElementById("sop_form").style.display="none"; document.getElementById("sop_history").style.display="none"; document.getElementById("sop_menu").style.display="block"; }
-  function irAHistorialSop() { 
-    document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_history").style.display="block"; 
-    db.collection("comunicacionPadres").where("documentoEstudiante", "==", estActualDoc).onSnapshot(snap => {
-      let h = ""; snap.forEach(d => { const m = d.data(); h += `<div style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom:12px;"><b>${m.asunto}</b><br><p>${m.mensaje}</p></div>`; });
-      document.getElementById("listaMensajesSop").innerHTML = h || "Sin registros.";
-    });
-  }
+  function irAHistorialSop() { document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_history").style.display="block"; db.collection("comunicacionPadres").where("documentoEstudiante", "==", estActualDoc).onSnapshot(snap => { let h = ""; snap.forEach(d => { const m = d.data(); h += `<div style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom:12px;"><b>${m.asunto}</b><br><p>${m.mensaje}</p></div>`; }); document.getElementById("listaMensajesSop").innerHTML = h || "Sin registros."; }); }
   async function enviarMensajeSoporte() { const p=pads.get('sigSoporte'); if(!p?.hasData) return alert("Firme el mensaje."); await db.collection("comunicacionPadres").add({ documentoEstudiante: estActualDoc, nombreEstudiante: estSop.nombre, asunto: document.getElementById("msg_asunto").value, mensaje: document.getElementById("msg_texto").value, timestamp: new Date().toISOString() }); document.getElementById("modalSoporte").style.display="none"; document.getElementById("successMsg").style.display="flex"; }
   function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
-
-  // FIRMAS
   function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=160*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
 </script>
 </body>
 </html>
-<!-- trigger pages -->
