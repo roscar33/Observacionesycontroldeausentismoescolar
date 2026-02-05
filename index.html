@@ -104,7 +104,7 @@
     border: 1px solid #ffcdd2;
     padding: 2px 6px;
     border-radius: 10px;
-    font-size: 12px; /* Tamaño base */
+    font-size: 11px; /* Tamaño base */
     font-weight: 900;
     transform: rotate(5deg);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -203,7 +203,9 @@
   </div>
 
   <div id="view-exc" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="formExc"><div id="nombreExc" style="text-align:center; font-weight:900;"></div><div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin:10px 0; border-radius:4px;"></div><div style="display:flex; gap:10px; margin-bottom:15px;"><div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#ef4444;" onclick="mostrarListadoFechas('I')"><span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS</div><div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#f97316;" onclick="mostrarListadoFechas('E')"><span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS</div></div><input id="fechaExc" type="date"><select id="motivoExc"><option value="">Motivo...</option><option>Enfermedad</option><option>Cita médica</option><option>Otro</option></select><textarea id="detalleExc" placeholder="Motivo..."></textarea><div class="sig-wrap"><canvas id="sigExc"></canvas><button class="btn sec" onclick="limpiarPad('sigExc')">Borrar</button></div><button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button></div></div>
+  
   <div id="view-obs" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="resultadoObs"></div></div>
+  
   <div id="view-piz" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div class="pizarra-header-ui">🏫 Pizarra Escolar</div><div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;"><button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button><button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('agenda')">📅 Agenda</button></div><div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div><div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div><div id="view-aa-notas"><div id="aaLista"></div></div><div id="view-aa-agenda" style="display:none;"><div class="agenda-filters"><span class="filter-label">Ordenar:</span><select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)"><option value="prox">Más próximas</option><option value="lejos">Más lejanas</option><option value="creado">Recientes</option></select></div><button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button><div id="aaAgendaLista"></div></div></div>
 
   <div id="modal-aviso-zoom" onclick="cerrarNotaGrande()">
@@ -243,20 +245,22 @@
   function navegarA(seccion) { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "none"; document.getElementById("view-" + seccion).style.display = "block"; if(seccion === 'exc') activarFormularioExcusa(); if(seccion === 'obs') buscarObservaciones(); if(seccion === 'piz') iniciarCargaAlerta(); }
   function volverAlMenu() { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "grid"; }
 
-  // --- LÓGICA PERIÓDICO ESCOLAR (ICONOS PERSONALIZADOS Y VISIBLES) ---
+  // --- LÓGICA PERIÓDICO ESCOLAR (AJUSTE QUIRÚRGICO DE NOMBRE Y PRIVACIDAD) ---
   function cargarTableroAvisos() {
     const div = document.getElementById("dashboard-avisos");
     
-    // EXTRACCIÓN DE NOMBRE INTELIGENTE (SIN APELLIDO)
-    let nombreNino = "Estudiante";
+    // FORMATEAR NOMBRE: "Nombre Apellido"
+    let nombreAmigable = "Estudiante";
     if (estSop && estSop.nombre) {
         const partes = estSop.nombre.trim().split(/\s+/);
-        if (partes.length > 2) {
-            nombreNino = partes[partes.length - 1];
+        if (partes.length >= 3) {
+            // Se asume: APELLIDO1 APELLIDO2 NOMBRE1 (NOMBRE2)
+            const apellidos = partes.slice(0, 2).join(" ");
+            const nombres = partes.slice(2).join(" ");
+            nombreAmigable = nombres + " " + apellidos;
         } else {
-            nombreNino = partes[0];
+            nombreAmigable = estSop.nombre;
         }
-        nombreNino = nombreNino.charAt(0).toUpperCase() + nombreNino.slice(1).toLowerCase();
     }
 
     db.collection("tableroAvisos").orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
@@ -266,41 +270,36 @@
       snap.forEach(doc => {
         const d = doc.data();
         
-        // 1. FILTRADO
+        // REGLAS DE PRIVACIDAD ESTRICTAS
         const scope = d.scope || 'General';
-        const targetGrades = d.targetGrades || ['Todos'];
+        const targetGrades = d.targetGrades || [];
         const targetDoc = d.targetStudentDoc || '';
 
-        const esGeneral = scope === 'General' || targetGrades.includes('Todos');
+        const esGeneral = scope === 'General';
         const esMiGrado = scope === 'Grado' && targetGrades.includes(gradoEstudianteActual);
         const esParaMi = scope === 'Individual' && targetDoc === estActualDoc;
 
+        // Si no cumple ninguna, no mostrar
         if (!esGeneral && !esMiGrado && !esParaMi) return;
 
-        // 2. CONFIGURACIÓN DEL BADGE (RÓTULO) - MODIFICADO PARA VISIBILIDAD DE GRUPO
         let badgeHtml = "";
-        
         if (scope === 'General') { 
-             // Solo icono mundo
-             badgeHtml = `<div class="heart-badge" style="padding: 2px 4px;">🌎</div>`;
+             badgeHtml = `<div class="heart-badge">🌎 GLOBAL</div>`;
         } 
         else if (scope === 'Grado') { 
-             // ---> CAMBIO QUIRÚRGICO AQUÍ: Aumentar tamaño y cambiar color para visibilidad <---
-             badgeHtml = `<div class="heart-badge" style="padding: 4px 6px; font-size: 20px; background: #fff9c4; border-color: #fbc02d; color: #f57f17;">👨‍👧‍👦</div>`; 
+             badgeHtml = `<div class="heart-badge" style="background: #fff9c4; color: #f57f17;">👨‍👧‍👦 GRUPO</div>`; 
         } 
         else if (scope === 'Individual') { 
-             // Icono + Nombre
-             badgeHtml = `<div class="heart-badge">👤 ${nombreNino}</div>`; 
+             // Ajuste de Rótulo: Nombre antes que apellido
+             badgeHtml = `<div class="heart-badge">👤 ${nombreAmigable}</div>`; 
         }
 
-        // 3. BOTÓN ME GUSTA (Solo si NO es general)
         let likeBtn = "";
         if (scope !== 'General') {
             const liked = (d.likes || []).includes(estActualDoc);
             likeBtn = `<button class="like-btn" onclick="toggleLike('${doc.id}', event)">${liked ? "❤️" : "🤍"}</button>`;
         }
 
-        // 4. MULTIMEDIA
         let multimediaHtml = "";
         if(d.imageUrl) multimediaHtml = `<div class="polaroid-frame"><img src="${d.imageUrl}" class="polaroid-img"></div>`;
         if(d.videoUrl) multimediaHtml += `<div class="video-indicator">▶️</div>`;
@@ -317,48 +316,33 @@
     });
   }
 
-  // --- FUNCIÓN ME GUSTA ---
   async function toggleLike(id, e) {
     e.stopPropagation(); 
     const docRef = db.collection("tableroAvisos").doc(id);
     const docSnap = await docRef.get();
     if (!docSnap.exists) return;
-
     const likes = docSnap.data().likes || [];
-    if (!likes.includes(estActualDoc)) {
-        await docRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(estActualDoc) });
-    }
+    if (!likes.includes(estActualDoc)) { await docRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(estActualDoc) }); }
   }
 
   function abrirZoom(data) {
-    const txt = document.getElementById("zoom-text");
-    const multi = document.getElementById("zoom-multimedia");
-    const content = document.getElementById("zoom-content");
     const modal = document.getElementById("modal-aviso-zoom");
-
-    txt.innerText = data.mensaje;
-    content.className = "note-large note-" + (data.color || 'yellow');
+    document.getElementById("zoom-text").innerText = data.mensaje;
+    document.getElementById("zoom-content").className = "note-large note-" + (data.color || 'yellow');
+    const multi = document.getElementById("zoom-multimedia");
     multi.innerHTML = ""; 
-
-    if(data.imageUrl) {
-      multi.innerHTML = `<img src="${data.imageUrl}" class="zoom-photo">`;
-    }
+    if(data.imageUrl) multi.innerHTML = `<img src="${data.imageUrl}" class="zoom-photo">`;
     if(data.videoUrl) {
       const vidId = getYouTubeId(data.videoUrl);
       if(vidId) multi.innerHTML += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
     }
-
     modal.style.display = "flex";
   }
 
-  function cerrarNotaGrande() {
-    document.getElementById("modal-aviso-zoom").style.display = "none";
-    document.getElementById("zoom-multimedia").innerHTML = ""; // Detener video
-  }
-
+  function cerrarNotaGrande() { document.getElementById("modal-aviso-zoom").style.display = "none"; document.getElementById("zoom-multimedia").innerHTML = ""; }
   function getYouTubeId(url) { if(!url) return null; const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
 
-  // --- RESTO DE FUNCIONES ---
+  // --- RESTO DE FUNCIONES (RESTAURADAS) ---
   function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
   function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
   function getAreaStyle(a) { const area = (a || '').toUpperCase(); if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' }; if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' }; if(area.includes('NATURALES')) return { border: '#059669', badge: '#d1fae5', text: '#047857' }; if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#fef3c7', text: '#b45309' }; return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' }; }
