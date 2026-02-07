@@ -6,6 +6,7 @@
 <title>Seguimiento Escolares · Primaria 2026</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Kalam:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
@@ -89,7 +90,57 @@
   .sticky-note:nth-child(3n) { transform: rotate(-1.5deg); }
   
   .note-pink { background: #fbcfe8 !important; } .note-blue { background: #bae6fd !important; } .note-green { background: #bbf7d0 !important; } .note-yellow { background: #fef08a !important; }
+  .note-orange { background: #ffcc80 !important; color: #fff !important; }
+  
   .note-pin { width: 14px; height: 14px; background: #ef4444; border-radius: 50%; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); box-shadow: 1px 1px 3px rgba(0,0,0,0.3); border: 1px solid #b91c1c; }
+
+  /* ESTILOS TABLA MADERA (Pergamino Tarea) */
+  .wood-board {
+      width: 100%; min-height: 160px;
+      background: #5d4037; /* Madera oscura */
+      border-radius: 6px;
+      padding: 15px 8px 8px 8px; /* Padding top para el clip */
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transform: rotate(0deg) !important;
+      cursor: pointer;
+      display: flex; flex-direction: column;
+  }
+  /* Estilo Modal para Madera */
+  .wood-board-modal {
+      width: 100%; max-width: 350px;
+      background: #5d4037;
+      padding: 25px 15px 15px 15px;
+      border-radius: 8px;
+      position: relative;
+      display: flex; flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+
+  .metal-clip {
+      position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+      width: 60px; height: 18px; background: #cfd8dc;
+      border: 2px solid #90a4ae; border-radius: 4px;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.3); z-index: 10;
+  }
+  .parchment-paper {
+      background: #fff8e1; /* Beige pergamino */
+      border: 1px solid #d7ccc8;
+      flex: 1; padding: 12px;
+      font-family: 'Lora', serif;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      display: flex; flex-direction: column; gap: 4px;
+      position: relative;
+  }
+  .parchment-header {
+      text-align: center; border-bottom: 2px solid #c62828;
+      padding-bottom: 4px; margin-bottom: 6px;
+  }
+  .parchment-title { font-family: 'Cinzel', serif; color: #c62828; font-weight: 900; font-size: 14px; text-transform: uppercase; }
+  .parchment-row { margin-bottom: 4px; border-bottom: 1px dashed #efebe9; padding-bottom: 2px; }
+  .parchment-label { display: block; font-size: 9px; font-weight: 900; color: #c62828; text-transform: uppercase; letter-spacing: 0.5px; }
+  .parchment-val { font-size: 12px; font-weight: 700; color: #000000; line-height: 1.2; }
+  .parchment-footer { font-size: 9px; color: #5d4037; text-align: center; margin-top: auto; font-style: italic; }
 
   /* FOTOS EN NOTA PEQUEÑA */
   .polaroid-frame { background: white; padding: 5px 5px 15px 5px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 5px; transform: rotate(-2deg); }
@@ -253,16 +304,24 @@
   function navegarA(seccion) { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "none"; document.getElementById("view-" + seccion).style.display = "block"; if(seccion === 'exc') activarFormularioExcusa(); if(seccion === 'obs') buscarObservaciones(); if(seccion === 'piz') iniciarCargaAlerta(); }
   function volverAlMenu() { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "grid"; }
 
-  // --- LÓGICA PERIÓDICO ESCOLAR (AJUSTE QUIRÚRGICO DE NOMBRE Y PRIVACIDAD) ---
+  // --- FUNCIÓN DE FECHA AMIGABLE (NUEVO) ---
+  function formatDateFriendly(dateStr) {
+     if(!dateStr) return '';
+     const parts = dateStr.split('-');
+     if(parts.length !== 3) return dateStr; 
+     const date = new Date(parts[0], parts[1] - 1, parts[2]);
+     return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  // ----------------------------------------
+
+  // --- LÓGICA PERIÓDICO ESCOLAR ---
   function cargarTableroAvisos() {
     const div = document.getElementById("dashboard-avisos");
     
-    // FORMATEAR NOMBRE: "Nombre Apellido"
     let nombreAmigable = "Estudiante";
     if (estSop && estSop.nombre) {
         const partes = estSop.nombre.trim().split(/\s+/);
         if (partes.length >= 3) {
-            // Se asume: APELLIDO1 APELLIDO2 NOMBRE1 (NOMBRE2)
             const apellidos = partes.slice(0, 2).join(" ");
             const nombres = partes.slice(2).join(" ");
             nombreAmigable = nombres + " " + apellidos;
@@ -278,12 +337,9 @@
       snap.forEach(doc => {
         const d = doc.data();
         
-        // --- MODIFICACIÓN QUIRÚRGICA: FILTROS DE FECHA ---
-        if (d.publishAt && new Date(d.publishAt) > new Date()) return; // Aún no empieza
-        if (d.expiresAt && new Date(d.expiresAt) < new Date()) return; // Ya venció
-        // -------------------------------------------------
+        if (d.publishAt && new Date(d.publishAt) > new Date()) return; 
+        if (d.expiresAt && new Date(d.expiresAt) < new Date()) return; 
 
-        // REGLAS DE PRIVACIDAD ESTRICTAS
         const scope = d.scope || 'General';
         const targetGrades = d.targetGrades || [];
         const targetDoc = d.targetStudentDoc || '';
@@ -292,39 +348,72 @@
         const esMiGrado = scope === 'Grado' && targetGrades.includes(gradoEstudianteActual);
         const esParaMi = scope === 'Individual' && targetDoc === estActualDoc;
 
-        // Si no cumple ninguna, no mostrar
         if (!esGeneral && !esMiGrado && !esParaMi) return;
 
-        let badgeHtml = "";
-        if (scope === 'General') { 
-             badgeHtml = `<div class="heart-badge">🌎 GLOBAL</div>`;
-        } 
-        else if (scope === 'Grado') { 
-             badgeHtml = `<div class="heart-badge" style="background: #fff9c4; color: #f57f17;">👨‍👧‍👦 GRUPO</div>`; 
-        } 
-        else if (scope === 'Individual') { 
-             // Ajuste de Rótulo: Nombre antes que apellido
-             badgeHtml = `<div class="heart-badge">👤 ${nombreAmigable}</div>`; 
-        }
+        if (d.isSystemNotice) {
+            // --- RENDERIZAR COMO TABLA MADERA ---
+            const areaMatch = d.mensaje.match(/📍 Área: (.*)/);
+            const workMatch = d.mensaje.match(/📝 Trabajo: (.*)/);
+            const dateMatch = d.mensaje.match(/🗓️ (.*)/);
 
-        let likeBtn = "";
-        if (scope !== 'General') {
-            const liked = (d.likes || []).includes(estActualDoc);
-            likeBtn = `<button class="like-btn" onclick="toggleLike('${doc.id}', event)">${liked ? "❤️" : "🤍"}</button>`;
-        }
+            const area = areaMatch ? areaMatch[1] : 'General';
+            const work = workMatch ? workMatch[1] : 'Actividad';
+            let date = dateMatch ? dateMatch[1] : 'Ver Agenda';
+            
+            // Aplicar formato amigable
+            if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
 
-        let multimediaHtml = "";
-        if(d.imageUrl) multimediaHtml = `<div class="polaroid-frame"><img src="${d.imageUrl}" class="polaroid-img"></div>`;
-        if(d.videoUrl) multimediaHtml += `<div class="video-indicator">▶️</div>`;
-        
-        div.innerHTML += `
-          <div class="sticky-note note-${d.color || 'yellow'}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
-            ${badgeHtml}
-            ${likeBtn}
-            <div class="note-pin"></div>
-            ${multimediaHtml}
-            <div class="note-text">${d.mensaje}</div>
-          </div>`;
+            div.innerHTML += `
+            <div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
+                <div class="metal-clip"></div>
+                <div class="parchment-paper">
+                    <div class="parchment-header">
+                        <div class="parchment-title">⚠️ ATENCIÓN</div>
+                        <div style="text-align:center; font-size:9px; font-weight:600; color:#555;">Nueva actividad en plataforma</div>
+                    </div>
+                    <div class="parchment-body">
+                        <div class="parchment-row">
+                            <span class="parchment-label">Actividad</span>
+                            <span class="parchment-val">${work}</span>
+                        </div>
+                        <div class="parchment-row">
+                            <span class="parchment-label">Área</span>
+                            <span class="parchment-val">${area}</span>
+                        </div>
+                        <div class="parchment-row">
+                            <span class="parchment-label">Entrega</span>
+                            <span class="parchment-val">🗓️ ${date}</span>
+                        </div>
+                    </div>
+                    <div class="parchment-footer">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div>
+                </div>
+            </div>`;
+        } else {
+            // --- RENDERIZAR NORMAL ---
+            let badgeHtml = "";
+            if (scope === 'General') { badgeHtml = `<div class="heart-badge">🌎 GLOBAL</div>`; } 
+            else if (scope === 'Grado') { badgeHtml = `<div class="heart-badge" style="background: #fff9c4; color: #f57f17;">👨‍👧‍👦 GRUPO</div>`; } 
+            else if (scope === 'Individual') { badgeHtml = `<div class="heart-badge">👤 ${nombreAmigable}</div>`; }
+
+            let likeBtn = "";
+            if (scope !== 'General') {
+                const liked = (d.likes || []).includes(estActualDoc);
+                likeBtn = `<button class="like-btn" onclick="toggleLike('${doc.id}', event)">${liked ? "❤️" : "🤍"}</button>`;
+            }
+
+            let multimediaHtml = "";
+            if(d.imageUrl) multimediaHtml = `<div class="polaroid-frame"><img src="${d.imageUrl}" class="polaroid-img"></div>`;
+            if(d.videoUrl) multimediaHtml += `<div class="video-indicator">▶️</div>`;
+            
+            div.innerHTML += `
+              <div class="sticky-note note-${d.color || 'yellow'}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
+                ${badgeHtml}
+                ${likeBtn}
+                <div class="note-pin"></div>
+                ${multimediaHtml}
+                <div class="note-text">${d.mensaje}</div>
+              </div>`;
+        }
       });
     });
   }
@@ -338,30 +427,83 @@
     if (!likes.includes(estActualDoc)) { await docRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(estActualDoc) }); }
   }
 
+  // --- LÓGICA ZOOM (MODAL) ---
   function abrirZoom(data) {
     const modal = document.getElementById("modal-aviso-zoom");
-    document.getElementById("zoom-text").innerText = data.mensaje;
-    document.getElementById("zoom-content").className = "note-large note-" + (data.color || 'yellow');
+    const content = document.getElementById("zoom-content");
     const multi = document.getElementById("zoom-multimedia");
-    multi.innerHTML = ""; 
-    // --- MODIFICACIÓN QUIRÚRGICA: INYECTAR BOTÓN DE DESCARGA ---
-    if(data.imageUrl) {
-        multi.innerHTML = `
+    const textDiv = document.getElementById("zoom-text");
+    
+    // Resetear contenido del modal para evitar duplicados visuales
+    content.innerHTML = ''; 
+    content.className = "note-large"; // Reset clases base
+
+    if (data.isSystemNotice) {
+       // --- MODAL TIPO TABLA MADERA (Reconstrucción completa) ---
+       content.classList.add("wood-board-modal");
+       
+       const areaMatch = data.mensaje.match(/📍 Área: (.*)/);
+       const workMatch = data.mensaje.match(/📝 Trabajo: (.*)/);
+       const dateMatch = data.mensaje.match(/🗓️ (.*)/);
+       const area = areaMatch ? areaMatch[1] : 'General';
+       const work = workMatch ? workMatch[1] : 'Actividad';
+       let date = dateMatch ? dateMatch[1] : '';
+       if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
+
+       content.innerHTML = `
+           <div class="metal-clip" style="top: -15px;"></div>
+           <div class="parchment-paper" style="min-height: 350px; justify-content: center;">
+                <div class="parchment-header">
+                    <div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div>
+                    <div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; color:#555;">Nueva actividad en plataforma</div>
+                </div>
+                <div class="parchment-body" style="font-size: 16px;">
+                    <div class="parchment-row" style="margin-bottom: 15px;">
+                        <span class="parchment-label" style="font-size: 11px;">Actividad</span>
+                        <span class="parchment-val" style="font-size: 18px;">${work}</span>
+                    </div>
+                    <div class="parchment-row" style="margin-bottom: 15px;">
+                        <span class="parchment-label" style="font-size: 11px;">Área</span>
+                        <span class="parchment-val" style="font-size: 18px;">${area}</span>
+                    </div>
+                    <div class="parchment-row" style="margin-bottom: 15px;">
+                        <span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span>
+                        <span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span>
+                    </div>
+                </div>
+                <div class="parchment-footer" style="font-size: 12px; margin-top: 20px;">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div>
+                <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%;" onclick="cerrarNotaGrande()">CERRAR</button>
+           </div>
+       `;
+    } else {
+       // --- MODAL NORMAL (Post-it) ---
+       content.classList.add("note-" + (data.color || 'yellow'));
+       
+       let multiHtml = '';
+       if(data.imageUrl) {
+           multiHtml += `
             <img src="${data.imageUrl}" class="zoom-photo" onclick="this.classList.toggle('zoom-active')">
             <a href="${data.imageUrl}" download="Imagen_Periodico.png" style="text-decoration:none;">
                 <button class="btn blue" style="padding:10px; font-size:12px; margin-bottom:10px; width:100%;">⬇️ DESCARGAR IMAGEN</button>
-            </a>
-        `;
+            </a>`;
+       }
+       if(data.videoUrl) {
+          const vidId = getYouTubeId(data.videoUrl);
+          if(vidId) multiHtml += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+       }
+
+       content.innerHTML = `
+          <div class="note-pin"></div>
+          <div id="zoom-multimedia">${multiHtml}</div>
+          <div id="zoom-text" style="white-space: pre-line;">${data.mensaje}</div>
+          <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto;" onclick="cerrarNotaGrande()">CERRAR</button>
+       `;
     }
-    // -----------------------------------------------------------
-    if(data.videoUrl) {
-      const vidId = getYouTubeId(data.videoUrl);
-      if(vidId) multi.innerHTML += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
-    }
+    
     modal.style.display = "flex";
   }
 
-  function cerrarNotaGrande() { document.getElementById("modal-aviso-zoom").style.display = "none"; document.getElementById("zoom-multimedia").innerHTML = ""; }
+  function cerrarNotaGrande() { document.getElementById("modal-aviso-zoom").style.display = "none"; }
   function getYouTubeId(url) { if(!url) return null; const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
 
   // --- RESTO DE FUNCIONES (RESTAURADAS) ---
