@@ -91,6 +91,8 @@
   
   .note-pink { background: #fbcfe8 !important; } .note-blue { background: #bae6fd !important; } .note-green { background: #bbf7d0 !important; } .note-yellow { background: #fef08a !important; }
   .note-orange { background: #ffcc80 !important; color: #fff !important; }
+  /* MODIFICACIÓN QUIRÚRGICA: ESTILO ROJO PASTEL PARA ALERTAS */
+  .note-red { background: #ffcdd2 !important; color: #b71c1c !important; }
   
   .note-pin { width: 14px; height: 14px; background: #ef4444; border-radius: 50%; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); box-shadow: 1px 1px 3px rgba(0,0,0,0.3); border: 1px solid #b91c1c; }
 
@@ -132,6 +134,19 @@
       display: flex; flex-direction: column; gap: 4px;
       position: relative;
   }
+  .parchment-paper.orange-style {
+      background: #ffcc80 !important; 
+      color: #fff !important; 
+      border-color: #ffb74d;
+  }
+  .parchment-paper.orange-style .parchment-label {
+      color: #b71c1c !important; 
+  }
+  .parchment-paper.orange-style .parchment-val {
+      color: #ffffff !important; 
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+
   .parchment-header {
       text-align: center; border-bottom: 2px solid #c62828;
       padding-bottom: 4px; margin-bottom: 6px;
@@ -141,6 +156,7 @@
   .parchment-label { display: block; font-size: 9px; font-weight: 900; color: #c62828; text-transform: uppercase; letter-spacing: 0.5px; }
   .parchment-val { font-size: 12px; font-weight: 700; color: #000000; line-height: 1.2; }
   .parchment-footer { font-size: 9px; color: #5d4037; text-align: center; margin-top: auto; font-style: italic; }
+  .parchment-paper.orange-style .parchment-footer { color: #fff !important; opacity: 0.9; }
 
   /* FOTOS EN NOTA PEQUEÑA */
   .polaroid-frame { background: white; padding: 5px 5px 15px 5px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 5px; transform: rotate(-2deg); }
@@ -181,11 +197,13 @@
     font-size: 22px; color: #1e3a8a; border-radius: 5px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     transform: rotate(-1deg); display: flex; flex-direction: column; align-items: center;
   }
+  /* MODIFICACIÓN QUIRÚRGICA: HEIGHT AUTO PARA NO DAÑAR DETALLES AL ABRIR */
   .zoom-photo { 
-    width: 100%; border-radius: 4px; margin-bottom: 15px; 
+    width: 100%; height: auto !important; border-radius: 4px; margin-bottom: 15px; 
     border: 8px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transition: transform 0.25s ease; cursor: zoom-in; 
   }
+  /* --------------------------------------------------------------------- */
   .zoom-active { 
     transform: scale(1.8); cursor: zoom-out; z-index: 50; position: relative; 
   }
@@ -360,16 +378,17 @@
             const work = workMatch ? workMatch[1] : 'Actividad';
             let date = dateMatch ? dateMatch[1] : 'Ver Agenda';
             
-            // Aplicar formato amigable
             if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
+
+            const paperClass = d.color === 'orange' ? 'parchment-paper orange-style' : 'parchment-paper';
 
             div.innerHTML += `
             <div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
                 <div class="metal-clip"></div>
-                <div class="parchment-paper">
+                <div class="${paperClass}">
                     <div class="parchment-header">
                         <div class="parchment-title">⚠️ ATENCIÓN</div>
-                        <div style="text-align:center; font-size:9px; font-weight:600; color:#555;">Nueva actividad en plataforma</div>
+                        <div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div>
                     </div>
                     <div class="parchment-body">
                         <div class="parchment-row">
@@ -434,12 +453,11 @@
     const multi = document.getElementById("zoom-multimedia");
     const textDiv = document.getElementById("zoom-text");
     
-    // Resetear contenido del modal para evitar duplicados visuales
     content.innerHTML = ''; 
-    content.className = "note-large"; // Reset clases base
+    content.className = "note-large"; 
 
     if (data.isSystemNotice) {
-       // --- MODAL TIPO TABLA MADERA (Reconstrucción completa) ---
+       // --- MODAL TIPO TABLA MADERA ---
        content.classList.add("wood-board-modal");
        
        const areaMatch = data.mensaje.match(/📍 Área: (.*)/);
@@ -450,12 +468,14 @@
        let date = dateMatch ? dateMatch[1] : '';
        if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
 
+       const paperClass = data.color === 'orange' ? 'parchment-paper orange-style' : 'parchment-paper';
+
        content.innerHTML = `
            <div class="metal-clip" style="top: -15px;"></div>
-           <div class="parchment-paper" style="min-height: 350px; justify-content: center;">
+           <div class="${paperClass}" style="min-height: 350px; justify-content: center;">
                 <div class="parchment-header">
                     <div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div>
-                    <div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; color:#555;">Nueva actividad en plataforma</div>
+                    <div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div>
                 </div>
                 <div class="parchment-body" style="font-size: 16px;">
                     <div class="parchment-row" style="margin-bottom: 15px;">
@@ -477,6 +497,7 @@
        `;
     } else {
        // --- MODAL NORMAL (Post-it) ---
+       // Aplicamos la clase adecuada para el color
        content.classList.add("note-" + (data.color || 'yellow'));
        
        let multiHtml = '';
@@ -564,4 +585,4 @@
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
 </script>
 </body>
-</html>
+                                                                                                                                                                                                                                                                                                            </html>
