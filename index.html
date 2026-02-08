@@ -144,17 +144,40 @@
       display: flex; flex-direction: column; gap: 4px;
       position: relative;
   }
+  
+  /* ESTILOS ESPECÍFICOS DEL SISTEMA */
   .parchment-paper.orange-style {
       background: #ffcc80 !important; 
       color: #fff !important; 
       border-color: #ffb74d;
   }
-  .parchment-paper.orange-style .parchment-label {
-      color: #b71c1c !important; 
+  .parchment-paper.orange-style .parchment-label { color: #b71c1c !important; }
+  .parchment-paper.orange-style .parchment-val { color: #ffffff !important; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  .parchment-paper.orange-style .parchment-footer { color: #fff !important; opacity: 0.9; }
+  
+  /* NUEVO: ESTILO BLANCO PARA AVISOS DE SISTEMA (CORREGIDO) */
+  .parchment-paper.white-style {
+      background: #ffffff !important; /* Fondo Blanco Puro */
+      border: 1px solid #e2e8f0; /* Borde gris claro */
+      color: #000000 !important; /* Texto base negro */
   }
-  .parchment-paper.orange-style .parchment-val {
-      color: #ffffff !important; 
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  .parchment-paper.white-style .parchment-header {
+      border-bottom-color: #c62828 !important; /* Línea divisoria vino tinto */
+      color: #c62828 !important; /* Texto encabezado vino tinto */
+  }
+  .parchment-paper.white-style .parchment-title {
+      color: #c62828 !important; /* Título principal vino tinto */
+  }
+  .parchment-paper.white-style .parchment-label {
+      color: #c62828 !important; /* Rótulos vino tinto */
+  }
+  .parchment-paper.white-style .parchment-val {
+      color: #000000 !important; /* Valores en negro */
+      text-shadow: none;
+  }
+  .parchment-paper.white-style .parchment-footer {
+      color: #000000 !important; /* Pie de página negro */
+      opacity: 0.8;
   }
 
   .parchment-header {
@@ -166,7 +189,6 @@
   .parchment-label { display: block; font-size: 9px; font-weight: 900; color: #c62828; text-transform: uppercase; letter-spacing: 0.5px; }
   .parchment-val { font-size: 12px; font-weight: 700; color: #000000; line-height: 1.2; }
   .parchment-footer { font-size: 9px; color: #5d4037; text-align: center; margin-top: auto; font-style: italic; }
-  .parchment-paper.orange-style .parchment-footer { color: #fff !important; opacity: 0.9; }
 
   /* FOTOS EN NOTA PEQUEÑA */
   .polaroid-frame { background: white; padding: 5px 5px 15px 5px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 5px; transform: rotate(-2deg); }
@@ -207,11 +229,13 @@
     font-size: 22px; color: #1e3a8a; border-radius: 5px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     transform: rotate(-1deg); display: flex; flex-direction: column; align-items: center;
   }
+  /* MODIFICACIÓN QUIRÚRGICA: HEIGHT AUTO PARA NO DAÑAR DETALLES AL ABRIR */
   .zoom-photo { 
     width: 100%; height: auto !important; border-radius: 4px; margin-bottom: 15px; 
     border: 8px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transition: transform 0.25s ease; cursor: zoom-in; 
   }
+  /* --------------------------------------------------------------------- */
   .zoom-active { 
     transform: scale(1.8); cursor: zoom-out; z-index: 50; position: relative; 
   }
@@ -340,6 +364,22 @@
   }
   // ----------------------------------------
 
+  // --- LÓGICA DE WHATSAPP (MODIFICADO MILIMÉTRICAMENTE) ---
+  function consultarPorWhatsApp(titulo, area) {
+      // NÚMERO DEL DOCENTE
+      const telefonoDocente = "573012901456"; 
+      
+      const nombreEstudiante = estSop ? estSop.nombre : "el estudiante";
+      const grado = gradoEstudianteActual;
+
+      // PLANTILLA EXACTA SOLICITADA
+      const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`;
+
+      const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+  }
+  // ------------------------------------
+
   // --- LÓGICA PERIÓDICO ESCOLAR ---
   function cargarTableroAvisos() {
     const div = document.getElementById("dashboard-avisos");
@@ -362,6 +402,9 @@
       
       snap.forEach(doc => {
         const d = doc.data();
+        
+        // 1. FILTER: IF ARCHIVED, DO NOT SHOW
+        if (d.archived) return;
         
         if (d.publishAt && new Date(d.publishAt) > new Date()) return; 
         if (d.expiresAt && new Date(d.expiresAt) < new Date()) return; 
@@ -388,8 +431,12 @@
             
             if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
 
-            const paperClass = d.color === 'orange' ? 'parchment-paper orange-style' : 'parchment-paper';
-
+            // LOGICA COLOR BLANCO PARA AVISO SISTEMA (FORZADO)
+            let paperClass = 'parchment-paper white-style'; // SIEMPRE BLANCO POR DEFECTO AHORA
+            
+            // Si quieres mantener soporte para otros colores en el futuro, puedes dejar la lógica, 
+            // pero si la orden es "Blanco", forzamos 'white-style'.
+            
             div.innerHTML += `
             <div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
                 <div class="metal-clip"></div>
@@ -432,8 +479,21 @@
             if(d.imageUrl) multimediaHtml = `<div class="polaroid-frame"><img src="${d.imageUrl}" class="polaroid-img"></div>`;
             if(d.videoUrl) multimediaHtml += `<div class="video-indicator">▶️</div>`;
             
+            // MAPEO CORRECTO DE CLASES DE COLOR
+            let colorClass = "note-yellow";
+            if (d.color === 'pink') colorClass = "note-pink";
+            else if (d.color === 'blue') colorClass = "note-blue";
+            else if (d.color === 'green') colorClass = "note-green";
+            else if (d.color === 'orange') colorClass = "note-orange";
+            else if (d.color === 'red') colorClass = "note-red";
+            else if (d.color === 'purple') colorClass = "note-purple";
+            else if (d.color === 'teal') colorClass = "note-teal";
+            else if (d.color === 'lime') colorClass = "note-lime";
+            else if (d.color === 'white') colorClass = "note-white";
+            else if (d.color === 'brown') colorClass = "note-brown";
+
             div.innerHTML += `
-              <div class="sticky-note note-${d.color || 'yellow'}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
+              <div class="sticky-note ${colorClass}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
                 ${badgeHtml}
                 ${likeBtn}
                 <div class="note-pin"></div>
@@ -477,8 +537,8 @@
        if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
 
        // CLASE CONDICIONAL EN MODAL TAMBIÉN
-       const paperClass = data.color === 'orange' ? 'parchment-paper orange-style' : 'parchment-paper';
-
+       let paperClass = 'parchment-paper white-style'; // SIEMPRE BLANCO
+       
        content.innerHTML = `
            <div class="metal-clip" style="top: -15px;"></div>
            <div class="${paperClass}" style="min-height: 350px; justify-content: center;">
@@ -506,8 +566,19 @@
        `;
     } else {
        // --- MODAL NORMAL (Post-it) ---
-       // Aplicamos la clase adecuada para el color
-       content.classList.add("note-" + (data.color || 'yellow'));
+       let colorClass = "note-yellow";
+       if (data.color === 'pink') colorClass = "note-pink";
+       else if (data.color === 'blue') colorClass = "note-blue";
+       else if (data.color === 'green') colorClass = "note-green";
+       else if (data.color === 'orange') colorClass = "note-orange";
+       else if (data.color === 'red') colorClass = "note-red";
+       else if (data.color === 'purple') colorClass = "note-purple";
+       else if (data.color === 'teal') colorClass = "note-teal";
+       else if (data.color === 'lime') colorClass = "note-lime";
+       else if (data.color === 'white') colorClass = "note-white";
+       else if (data.color === 'brown') colorClass = "note-brown";
+
+       content.classList.add(colorClass);
        
        let multiHtml = '';
        if(data.imageUrl) {
@@ -577,7 +648,7 @@
       
       cacheTareasAgenda = filtered; 
       if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; } 
-      div.innerHTML = filtered.map(t => { const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink); let chatHtml = ""; if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; } return `<div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"><span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span><div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#c62828;">📅 Entrega: ${formatearFecha(t.date)}</div><div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div><div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}${chatHtml}<div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1.5 solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="prepararPregunta('${t.id}', '${t.title}')">📩 Chat</button></div></div>`; }).join(""); 
+      div.innerHTML = filtered.map(t => { const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink); let chatHtml = ""; if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; } return `<div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"><span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span><div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#c62828;">📅 Entrega: ${formatearFecha(t.date)}</div><div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div><div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}${chatHtml}<div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1.5 solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="consultarPorWhatsApp('${t.title.replace(/'/g, "\\'")}', '${t.area}')">💬 Chatear</button></div></div>`; }).join(""); 
   }
   function descargarAgendaPDF() { const doc = new window.jsPDF(); const est = estudiantesValidos.find(e => e.doc === docAlertaActual); doc.text("AGENDA ESCOLAR - " + (est ? est.nombre : ""), 10, 15); const body = cacheTareasAgenda.map(t => [t.area || "Gral", t.title, formatearFecha(t.date)]); doc.autoTable({ startY: 25, head: [['ÁREA', 'ACTIVIDAD', 'ENTREGA']], body, headStyles:{fillColor:[27,94,32]} }); doc.save(`Agenda_${docAlertaActual}.pdf`); }
   function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "flex"; }
