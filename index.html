@@ -145,39 +145,32 @@
       position: relative;
   }
   
-  /* ESTILOS ESPECÍFICOS DEL SISTEMA */
-  .parchment-paper.orange-style {
-      background: #ffcc80 !important; 
-      color: #fff !important; 
-      border-color: #ffb74d;
+  /* ESTILOS ESPECÍFICOS DEL SISTEMA (FORZADO BLANCO) */
+  .parchment-paper.orange-style, .parchment-paper.white-style {
+      background: #ffffff !important; /* FONDO BLANCO */
+      border: 1px solid #e2e8f0 !important;
+      color: #000000 !important; /* TEXTO NEGRO */
   }
-  .parchment-paper.orange-style .parchment-label { color: #b71c1c !important; }
-  .parchment-paper.orange-style .parchment-val { color: #ffffff !important; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-  .parchment-paper.orange-style .parchment-footer { color: #fff !important; opacity: 0.9; }
   
-  /* NUEVO: ESTILO BLANCO PARA AVISOS DE SISTEMA (CORREGIDO) */
-  .parchment-paper.white-style {
-      background: #ffffff !important; /* Fondo Blanco Puro */
-      border: 1px solid #e2e8f0; /* Borde gris claro */
-      color: #000000 !important; /* Texto base negro */
+  .parchment-paper.orange-style .parchment-header, .parchment-paper.white-style .parchment-header {
+      border-bottom: 2px solid #880e4f !important; /* VINO TINTO */
+      color: #880e4f !important;
   }
-  .parchment-paper.white-style .parchment-header {
-      border-bottom-color: #c62828 !important; /* Línea divisoria vino tinto */
-      color: #c62828 !important; /* Texto encabezado vino tinto */
+  
+  .parchment-paper.orange-style .parchment-title, .parchment-paper.white-style .parchment-title,
+  .parchment-paper.orange-style .parchment-label, .parchment-paper.white-style .parchment-label {
+      color: #880e4f !important; /* VINO TINTO */
+      text-shadow: none !important;
   }
-  .parchment-paper.white-style .parchment-title {
-      color: #c62828 !important; /* Título principal vino tinto */
+  
+  .parchment-paper.orange-style .parchment-val, .parchment-paper.white-style .parchment-val {
+      color: #000000 !important; /* NEGRO */
+      text-shadow: none !important;
   }
-  .parchment-paper.white-style .parchment-label {
-      color: #c62828 !important; /* Rótulos vino tinto */
-  }
-  .parchment-paper.white-style .parchment-val {
-      color: #000000 !important; /* Valores en negro */
-      text-shadow: none;
-  }
-  .parchment-paper.white-style .parchment-footer {
-      color: #000000 !important; /* Pie de página negro */
-      opacity: 0.8;
+  
+  .parchment-paper.orange-style .parchment-footer, .parchment-paper.white-style .parchment-footer {
+      color: #333 !important; /* GRIS OSCURO */
+      opacity: 1 !important;
   }
 
   .parchment-header {
@@ -434,9 +427,6 @@
             // LOGICA COLOR BLANCO PARA AVISO SISTEMA (FORZADO)
             let paperClass = 'parchment-paper white-style'; // SIEMPRE BLANCO POR DEFECTO AHORA
             
-            // Si quieres mantener soporte para otros colores en el futuro, puedes dejar la lógica, 
-            // pero si la orden es "Blanco", forzamos 'white-style'.
-            
             div.innerHTML += `
             <div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
                 <div class="metal-clip"></div>
@@ -626,6 +616,16 @@
   async function iniciarCargaAlerta() { document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; await cargarPeriodoNotasActual(); cargarNotasBajasPeriodo(docAlertaActual); cargarAgendaEscolar(gradoEstudianteActual); }
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
   async function cargarNotasBajasPeriodo(docEst) { document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`; const div = document.getElementById("aaLista"); div.innerHTML = "Cargando..."; const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get(); let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); }); if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Todo al día.</div>`; return; } div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5 solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5 solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="agenda-task-desc" style="font-size: 12px; padding: 12px; margin-top: 10px;">${formatTaskDescription(it.observacion)}</div></div>`).join(""); }
+  
+  // --- NUEVA FUNCIÓN PARA FILTRAR VENCIDAS (CLIENTE) ---
+  function esTareaVencida(fechaStr) {
+      if (!fechaStr) return false;
+      const ahora = new Date();
+      // Fecha límite: 23:59:59 del día asignado
+      const vencimiento = new Date(fechaStr + "T23:59:59");
+      return ahora > vencimiento;
+  }
+  // -----------------------------------------------------
 
   async function cargarAgendaEscolar(grado) { 
       const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda..."; 
@@ -635,7 +635,10 @@
       let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() })); 
       
       let filtered = tareas.filter(t => {
-        // --- MODIFICACIÓN QUIRÚRGICA: FILTRO DE FECHA PROGRAMADA ---
+        // --- AQUÍ ESTÁ EL AJUSTE PARA OCULTAR VENCIDAS ---
+        if (esTareaVencida(t.date)) return false; 
+        // -------------------------------------------------
+        
         if (t.publishAt && new Date(t.publishAt) > new Date()) return false;
         // -----------------------------------------------------------
         return (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false;
