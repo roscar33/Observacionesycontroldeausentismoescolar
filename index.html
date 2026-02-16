@@ -42,7 +42,7 @@
   /* CONTENEDORES */
   .container { background: #fff; width: 92%; margin: 30px auto; padding: 20px 16px; border-radius: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: none; animation: slideUp 0.3s ease-out; }
   .btn-back { background: #f1f5f9; border: none; padding: 10px 20px; border-radius: 50px; font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 20px; cursor: pointer; }
-  
+   
   /* ELEMENTOS UI */
   input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; outline: none; }
   .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; }
@@ -88,7 +88,7 @@
   .sticky-note:active { transform: scale(0.95); }
   .sticky-note:nth-child(even) { transform: rotate(1.5deg); }
   .sticky-note:nth-child(3n) { transform: rotate(-1.5deg); }
-  
+   
   /* COLORES ORIGINALES Y NUEVOS (CORREGIDOS PARA EVITAR TRANSPARENCIA) */
   .note-pink   { background-color: #fbcfe8 !important; } 
   .note-blue   { background-color: #bae6fd !important; } 
@@ -144,30 +144,30 @@
       display: flex; flex-direction: column; gap: 4px;
       position: relative;
   }
-  
+   
   /* ESTILOS ESPECÍFICOS DEL SISTEMA (FORZADO BLANCO) */
   .parchment-paper.orange-style, .parchment-paper.white-style {
       background: #ffffff !important; /* FONDO BLANCO */
       border: 1px solid #e2e8f0 !important;
       color: #000000 !important; /* TEXTO NEGRO */
   }
-  
+   
   .parchment-paper.orange-style .parchment-header, .parchment-paper.white-style .parchment-header {
       border-bottom: 2px solid #880e4f !important; /* VINO TINTO */
       color: #880e4f !important;
   }
-  
+   
   .parchment-paper.orange-style .parchment-title, .parchment-paper.white-style .parchment-title,
   .parchment-paper.orange-style .parchment-label, .parchment-paper.white-style .parchment-label {
       color: #880e4f !important; /* VINO TINTO */
       text-shadow: none !important;
   }
-  
+   
   .parchment-paper.orange-style .parchment-val, .parchment-paper.white-style .parchment-val {
       color: #000000 !important; /* NEGRO */
       text-shadow: none !important;
   }
-  
+   
   .parchment-paper.orange-style .parchment-footer, .parchment-paper.white-style .parchment-footer {
       color: #333 !important; /* GRIS OSCURO */
       opacity: 1 !important;
@@ -235,7 +235,7 @@
 
   .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; width: 100%; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
   .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-  
+   
   @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -305,9 +305,9 @@
   </div>
 
   <div id="view-exc" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="formExc"><div id="nombreExc" style="text-align:center; font-weight:900;"></div><div id="periodoAsisLabel" style="text-align:center; font-size:11px; background:#1b5e20; color:white; padding:3px; margin:10px 0; border-radius:4px;"></div><div style="display:flex; gap:10px; margin-bottom:15px;"><div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#ef4444;" onclick="mostrarListadoFechas('I')"><span id="statFallas" style="display:block; font-size:22px; font-weight:900;">0</span>FALLAS</div><div style="flex:1; text-align:center; padding:10px; border-radius:12px; color:#fff; background:#f97316;" onclick="mostrarListadoFechas('E')"><span id="statExcusas" style="display:block; font-size:22px; font-weight:900;">0</span>EXCUSAS</div></div><input id="fechaExc" type="date"><select id="motivoExc"><option value="">Motivo...</option><option>Enfermedad</option><option>Cita médica</option><option>Otro</option></select><textarea id="detalleExc" placeholder="Motivo..."></textarea><div class="sig-wrap"><canvas id="sigExc"></canvas><button class="btn sec" onclick="limpiarPad('sigExc')">Borrar</button></div><button class="btn" style="margin-top:15px" onclick="enviarExcusa()">ENVIAR EXCUSA</button></div></div>
-  
+   
   <div id="view-obs" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="resultadoObs"></div></div>
-  
+   
   <div id="view-piz" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div class="pizarra-header-ui">🏫 Pizarra Escolar</div><div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;"><button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button><button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('agenda')">📅 Agenda</button></div><div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div><div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div><div id="view-aa-notas"><div id="aaLista"></div></div><div id="view-aa-agenda" style="display:none;"><div class="agenda-filters"><span class="filter-label">Ordenar:</span><select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)"><option value="prox">Más próximas</option><option value="lejos">Más lejanas</option><option value="creado">Recientes</option></select></div><button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button><div id="aaAgendaLista"></div></div></div>
 
   <div id="modal-aviso-zoom" onclick="cerrarNotaGrande()">
@@ -324,7 +324,7 @@
   <div id="modalSoporte" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9000; overflow-y:auto;"><div style="background:#263238; color:white; padding:20px; text-align:center; position:sticky; top:0;"><button onclick="cerrarSoporte()" style="position:absolute; left:15px; top:18px; background:none; border:none; color:white; font-size:24px;">✕</button>Soporte Técnico</div><div style="padding:20px;"><div id="sop_menu" style="text-align:center;"><a href="https://roscar33.github.io/Asistenciapapas/" target="_blank"><button class="btn" style="background:#2e7d32; margin-bottom:12px;">PLANILLAS ASAMBLEAS</button></a><a href="https://roscar33.github.io/Horario/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📅 HORARIO ESCOLAR</button></a><a href="https://roscar33.github.io/Utiles2026/" target="_blank"><button class="btn blue" style="margin-bottom:12px;">📚 ÚTILES ESCOLARES</button></a><button class="btn" onclick="irAFormSop()">✉️ CONTACTAR DOCENTE</button><button class="btn sec" style="margin-top:12px;" onclick="irAHistorialSop()">📬 VER RESPUESTAS</button></div><div id="sop_form" style="display:none;"><input id="msg_fecha" type="date"><input id="msg_asunto" type="text" placeholder="Asunto"><textarea id="msg_texto" rows="4"></textarea><div class="sig-wrap"><canvas id="sigSoporte"></canvas><button class="btn sec" onclick="limpiarPad('sigSoporte')">Borrar</button></div><button class="btn" onclick="enviarMensajeSoporte()">ENVIAR</button></div><div id="sop_history" style="display:none;"><div id="listaMensajesSop"></div><button class="btn sec" onclick="irAMenuSop()">VOLVER</button></div></div></div>
   <div id="modalPreguntaTarea" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9500; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;"><div style="background:white; padding:25px; border-radius:24px; width:100%; max-width:350px;"><h3 style="color:#1b5e20;">Duda sobre Tarea</h3><p id="tituloTareaPregunta" style="font-size:12px; font-weight:bold;"></p><textarea id="textoPregunta" rows="4"></textarea><div style="display:flex; gap:10px;"><button class="btn sec" onclick="document.getElementById('modalPreguntaTarea').style.display='none'">Cerrar</button><button class="btn" onclick="enviarPregunta()">Enviar</button></div></div></div>
   <div id="modalFechas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9600; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px;"><div style="background:white; border-radius:24px; width:100%; max-width:320px; overflow:hidden;"><div id="txtTituloModalFechas" style="background:#1b5e20; color:white; padding:15px; font-weight:900;"></div><ul id="containerListaFechas" style="list-style:none; padding:15px; text-align:left; margin:0; max-height:300px; overflow-y:auto;"></ul><button class="btn" style="border-radius:0;" onclick="cerrarModalFechas()">CERRAR</button></div></div>
-  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);"><h2>✅ ¡Envío Exitoso!</h2><p>Póngase al día con sus procesos.</p><button class="btn" style="background:white; color:#1b5e20; width:fit-content;" onclick="location.reload()">ENTENDIDO</button></div>
+  <div id="successAsis" class="success-overlay" style="background: rgba(27, 94, 32, 0.98);"><h2>✅ ¡Envío Exitoso!</h2><p style="padding:0 20px;">Se recuerda a los padres de familia que las ausencias implican la responsabilidad de ponerse al día con las actividades y compromisos escolares.</p><button class="btn" style="background:white; color:#1b5e20; width:fit-content;" onclick="location.reload()">ENTENDIDO</button></div>
   <div id="successMsg" class="success-overlay" style="background: rgba(0, 119, 189, 0.98);"><h2>✅ Mensaje Enviado</h2><p>Docente responderá pronto.</p><button class="btn" style="background:white; color:#0277bd; width:fit-content;" onclick="cerrarSuccessMsg()">ENTENDIDO</button></div>
   <div id="overlaySem" class="success-overlay" style="background: rgba(0,0,0,0.9);"><div style="background:white; padding:30px; border-radius:24px; color:#333; width:90%;"><h2 style="color:#d32f2f;">ADVERTENCIA</h2><p id="semText" style="white-space:pre-line;"></p><button class="btn" onclick="location.reload()">ENTENDIDO</button></div></div>
 
@@ -349,11 +349,11 @@
 
   // --- FUNCIÓN DE FECHA AMIGABLE (NUEVO) ---
   function formatDateFriendly(dateStr) {
-     if(!dateStr) return '';
-     const parts = dateStr.split('-');
-     if(parts.length !== 3) return dateStr; 
-     const date = new Date(parts[0], parts[1] - 1, parts[2]);
-     return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      if(!dateStr) return '';
+      const parts = dateStr.split('-');
+      if(parts.length !== 3) return dateStr; 
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
   // ----------------------------------------
 
@@ -607,7 +607,21 @@
   async function consultarStats(di) { const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get(); let f=0, e=0; cacheFechas.I=[]; cacheFechas.E=[]; snap.forEach(d => { const reg = (d.data().detalles || []).find(x => x.doc === di); if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); } if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); } }); document.getElementById("statFallas").innerText=f; document.getElementById("statExcusas").innerText=e; }
   function mostrarListadoFechas(tipo) { const arr=(tipo==='I')?cacheFechas.I:cacheFechas.E; document.getElementById("txtTituloModalFechas").innerText=(tipo==='I')?"FECHAS DE FALLAS":"FECHAS DE EXCUSAS"; const c=document.getElementById("containerListaFechas"); c.innerHTML=arr.length?arr.map(f=>`<li>📅 ${formatearFecha(f)}</li>`).join(""):"<li>Sin registros.</li>"; document.getElementById("modalFechas").style.display="flex"; }
   function cerrarModalFechas() { document.getElementById("modalFechas").style.display="none"; }
-  async function enviarExcusa() { const p=pads.get('sigExc'); if(!p?.hasData) return alert("Firme el recuadro."); await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: document.getElementById("fechaExc").value, motivoTipo: document.getElementById("motivoExc").value, motivoDetalle: document.getElementById("detalleExc").value, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); document.getElementById("successAsis").style.display="flex"; }
+  async function enviarExcusa() { 
+      const fecha = document.getElementById("fechaExc").value;
+      const motivo = document.getElementById("motivoExc").value;
+      const detalle = document.getElementById("detalleExc").value;
+      const p = pads.get('sigExc'); 
+      
+      if (!fecha || !motivo || !detalle.trim()) {
+         return alert("Por favor complete todos los campos (Fecha, Motivo, Detalle) antes de enviar.");
+      }
+
+      if(!p?.hasData) return alert("Firme el recuadro."); 
+      
+      await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: fecha, motivoTipo: motivo, motivoDetalle: detalle, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); 
+      document.getElementById("successAsis").style.display="flex"; 
+  }
 
   async function buscarObservaciones() { const docId = estActualDoc; const out = document.getElementById("resultadoObs"); out.innerHTML = "Cargando..."; const cSnap = await db.collection("configuracionCiclos").doc(docId).get(); const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1; db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => { let list = []; snap.forEach(d => { if(d.data().ciclo == cAct) list.push({ id: d.id, ...d.data() }); }); let obsL = list.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || "")); if(obsL.length === 0) { out.innerHTML = `<div style='text-align:center; padding:20px;'>No hay anotaciones en el ciclo #${cAct}</div>`; return; } out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => { let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32"); return `<div style="border:1.5 solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`; }).join(""); setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500); }); }
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
