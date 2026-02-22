@@ -35,7 +35,7 @@
   .card-btn:active { transform: scale(0.95); }
   .card-btn.full { grid-column: span 2; padding: 30px 20px; }
   .icon-circle { width: 60px; height: 60px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 12px; }
-  .blue-bg { background: #e3f2fd; } .orange-bg { background: #fff3e0; } .purple-bg { background: #f3e5f5; }
+  .blue-bg { background: #e3f2fd; } .orange-bg { background: #fff3e0; } .purple-bg { background: #f3e5f5; } .teal-bg { background: #e0f2f1; }
   .card-label { font-weight: 900; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
   .card-info { font-size: 10px; color: #94a3b8; margin-top: 4px; font-weight: 600; }
 
@@ -64,18 +64,13 @@
   .filter-label { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; }
   .filter-select { width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; color: #1e293b; background: white; margin-bottom: 0 !important; }
 
-  /* ========================================= */
-  /* PERIÓDICO ESCOLAR (CORCHO + MULTIMEDIA)   */
-  /* ========================================= */
+  /* PERIÓDICO ESCOLAR */
   .tablero-container { grid-column: 1 / -1; margin-top: 20px; margin-bottom: 20px; }
   .tablero-titulo { text-align: center; font-weight: 900; color: #5d4037; margin-bottom: 10px; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .tablero-cork {
     background: #d7b594; background-image: radial-gradient(#bc9a7a 10%, transparent 10%); background-size: 10px 10px;
     padding: 20px 10px; border-radius: 20px; 
-    
-    /* GRID 2 COLUMNAS */
     display: grid; grid-template-columns: 1fr 1fr; gap: 15px; 
-    
     justify-content: center;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1); min-height: 250px; border: 8px solid #8d6e63;
   }
@@ -89,149 +84,52 @@
   .sticky-note:nth-child(even) { transform: rotate(1.5deg); }
   .sticky-note:nth-child(3n) { transform: rotate(-1.5deg); }
    
-  /* COLORES ORIGINALES Y NUEVOS (CORREGIDOS PARA EVITAR TRANSPARENCIA) */
   .note-pink   { background-color: #fbcfe8 !important; } 
   .note-blue   { background-color: #bae6fd !important; } 
   .note-green  { background-color: #bbf7d0 !important; } 
   .note-yellow { background-color: #fef08a !important; }
   .note-orange { background-color: #ffcc80 !important; color: #fff !important; }
   .note-red    { background-color: #ffcdd2 !important; color: #b71c1c !important; }
-
-  /* NUEVOS COLORES REFORZADOS */
-  .note-purple { background-color: #e9d5ff !important; color: #581c87 !important; } /* Lavanda */
-  .note-teal   { background-color: #99f6e4 !important; color: #115e59 !important; } /* Turquesa */
-  .note-lime   { background-color: #d9f99d !important; color: #365314 !important; } /* Lima */
-  .note-white  { background-color: #ffffff !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important; } /* Blanco */
-  .note-brown  { background-color: #d7ccc8 !important; color: #3e2723 !important; } /* Kraft */
+  .note-purple { background-color: #e9d5ff !important; color: #581c87 !important; }
+  .note-teal   { background-color: #99f6e4 !important; color: #115e59 !important; }
+  .note-lime   { background-color: #d9f99d !important; color: #365314 !important; }
+  .note-white  { background-color: #ffffff !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important; }
+  .note-brown  { background-color: #d7ccc8 !important; color: #3e2723 !important; }
 
   .note-pin { width: 14px; height: 14px; background: #ef4444; border-radius: 50%; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); box-shadow: 1px 1px 3px rgba(0,0,0,0.3); border: 1px solid #b91c1c; }
 
-  /* ESTILOS TABLA MADERA (Pergamino Tarea) */
-  .wood-board {
-      width: 100%; min-height: 160px;
-      background: #5d4037; /* Madera oscura */
-      border-radius: 6px;
-      padding: 15px 8px 8px 8px; /* Padding top para el clip */
-      position: relative;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transform: rotate(0deg) !important;
-      cursor: pointer;
-      display: flex; flex-direction: column;
-  }
-  /* Estilo Modal para Madera */
-  .wood-board-modal {
-      width: 100%; max-width: 350px;
-      background: #5d4037;
-      padding: 25px 15px 15px 15px;
-      border-radius: 8px;
-      position: relative;
-      display: flex; flex-direction: column;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  }
+  .wood-board { width: 100%; min-height: 160px; background: #5d4037; border-radius: 6px; padding: 15px 8px 8px 8px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transform: rotate(0deg) !important; cursor: pointer; display: flex; flex-direction: column; }
+  .wood-board-modal { width: 100%; max-width: 350px; background: #5d4037; padding: 25px 15px 15px 15px; border-radius: 8px; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
 
-  .metal-clip {
-      position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
-      width: 60px; height: 18px; background: #cfd8dc;
-      border: 2px solid #90a4ae; border-radius: 4px;
-      box-shadow: 0 2px 3px rgba(0,0,0,0.3); z-index: 10;
-  }
-  .parchment-paper {
-      background: #fff8e1; /* Beige pergamino */
-      border: 1px solid #d7ccc8;
-      flex: 1; padding: 12px;
-      font-family: 'Lora', serif;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      display: flex; flex-direction: column; gap: 4px;
-      position: relative;
-  }
+  .metal-clip { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 60px; height: 18px; background: #cfd8dc; border: 2px solid #90a4ae; border-radius: 4px; box-shadow: 0 2px 3px rgba(0,0,0,0.3); z-index: 10; }
+  .parchment-paper { background: #fff8e1; border: 1px solid #d7ccc8; flex: 1; padding: 12px; font-family: 'Lora', serif; box-shadow: 0 1px 3px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 4px; position: relative; }
    
-  /* ESTILOS ESPECÍFICOS DEL SISTEMA (FORZADO BLANCO) */
-  .parchment-paper.orange-style, .parchment-paper.white-style {
-      background: #ffffff !important; /* FONDO BLANCO */
-      border: 1px solid #e2e8f0 !important;
-      color: #000000 !important; /* TEXTO NEGRO */
-  }
-   
-  .parchment-paper.orange-style .parchment-header, .parchment-paper.white-style .parchment-header {
-      border-bottom: 2px solid #880e4f !important; /* VINO TINTO */
-      color: #880e4f !important;
-  }
-   
-  .parchment-paper.orange-style .parchment-title, .parchment-paper.white-style .parchment-title,
-  .parchment-paper.orange-style .parchment-label, .parchment-paper.white-style .parchment-label {
-      color: #880e4f !important; /* VINO TINTO */
-      text-shadow: none !important;
-  }
-   
-  .parchment-paper.orange-style .parchment-val, .parchment-paper.white-style .parchment-val {
-      color: #000000 !important; /* NEGRO */
-      text-shadow: none !important;
-  }
-   
-  .parchment-paper.orange-style .parchment-footer, .parchment-paper.white-style .parchment-footer {
-      color: #333 !important; /* GRIS OSCURO */
-      opacity: 1 !important;
-  }
+  .parchment-paper.orange-style, .parchment-paper.white-style { background: #ffffff !important; border: 1px solid #e2e8f0 !important; color: #000000 !important; }
+  .parchment-paper.orange-style .parchment-header, .parchment-paper.white-style .parchment-header { border-bottom: 2px solid #880e4f !important; color: #880e4f !important; }
+  .parchment-paper.orange-style .parchment-title, .parchment-paper.white-style .parchment-title, .parchment-paper.orange-style .parchment-label, .parchment-paper.white-style .parchment-label { color: #880e4f !important; text-shadow: none !important; }
+  .parchment-paper.orange-style .parchment-val, .parchment-paper.white-style .parchment-val { color: #000000 !important; text-shadow: none !important; }
+  .parchment-paper.orange-style .parchment-footer, .parchment-paper.white-style .parchment-footer { color: #333 !important; opacity: 1 !important; }
 
-  .parchment-header {
-      text-align: center; border-bottom: 2px solid #c62828;
-      padding-bottom: 4px; margin-bottom: 6px;
-  }
+  .parchment-header { text-align: center; border-bottom: 2px solid #c62828; padding-bottom: 4px; margin-bottom: 6px; }
   .parchment-title { font-family: 'Cinzel', serif; color: #c62828; font-weight: 900; font-size: 14px; text-transform: uppercase; }
   .parchment-row { margin-bottom: 4px; border-bottom: 1px dashed #efebe9; padding-bottom: 2px; }
   .parchment-label { display: block; font-size: 9px; font-weight: 900; color: #c62828; text-transform: uppercase; letter-spacing: 0.5px; }
   .parchment-val { font-size: 12px; font-weight: 700; color: #000000; line-height: 1.2; }
   .parchment-footer { font-size: 9px; color: #5d4037; text-align: center; margin-top: auto; font-style: italic; }
 
-  /* FOTOS EN NOTA PEQUEÑA */
   .polaroid-frame { background: white; padding: 5px 5px 15px 5px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 5px; transform: rotate(-2deg); }
   .polaroid-img { width: 100%; height: 80px; object-fit: cover; display: block; }
   .video-indicator { position: absolute; top: 10px; right: 10px; font-size: 24px; color: #d32f2f; filter: drop-shadow(0 2px 2px rgba(255,255,255,0.8)); }
 
-  /* RÓTULO ESTILO STICKER */
-  .heart-badge {
-    position: absolute; top: -6px; right: -6px;
-    background: #fff0f5; /* Fondo rosita muy claro */
-    color: #b71c1c; /* Texto rojo oscuro */
-    border: 1px solid #ffcdd2;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 11px; /* Tamaño base */
-    font-weight: 900;
-    transform: rotate(5deg);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 10;
-    font-family: system-ui, sans-serif;
-    display: flex; align-items: center; gap: 3px;
-    white-space: nowrap; max-width: 95%; overflow: hidden;
-  }
+  .heart-badge { position: absolute; top: -6px; right: -6px; background: #fff0f5; color: #b71c1c; border: 1px solid #ffcdd2; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: 900; transform: rotate(5deg); box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; font-family: system-ui, sans-serif; display: flex; align-items: center; gap: 3px; white-space: nowrap; max-width: 95%; overflow: hidden; }
 
-  /* BOTÓN ME GUSTA */
-  .like-btn {
-    position: absolute; bottom: 5px; right: 5px; background: none; border: none;
-    font-size: 18px; cursor: pointer; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
-    z-index: 20; padding: 5px; transition: transform 0.2s;
-  }
+  .like-btn { position: absolute; bottom: 5px; right: 5px; background: none; border: none; font-size: 18px; cursor: pointer; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1)); z-index: 20; padding: 5px; transition: transform 0.2s; }
   .like-btn:active { transform: scale(1.3); }
 
-  /* ESTILOS DEL MODAL ZOOM */
   #modal-aviso-zoom { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 20px; animation: fadeIn 0.2s; }
-  .note-large {
-    width: 100%; max-width: 350px; 
-    padding: 30px 20px; font-family: 'Kalam', cursive;
-    font-size: 22px; color: #1e3a8a; border-radius: 5px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-    transform: rotate(-1deg); display: flex; flex-direction: column; align-items: center;
-  }
-  /* MODIFICACIÓN QUIRÚRGICA: HEIGHT AUTO PARA NO DAÑAR DETALLES AL ABRIR */
-  .zoom-photo { 
-    width: 100%; height: auto !important; border-radius: 4px; margin-bottom: 15px; 
-    border: 8px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: transform 0.25s ease; cursor: zoom-in; 
-  }
-  /* --------------------------------------------------------------------- */
-  .zoom-active { 
-    transform: scale(1.8); cursor: zoom-out; z-index: 50; position: relative; 
-  }
+  .note-large { width: 100%; max-width: 350px; padding: 30px 20px; font-family: 'Kalam', cursive; font-size: 22px; color: #1e3a8a; border-radius: 5px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8); transform: rotate(-1deg); display: flex; flex-direction: column; align-items: center; }
+  .zoom-photo { width: 100%; height: auto !important; border-radius: 4px; margin-bottom: 15px; border: 8px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.25s ease; cursor: zoom-in; }
+  .zoom-active { transform: scale(1.8); cursor: zoom-out; z-index: 50; position: relative; }
 
   .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; width: 100%; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
   .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
@@ -292,7 +190,11 @@
   <div id="main-dashboard">
     <button class="card-btn" onclick="navegarA('exc')"><div class="icon-circle blue-bg">📋</div><span class="card-label">Asistencia</span><span class="card-info">Fallas y Excusas</span></button>
     <button class="card-btn" onclick="navegarA('obs')"><div class="icon-circle orange-bg">✍️</div><span class="card-label">Observador</span><span class="card-info">Conducta Escolar</span></button>
-    <button class="card-btn full" onclick="navegarA('piz')"><div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span></button>
+    
+    <button class="card-btn" onclick="navegarA('piz')"><div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span></button>
+    
+    <!-- BOTÓN: ESCUELA INTERACTIVA -->
+    <button class="card-btn" onclick="navegarA('int')"><div class="icon-circle teal-bg">🎮</div><span class="card-label">Escuela Interactiva</span><span class="card-info">Juegos y Práctica</span></button>
 
     <div class="tablero-container">
       <div class="tablero-titulo">📰 Periódico Escolar</div>
@@ -309,6 +211,30 @@
   <div id="view-obs" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div id="resultadoObs"></div></div>
    
   <div id="view-piz" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div class="pizarra-header-ui">🏫 Pizarra Escolar</div><div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;"><button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button><button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('agenda')">📅 Agenda</button></div><div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div><div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div><div id="view-aa-notas"><div id="aaLista"></div></div><div id="view-aa-agenda" style="display:none;"><div class="agenda-filters"><span class="filter-label">Ordenar:</span><select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)"><option value="prox">Más próximas</option><option value="lejos">Más lejanas</option><option value="creado">Recientes</option></select></div><button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button><div id="aaAgendaLista"></div></div></div>
+
+  <!-- SECCIÓN MODIFICADA: ESCUELA INTERACTIVA CON DOS BOTONES -->
+  <div id="view-int" class="container">
+    <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button>
+    <div style="text-align:center; font-weight:900; margin-bottom:20px; color:#00796b; text-transform:uppercase;">Escuela Interactiva</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <!-- Botón Original: Tablas de Multiplicar -->
+        <a href="https://roscar33.github.io/Tablasdemultiplicar/" target="_blank" style="text-decoration:none;">
+            <button class="card-btn" style="width:100%; border:2px solid #e0f2f1; min-height:160px;">
+                <div class="icon-circle teal-bg">🔢</div>
+                <span class="card-label">TABLAS DE MULTIPLICAR</span>
+                <span class="card-info">¡Aprende jugando!</span>
+            </button>
+        </a>
+        <!-- Nuevo Botón: Tablas de Sumas -->
+        <a href="https://roscar33.github.io/Sumastablas/" target="_blank" style="text-decoration:none;">
+            <button class="card-btn" style="width:100%; border:2px solid #e0f2f1; min-height:160px;">
+                <div class="icon-circle teal-bg">➕</div>
+                <span class="card-label">TABLAS DE SUMAS</span>
+                <span class="card-info" style="font-size:9px;">solo grados segundo</span>
+            </button>
+        </a>
+    </div>
+  </div>
 
   <div id="modal-aviso-zoom" onclick="cerrarNotaGrande()">
     <div id="zoom-content" class="note-large" onclick="event.stopPropagation()">
@@ -347,177 +273,64 @@
   function navegarA(seccion) { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "none"; document.getElementById("view-" + seccion).style.display = "block"; if(seccion === 'exc') activarFormularioExcusa(); if(seccion === 'obs') buscarObservaciones(); if(seccion === 'piz') iniciarCargaAlerta(); }
   function volverAlMenu() { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "grid"; }
 
-  // --- FUNCIÓN DE FECHA AMIGABLE (NUEVO) ---
-  function formatDateFriendly(dateStr) {
-      if(!dateStr) return '';
-      const parts = dateStr.split('-');
-      if(parts.length !== 3) return dateStr; 
-      const date = new Date(parts[0], parts[1] - 1, parts[2]);
-      return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  }
-  // ----------------------------------------
+  function formatDateFriendly(dateStr) { if(!dateStr) return ''; const parts = dateStr.split('-'); if(parts.length !== 3) return dateStr; const date = new Date(parts[0], parts[1] - 1, parts[2]); return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
+  function consultarPorWhatsApp(titulo, area) { const telefonoDocente = "573012901456"; const nombreEstudiante = estSop ? estSop.nombre : "el estudiante"; const grado = gradoEstudianteActual; const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`; const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`; window.open(url, '_blank'); }
 
-  // --- LÓGICA DE WHATSAPP (MODIFICADO MILIMÉTRICAMENTE) ---
-  function consultarPorWhatsApp(titulo, area) {
-      // NÚMERO DEL DOCENTE
-      const telefonoDocente = "573012901456"; 
-      
-      const nombreEstudiante = estSop ? estSop.nombre : "el estudiante";
-      const grado = gradoEstudianteActual;
-
-      // PLANTILLA EXACTA SOLICITADA
-      const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`;
-
-      const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`;
-      window.open(url, '_blank');
-  }
-  // ------------------------------------
-
-  // --- LÓGICA PERIÓDICO ESCOLAR ---
   function cargarTableroAvisos() {
     const div = document.getElementById("dashboard-avisos");
-    
     let nombreAmigable = "Estudiante";
-    if (estSop && estSop.nombre) {
-        const partes = estSop.nombre.trim().split(/\s+/);
-        if (partes.length >= 3) {
-            const apellidos = partes.slice(0, 2).join(" ");
-            const nombres = partes.slice(2).join(" ");
-            nombreAmigable = nombres + " " + apellidos;
-        } else {
-            nombreAmigable = estSop.nombre;
-        }
-    }
-
+    if (estSop && estSop.nombre) { const partes = estSop.nombre.trim().split(/\s+/); if (partes.length >= 3) { const apellidos = partes.slice(0, 2).join(" "); const nombres = partes.slice(2).join(" "); nombreAmigable = nombres + " " + apellidos; } else { nombreAmigable = estSop.nombre; } }
     db.collection("tableroAvisos").orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
       div.innerHTML = "";
       if(snap.empty) { div.innerHTML = "<div class='sticky-note note-yellow'><div class='note-pin'></div>Sin avisos.</div>"; return; }
-      
       snap.forEach(doc => {
         const d = doc.data();
-        
-        // 1. FILTER: IF ARCHIVED, DO NOT SHOW
         if (d.archived) return;
-        
         if (d.publishAt && new Date(d.publishAt) > new Date()) return; 
         if (d.expiresAt && new Date(d.expiresAt) < new Date()) return; 
-
         const scope = d.scope || 'General';
         const targetGrades = d.targetGrades || [];
         const targetDoc = d.targetStudentDoc || '';
-
         const esGeneral = scope === 'General';
         const esMiGrado = scope === 'Grado' && targetGrades.includes(gradoEstudianteActual);
         const esParaMi = scope === 'Individual' && targetDoc === estActualDoc;
-
         if (!esGeneral && !esMiGrado && !esParaMi) return;
-
         if (d.isSystemNotice) {
-            // --- RENDERIZAR COMO TABLA MADERA ---
             const areaMatch = d.mensaje.match(/📍 Área: (.*)/);
             const workMatch = d.mensaje.match(/📝 Trabajo: (.*)/);
             const dateMatch = d.mensaje.match(/🗓️ (.*)/);
-
             const area = areaMatch ? areaMatch[1] : 'General';
             const work = workMatch ? workMatch[1] : 'Actividad';
             let date = dateMatch ? dateMatch[1] : 'Ver Agenda';
-            
             if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
-
-            // LOGICA COLOR BLANCO PARA AVISO SISTEMA (FORZADO)
-            let paperClass = 'parchment-paper white-style'; // SIEMPRE BLANCO POR DEFECTO AHORA
-            
-            div.innerHTML += `
-            <div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
-                <div class="metal-clip"></div>
-                <div class="${paperClass}">
-                    <div class="parchment-header">
-                        <div class="parchment-title">⚠️ ATENCIÓN</div>
-                        <div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div>
-                    </div>
-                    <div class="parchment-body">
-                        <div class="parchment-row">
-                            <span class="parchment-label">Actividad</span>
-                            <span class="parchment-val">${work}</span>
-                        </div>
-                        <div class="parchment-row">
-                            <span class="parchment-label">Área</span>
-                            <span class="parchment-val">${area}</span>
-                        </div>
-                        <div class="parchment-row">
-                            <span class="parchment-label">Entrega</span>
-                            <span class="parchment-val">🗓️ ${date}</span>
-                        </div>
-                    </div>
-                    <div class="parchment-footer">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div>
-                </div>
-            </div>`;
+            let paperClass = 'parchment-paper white-style';
+            div.innerHTML += `<div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'><div class="metal-clip"></div><div class="${paperClass}"><div class="parchment-header"><div class="parchment-title">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body"><div class="parchment-row"><span class="parchment-label">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row"><span class="parchment-label">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label">Entrega</span><span class="parchment-val">🗓️ ${date}</span></div></div><div class="parchment-footer">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div></div></div>`;
         } else {
-            // --- RENDERIZAR NORMAL ---
             let badgeHtml = "";
             if (scope === 'General') { badgeHtml = `<div class="heart-badge">🌎 GLOBAL</div>`; } 
             else if (scope === 'Grado') { badgeHtml = `<div class="heart-badge" style="background: #fff9c4; color: #f57f17;">👨‍👧‍👦 GRUPO</div>`; } 
             else if (scope === 'Individual') { badgeHtml = `<div class="heart-badge">👤 ${nombreAmigable}</div>`; }
-
             let likeBtn = "";
-            if (scope !== 'General') {
-                const liked = (d.likes || []).includes(estActualDoc);
-                likeBtn = `<button class="like-btn" onclick="toggleLike('${doc.id}', event)">${liked ? "❤️" : "🤍"}</button>`;
-            }
-
+            if (scope !== 'General') { const liked = (d.likes || []).includes(estActualDoc); likeBtn = `<button class="like-btn" onclick="toggleLike('${doc.id}', event)">${liked ? "❤️" : "🤍"}</button>`; }
             let multimediaHtml = "";
             if(d.imageUrl) multimediaHtml = `<div class="polaroid-frame"><img src="${d.imageUrl}" class="polaroid-img"></div>`;
             if(d.videoUrl) multimediaHtml += `<div class="video-indicator">▶️</div>`;
-            
-            // MAPEO CORRECTO DE CLASES DE COLOR
             let colorClass = "note-yellow";
-            if (d.color === 'pink') colorClass = "note-pink";
-            else if (d.color === 'blue') colorClass = "note-blue";
-            else if (d.color === 'green') colorClass = "note-green";
-            else if (d.color === 'orange') colorClass = "note-orange";
-            else if (d.color === 'red') colorClass = "note-red";
-            else if (d.color === 'purple') colorClass = "note-purple";
-            else if (d.color === 'teal') colorClass = "note-teal";
-            else if (d.color === 'lime') colorClass = "note-lime";
-            else if (d.color === 'white') colorClass = "note-white";
-            else if (d.color === 'brown') colorClass = "note-brown";
-
-            div.innerHTML += `
-              <div class="sticky-note ${colorClass}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>
-                ${badgeHtml}
-                ${likeBtn}
-                <div class="note-pin"></div>
-                ${multimediaHtml}
-                <div class="note-text">${d.mensaje}</div>
-              </div>`;
+            if (d.color === 'pink') colorClass = "note-pink"; else if (d.color === 'blue') colorClass = "note-blue"; else if (d.color === 'green') colorClass = "note-green"; else if (d.color === 'orange') colorClass = "note-orange"; else if (d.color === 'red') colorClass = "note-red"; else if (d.color === 'purple') colorClass = "note-purple"; else if (d.color === 'teal') colorClass = "note-teal"; else if (d.color === 'lime') colorClass = "note-lime"; else if (d.color === 'white') colorClass = "note-white"; else if (d.color === 'brown') colorClass = "note-brown";
+            div.innerHTML += `<div class="sticky-note ${colorClass}" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${badgeHtml}${likeBtn}<div class="note-pin"></div>${multimediaHtml}<div class="note-text">${d.mensaje}</div></div>`;
         }
       });
     });
   }
 
-  async function toggleLike(id, e) {
-    e.stopPropagation(); 
-    const docRef = db.collection("tableroAvisos").doc(id);
-    const docSnap = await docRef.get();
-    if (!docSnap.exists) return;
-    const likes = docSnap.data().likes || [];
-    if (!likes.includes(estActualDoc)) { await docRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(estActualDoc) }); }
-  }
+  async function toggleLike(id, e) { e.stopPropagation(); const docRef = db.collection("tableroAvisos").doc(id); const docSnap = await docRef.get(); if (!docSnap.exists) return; const likes = docSnap.data().likes || []; if (!likes.includes(estActualDoc)) { await docRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(estActualDoc) }); } }
 
-  // --- LÓGICA ZOOM (MODAL) ---
   function abrirZoom(data) {
     const modal = document.getElementById("modal-aviso-zoom");
     const content = document.getElementById("zoom-content");
-    const multi = document.getElementById("zoom-multimedia");
-    const textDiv = document.getElementById("zoom-text");
-    
-    content.innerHTML = ''; 
-    content.className = "note-large"; 
-
+    content.innerHTML = ''; content.className = "note-large"; 
     if (data.isSystemNotice) {
-       // --- MODAL TIPO TABLA MADERA ---
        content.classList.add("wood-board-modal");
-       
        const areaMatch = data.mensaje.match(/📍 Área: (.*)/);
        const workMatch = data.mensaje.match(/📝 Trabajo: (.*)/);
        const dateMatch = data.mensaje.match(/🗓️ (.*)/);
@@ -525,79 +338,22 @@
        const work = workMatch ? workMatch[1] : 'Actividad';
        let date = dateMatch ? dateMatch[1] : '';
        if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
-
-       // CLASE CONDICIONAL EN MODAL TAMBIÉN
-       let paperClass = 'parchment-paper white-style'; // SIEMPRE BLANCO
-       
-       content.innerHTML = `
-           <div class="metal-clip" style="top: -15px;"></div>
-           <div class="${paperClass}" style="min-height: 350px; justify-content: center;">
-                <div class="parchment-header">
-                    <div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div>
-                    <div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div>
-                </div>
-                <div class="parchment-body" style="font-size: 16px;">
-                    <div class="parchment-row" style="margin-bottom: 15px;">
-                        <span class="parchment-label" style="font-size: 11px;">Actividad</span>
-                        <span class="parchment-val" style="font-size: 18px;">${work}</span>
-                    </div>
-                    <div class="parchment-row" style="margin-bottom: 15px;">
-                        <span class="parchment-label" style="font-size: 11px;">Área</span>
-                        <span class="parchment-val" style="font-size: 18px;">${area}</span>
-                    </div>
-                    <div class="parchment-row" style="margin-bottom: 15px;">
-                        <span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span>
-                        <span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span>
-                    </div>
-                </div>
-                <div class="parchment-footer" style="font-size: 12px; margin-top: 20px;">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div>
-                <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%;" onclick="cerrarNotaGrande()">CERRAR</button>
-           </div>
-       `;
+       content.innerHTML = `<div class="metal-clip" style="top: -15px;"></div><div class="parchment-paper white-style" style="min-height: 350px; justify-content: center;"><div class="parchment-header"><div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body" style="font-size: 16px;"><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Actividad</span><span class="parchment-val" style="font-size: 18px;">${work}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Área</span><span class="parchment-val" style="font-size: 18px;">${area}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span><span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span></div></div><div class="parchment-footer" style="font-size: 12px; margin-top: 20px;">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%;" onclick="cerrarNotaGrande()">CERRAR</button></div>`;
     } else {
-       // --- MODAL NORMAL (Post-it) ---
        let colorClass = "note-yellow";
-       if (data.color === 'pink') colorClass = "note-pink";
-       else if (data.color === 'blue') colorClass = "note-blue";
-       else if (data.color === 'green') colorClass = "note-green";
-       else if (data.color === 'orange') colorClass = "note-orange";
-       else if (data.color === 'red') colorClass = "note-red";
-       else if (data.color === 'purple') colorClass = "note-purple";
-       else if (data.color === 'teal') colorClass = "note-teal";
-       else if (data.color === 'lime') colorClass = "note-lime";
-       else if (data.color === 'white') colorClass = "note-white";
-       else if (data.color === 'brown') colorClass = "note-brown";
-
+       if (data.color === 'pink') colorClass = "note-pink"; else if (data.color === 'blue') colorClass = "note-blue"; else if (data.color === 'green') colorClass = "note-green"; else if (data.color === 'orange') colorClass = "note-orange"; else if (data.color === 'red') colorClass = "note-red"; else if (data.color === 'purple') colorClass = "note-purple"; else if (data.color === 'teal') colorClass = "note-teal"; else if (data.color === 'lime') colorClass = "note-lime"; else if (data.color === 'white') colorClass = "note-white"; else if (data.color === 'brown') colorClass = "note-brown";
        content.classList.add(colorClass);
-       
        let multiHtml = '';
-       if(data.imageUrl) {
-           multiHtml += `
-            <img src="${data.imageUrl}" class="zoom-photo" onclick="this.classList.toggle('zoom-active')">
-            <a href="${data.imageUrl}" download="Imagen_Periodico.png" style="text-decoration:none;">
-                <button class="btn blue" style="padding:10px; font-size:12px; margin-bottom:10px; width:100%;">⬇️ DESCARGAR IMAGEN</button>
-            </a>`;
-       }
-       if(data.videoUrl) {
-          const vidId = getYouTubeId(data.videoUrl);
-          if(vidId) multiHtml += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
-       }
-
-       content.innerHTML = `
-          <div class="note-pin"></div>
-          <div id="zoom-multimedia">${multiHtml}</div>
-          <div id="zoom-text" style="white-space: pre-line;">${data.mensaje}</div>
-          <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto;" onclick="cerrarNotaGrande()">CERRAR</button>
-       `;
+       if(data.imageUrl) { multiHtml += `<img src="${data.imageUrl}" class="zoom-photo" onclick="this.classList.toggle('zoom-active')"><a href="${data.imageUrl}" download="Imagen_Periodico.png" style="text-decoration:none;"><button class="btn blue" style="padding:10px; font-size:12px; margin-bottom:10px; width:100%;">⬇️ DESCARGAR IMAGEN</button></a>`; }
+       if(data.videoUrl) { const vidId = getYouTubeId(data.videoUrl); if(vidId) multiHtml += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`; }
+       content.innerHTML = `<div class="note-pin"></div><div id="zoom-multimedia">${multiHtml}</div><div id="zoom-text" style="white-space: pre-line;">${data.mensaje}</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto;" onclick="cerrarNotaGrande()">CERRAR</button>`;
     }
-    
     modal.style.display = "flex";
   }
 
   function cerrarNotaGrande() { document.getElementById("modal-aviso-zoom").style.display = "none"; }
   function getYouTubeId(url) { if(!url) return null; const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
 
-  // --- RESTO DE FUNCIONES (RESTAURADAS) ---
   function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
   function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
   function getAreaStyle(a) { const area = (a || '').toUpperCase(); if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' }; if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' }; if(area.includes('NATURALES')) return { border: '#059669', badge: '#d1fae5', text: '#047857' }; if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#fef3c7', text: '#b45309' }; return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' }; }
@@ -607,21 +363,7 @@
   async function consultarStats(di) { const snap = await db.collection("controlAsistencia").where("periodo", "==", periodoAsis).get(); let f=0, e=0; cacheFechas.I=[]; cacheFechas.E=[]; snap.forEach(d => { const reg = (d.data().detalles || []).find(x => x.doc === di); if(reg?.estado==='I'){ f++; cacheFechas.I.push(d.data().fecha); } if(reg?.estado==='E'){ e++; cacheFechas.E.push(d.data().fecha); } }); document.getElementById("statFallas").innerText=f; document.getElementById("statExcusas").innerText=e; }
   function mostrarListadoFechas(tipo) { const arr=(tipo==='I')?cacheFechas.I:cacheFechas.E; document.getElementById("txtTituloModalFechas").innerText=(tipo==='I')?"FECHAS DE FALLAS":"FECHAS DE EXCUSAS"; const c=document.getElementById("containerListaFechas"); c.innerHTML=arr.length?arr.map(f=>`<li>📅 ${formatearFecha(f)}</li>`).join(""):"<li>Sin registros.</li>"; document.getElementById("modalFechas").style.display="flex"; }
   function cerrarModalFechas() { document.getElementById("modalFechas").style.display="none"; }
-  async function enviarExcusa() { 
-      const fecha = document.getElementById("fechaExc").value;
-      const motivo = document.getElementById("motivoExc").value;
-      const detalle = document.getElementById("detalleExc").value;
-      const p = pads.get('sigExc'); 
-      
-      if (!fecha || !motivo || !detalle.trim()) {
-         return alert("Por favor complete todos los campos (Fecha, Motivo, Detalle) antes de enviar.");
-      }
-
-      if(!p?.hasData) return alert("Firme el recuadro."); 
-      
-      await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: fecha, motivoTipo: motivo, motivoDetalle: detalle, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); 
-      document.getElementById("successAsis").style.display="flex"; 
-  }
+  async function enviarExcusa() { const fecha = document.getElementById("fechaExc").value; const motivo = document.getElementById("motivoExc").value; const detalle = document.getElementById("detalleExc").value; const p = pads.get('sigExc'); if (!fecha || !motivo || !detalle.trim()) return alert("Por favor complete todos los campos antes de enviar."); if(!p?.hasData) return alert("Firme el recuadro."); await db.collection("excusasInasistencia").add({ documentoEstudiante: estActualDoc, fechaInasistencia: fecha, motivoTipo: motivo, motivoDetalle: detalle, firmaAcudiente: p.c.toDataURL(), timestamp: new Date().toISOString() }); document.getElementById("successAsis").style.display="flex"; }
 
   async function buscarObservaciones() { const docId = estActualDoc; const out = document.getElementById("resultadoObs"); out.innerHTML = "Cargando..."; const cSnap = await db.collection("configuracionCiclos").doc(docId).get(); const cAct = cSnap.exists ? (cSnap.data().cicloActual || 1) : 1; db.collection("registrosComportamentales").where("documentoEstudiante", "==", docId).onSnapshot(snap => { let list = []; snap.forEach(d => { if(d.data().ciclo == cAct) list.push({ id: d.id, ...d.data() }); }); let obsL = list.sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || "")); if(obsL.length === 0) { out.innerHTML = `<div style='text-align:center; padding:20px;'>No hay anotaciones en el ciclo #${cAct}</div>`; return; } out.innerHTML = `<p style='font-size:11px; font-weight:bold; color:#1b5e20;'>CICLO ACTUAL: #${cAct}</p>` + obsL.reverse().map((r, index) => { let n = obsL.length - index; let color = (n >= 3) ? "#d32f2f" : (n === 2 ? "#f97316" : "#2e7d32"); return `<div style="border:1.5 solid ${color}; border-radius:18px; overflow:hidden; margin-top:15px; background:#fff;"><div style="background:${color}; color:white; padding:10px 15px; font-weight:900; display:flex; justify-content:space-between; font-size:12px;"><span>OBSERVACIÓN N° ${n}</span></div><div style="padding:15px; font-size:13px;"><b>Fecha:</b> ${formatearFecha(r.fecha)}<br><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">HECHOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid ${color};">${r.comportamiento}</div><div style="margin-top:10px; font-weight:900; font-size:10px; opacity:0.6;">DESCARGOS:</div><div style="background:#fcfcfc; padding:10px; border-radius:10px; border-left:4px solid #ccc;">${r.descargos || "N/A"}</div>${!r.firmaAcudiente?`<div class="sig-wrap"><canvas id="cv_${r.id}"></canvas><button class="btn" onclick="firmarObs('${r.id}','${docId}',${cAct})">FIRMAR</button></div>`:`<div style="text-align:center; margin-top:10px;"><img src="${r.firmaAcudiente}" height="50"></div>`}</div></div>`; }).join(""); setTimeout(()=>obsL.forEach(r=>{if(!r.firmaAcudiente)initPad('cv_'+r.id)}),500); }); }
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
@@ -631,15 +373,7 @@
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
   async function cargarNotasBajasPeriodo(docEst) { document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`; const div = document.getElementById("aaLista"); div.innerHTML = "Cargando..."; const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get(); let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); }); if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Todo al día.</div>`; return; } div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5 solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5 solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="agenda-task-desc" style="font-size: 12px; padding: 12px; margin-top: 10px;">${formatTaskDescription(it.observacion)}</div></div>`).join(""); }
   
-  // --- NUEVA FUNCIÓN PARA FILTRAR VENCIDAS (CLIENTE) ---
-  function esTareaVencida(fechaStr) {
-      if (!fechaStr) return false;
-      const ahora = new Date();
-      // Fecha límite: 23:59:59 del día asignado
-      const vencimiento = new Date(fechaStr + "T23:59:59");
-      return ahora > vencimiento;
-  }
-  // -----------------------------------------------------
+  function esTareaVencida(fechaStr) { if (!fechaStr) return false; const ahora = new Date(); const vencimiento = new Date(fechaStr + "T23:59:59"); return ahora > vencimiento; }
 
   async function cargarAgendaEscolar(grado) { 
       const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda..."; 
@@ -647,28 +381,13 @@
       const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get(); 
       const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); }); 
       let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() })); 
-      
-      let filtered = tareas.filter(t => {
-        // --- AQUÍ ESTÁ EL AJUSTE PARA OCULTAR VENCIDAS ---
-        if (esTareaVencida(t.date)) return false; 
-        // -------------------------------------------------
-        
-        if (t.publishAt && new Date(t.publishAt) > new Date()) return false;
-        // -----------------------------------------------------------
-        return (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false;
-      }); 
-
+      let filtered = tareas.filter(t => { if (esTareaVencida(t.date)) return false; if (t.publishAt && new Date(t.publishAt) > new Date()) return false; return (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false; }); 
       const order = document.getElementById("agendaSortOrder").value; 
-      if(order === "prox") { filtered.sort((a,b) => (a.date || "").localeCompare(b.date || "")); } 
-      else if (order === "lejos") { filtered.sort((a,b) => (b.date || "").localeCompare(a.date || "")); } 
-      else { filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)); } 
-      
-      cacheTareasAgenda = filtered; 
-      if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; } 
+      if(order === "prox") { filtered.sort((a,b) => (a.date || "").localeCompare(b.date || "")); } else if (order === "lejos") { filtered.sort((a,b) => (b.date || "").localeCompare(a.date || "")); } else { filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)); } 
+      cacheTareasAgenda = filtered; if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; } 
       div.innerHTML = filtered.map(t => { const conv = convMap[t.id]; const colors = getAreaStyle(t.area); const videoUrl = getYouTubeEmbedUrl(t.videoLink); let chatHtml = ""; if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; } return `<div style="border:1.5px solid #eee; border-left:6px solid ${colors.border}; border-radius:20px; padding:18px; margin-bottom:18px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"><span style="font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px; background:${colors.badge}; color:${colors.text}; text-transform:uppercase;">${t.area || 'General'}</span><div style="margin:12px 0 8px; font-size:12px; font-weight:700; color:#c62828;">📅 Entrega: ${formatearFecha(t.date)}</div><div style="font-size:17px; font-weight:900; color:#1e293b; line-height:1.2;">${t.title}</div><div class="agenda-task-desc">${formatTaskDescription(t.description)}</div>${videoUrl ? `<div style="margin-top:15px; border-radius:15px; overflow:hidden; aspect-ratio:16/9; border:1px solid #ddd;"><iframe width="100%" height="100%" src="${videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}${t.pdfLink ? `<a href="${t.pdfLink}" target="_blank" style="text-decoration:none;"><button class="btn" style="padding:12px; margin-top:15px; font-size:12px; background:#1b5e20;">📂 VER MATERIAL PDF</button></a>` : ''}${chatHtml}<div style="text-align:right; margin-top:15px;"><button style="background:#f1f5f9; border:1.5 solid #cbd5e1; padding:10px 16px; border-radius:50px; font-size:12px; font-weight:800; color:#475569; cursor:pointer;" onclick="consultarPorWhatsApp('${t.title.replace(/'/g, "\\'")}', '${t.area}')">💬 Chatear</button></div></div>`; }).join(""); 
   }
   function descargarAgendaPDF() { const doc = new window.jsPDF(); const est = estudiantesValidos.find(e => e.doc === docAlertaActual); doc.text("AGENDA ESCOLAR - " + (est ? est.nombre : ""), 10, 15); const body = cacheTareasAgenda.map(t => [t.area || "Gral", t.title, formatearFecha(t.date)]); doc.autoTable({ startY: 25, head: [['ÁREA', 'ACTIVIDAD', 'ENTREGA']], body, headStyles:{fillColor:[27,94,32]} }); doc.save(`Agenda_${docAlertaActual}.pdf`); }
-  function prepararPregunta(id, tit) { currentTaskId = id; currentTaskTitle = tit; document.getElementById("tituloTareaPregunta").innerText = tit; document.getElementById("modalPreguntaTarea").style.display = "flex"; }
   async function enviarPregunta() { const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda."); const mRef = db.collection("mensajesAgenda"); const query = await mRef.where("taskId", "==", currentTaskId).where("studentDoc", "==", docAlertaActual).get(); const newMsg = { rol: 'user', texto: txt, timestamp: new Date().toISOString() }; if (!query.empty) { await mRef.doc(query.docs[0].id).update({ conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg), lastUpdate: new Date().toISOString(), read: false }); } else { await mRef.add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: estSop.nombre, conversacion: [newMsg], lastUpdate: new Date().toISOString(), read: false, periodo: periodoNotasActual }); } alert("Duda enviada."); document.getElementById("textoPregunta").value = ""; document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual); }
   function switchTabAlerta(tab) { document.getElementById("view-aa-notas").style.display = tab === 'notas' ? 'block' : 'none'; document.getElementById("view-aa-agenda").style.display = tab === 'agenda' ? 'block' : 'none'; document.getElementById("tab-notas").classList.toggle('active', tab === 'notas'); document.getElementById("tab-agenda").classList.toggle('active', tab === 'agenda'); }
   function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
@@ -683,3 +402,4 @@
 </script>
 </body>
 </html>
+
