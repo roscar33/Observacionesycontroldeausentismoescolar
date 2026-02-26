@@ -137,6 +137,13 @@
   @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+  /* --- ESTILOS DE TALLER DE LECTURA --- */
+  .lectura-texto { background: #fff8e1; padding: 20px; border-radius: 16px; border: 1.5px solid #ffe082; font-family: 'Lora', serif; font-size: 15px; line-height: 1.7; color: #424242; margin-bottom: 25px; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); }
+  .pregunta-card { background: #f8fafc; padding: 15px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+  .opcion-label { display: block; padding: 12px; background: white; border: 1.5px solid #cbd5e1; border-radius: 12px; margin-top: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .opcion-label:has(input:checked) { border-color: #1b5e20; background: #e8f5e9; color: #1b5e20; }
+  .badge-tipo { font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
+
 </style>
 
 <script>
@@ -193,7 +200,6 @@
     
     <button class="card-btn" onclick="navegarA('piz')"><div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span></button>
     
-    <!-- BOTÓN: ESCUELA INTERACTIVA -->
     <button class="card-btn" onclick="navegarA('int')"><div class="icon-circle teal-bg">🎮</div><span class="card-label">Escuela Interactiva</span><span class="card-info">Juegos y Práctica</span></button>
 
     <div class="tablero-container">
@@ -212,12 +218,10 @@
    
   <div id="view-piz" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div class="pizarra-header-ui">🏫 Pizarra Escolar</div><div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;"><button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button><button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('agenda')">📅 Agenda</button></div><div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div><div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div><div id="view-aa-notas"><div id="aaLista"></div></div><div id="view-aa-agenda" style="display:none;"><div class="agenda-filters"><span class="filter-label">Ordenar:</span><select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)"><option value="prox">Más próximas</option><option value="lejos">Más lejanas</option><option value="creado">Recientes</option></select></div><button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button><div id="aaAgendaLista"></div></div></div>
 
-  <!-- SECCIÓN MODIFICADA: ESCUELA INTERACTIVA CON DOS BOTONES -->
   <div id="view-int" class="container">
     <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button>
     <div style="text-align:center; font-weight:900; margin-bottom:20px; color:#00796b; text-transform:uppercase;">Escuela Interactiva</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <!-- Botón Original: Tablas de Multiplicar -->
         <a href="https://roscar33.github.io/Tablasdemultiplicar/" target="_blank" style="text-decoration:none;">
             <button class="card-btn" style="width:100%; border:2px solid #e0f2f1; min-height:160px;">
                 <div class="icon-circle teal-bg">🔢</div>
@@ -225,7 +229,6 @@
                 <span class="card-info">¡Aprende jugando!</span>
             </button>
         </a>
-        <!-- Nuevo Botón: Tablas de Sumas -->
         <a href="https://roscar33.github.io/Sumastablas/" target="_blank" style="text-decoration:none;">
             <button class="card-btn" style="width:100%; border:2px solid #e0f2f1; min-height:160px;">
                 <div class="icon-circle teal-bg">➕</div>
@@ -233,7 +236,26 @@
                 <span class="card-info" style="font-size:9px;">solo grados segundo</span>
             </button>
         </a>
+        <button class="card-btn" style="grid-column: span 2; border:2px solid #f3e5f5; min-height:120px;" onclick="abrirSeccionLectura()">
+            <div class="icon-circle purple-bg">📖</div>
+            <span class="card-label">TALLERES Y ACTIVIDADES</span>
+            <span class="card-info">Asignadas por el docente</span>
+        </button>
     </div>
+  </div>
+
+  <div id="view-lec-list" class="container">
+    <button class="btn-back" onclick="navegarA('int')">🔙 Regresar</button>
+    <div style="text-align:center; font-weight:900; margin-bottom:15px; color:#6a1b9a;">TALLERES ASIGNADOS</div>
+    <div id="lista-talleres-firebase" style="display: flex; flex-direction: column; gap: 12px;"></div>
+  </div>
+
+  <div id="view-taller-activo" class="container">
+    <button class="btn-back" onclick="navegarA('lec-list')">🔙 Salir del Taller</button>
+    <div id="taller-titulo" style="font-weight:900; color:#1b5e20; text-align:center; margin-bottom:15px; font-size:18px;"></div>
+    <div id="taller-contenido" class="lectura-texto"></div>
+    <div id="taller-preguntas"></div>
+    <button class="btn blue" id="btnFinalizarTaller" onclick="evaluarTallerLectura()">ENVIAR RESPUESTAS</button>
   </div>
 
   <div id="modal-aviso-zoom" onclick="cerrarNotaGrande()">
@@ -257,7 +279,7 @@
 <script>
   let estActualDoc = ""; let periodoAsis = 1; let estSop = null; const pads = new Map(); let cacheFechas = { I: [], E: [] };
   let docAlertaActual = ""; let periodoNotasActual = 1; let gradoEstudianteActual = ""; let cacheTareasAgenda = []; let currentTaskId = null; let currentTaskTitle = null;
-  window.jsPDF = window.jspdf.jsPDF;
+  let tallerEnCurso = null; 
 
   window.onload = function() { const saved = localStorage.getItem("padre_doc"); if(saved) { document.getElementById("globalDocInput").value = saved; document.getElementById("chkGlobalSave").checked = true; } };
 
@@ -294,8 +316,19 @@
         const esGeneral = scope === 'General';
         const esMiGrado = scope === 'Grado' && targetGrades.includes(gradoEstudianteActual);
         const esParaMi = scope === 'Individual' && targetDoc === estActualDoc;
+        
         if (!esGeneral && !esMiGrado && !esParaMi) return;
-        if (d.isSystemNotice) {
+
+        if (d.isTallerNotice) {
+            const areaMatch = d.mensaje.match(/📍 Área: (.*)/);
+            const workMatch = d.mensaje.match(/📝 Trabajo: (.*)/);
+            const dateMatch = d.mensaje.match(/⏳ Cierre: (.*)/);
+            const area = areaMatch ? areaMatch[1] : 'General';
+            const work = workMatch ? workMatch[1] : 'Actividad';
+            const date = dateMatch ? dateMatch[1] : '';
+            div.innerHTML += `<div class="wood-board" onclick='navegarA("int"); cerrarNotaGrande()'><div class="metal-clip"></div><div class="parchment-paper" style="background: #f3e5f5; border-color: #ce93d8;"><div class="parchment-header" style="border-bottom: 2px solid #6a1b9a;"><div class="parchment-title" style="color: #6a1b9a;">🎮 NUEVA ACTIVIDAD</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8; color: #4a148c;">Escuela Interactiva</div></div><div class="parchment-body"><div class="parchment-row" style="border-bottom: 1px dashed #e1bee7;"><span class="parchment-label" style="color: #6a1b9a;">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row" style="border-bottom: 1px dashed #e1bee7;"><span class="parchment-label" style="color: #6a1b9a;">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label" style="color: #6a1b9a;">Vencimiento</span><span class="parchment-val" style="color:#d32f2f;">⏳ ${date}</span></div></div><div class="parchment-footer" style="color: #6a1b9a; background: #e1bee7; padding: 4px; border-radius: 4px; margin-top: 5px; font-weight: bold; cursor:pointer;">👉 Toca aquí para resolver</div></div></div>`;
+        } 
+        else if (d.isSystemNotice) {
             const areaMatch = d.mensaje.match(/📍 Área: (.*)/);
             const workMatch = d.mensaje.match(/📝 Trabajo: (.*)/);
             const dateMatch = d.mensaje.match(/🗓️ (.*)/);
@@ -399,7 +432,166 @@
   function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
   function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=160*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
+
+  /* ==============================================================
+     FUNCIÓN AGREGADA DE LECTURA (FILTROS DE PRIVACIDAD IMPLEMENTADOS)
+     ============================================================== */
+
+  async function abrirSeccionLectura() {
+    navegarA('lec-list');
+    const divLista = document.getElementById("lista-talleres-firebase"); 
+    divLista.innerHTML = "<p style='text-align:center; font-size:12px; margin-top:20px;'>Buscando talleres...</p>";
+
+    try {
+        const resSnap = await db.collection("resultadosTalleres").where("documentoEstudiante", "==", estActualDoc).get();
+        const talleresCompletados = [];
+        resSnap.forEach(doc => talleresCompletados.push(doc.data().idTaller));
+
+        const snap = await db.collection("talleresLectura")
+            .where("gradoDestino", "array-contains-any", [gradoEstudianteActual, "Todos"])
+            .where("activo", "==", true)
+            .get();
+
+        divLista.innerHTML = "";
+        let actividadesDisponibles = 0;
+        
+        snap.forEach(doc => {
+            const t = doc.data();
+            
+            // FILTRO ESTRICTO: Si la actividad tiene un estudiante objetivo y no es este niño, la saltamos.
+            if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
+            
+            // FILTRO ESTRICTO: Si el niño está en la lista de excluidos, la saltamos.
+            if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
+
+            actividadesDisponibles++;
+            const id = doc.id;
+            const yaRespondio = talleresCompletados.includes(id);
+            const ahora = new Date();
+            const vencimiento = t.fechaVencimiento ? new Date(t.fechaVencimiento) : null;
+            const estaVencido = vencimiento && ahora > vencimiento;
+            let fVencStr = vencimiento ? vencimiento.toLocaleString('es-CO', { dateStyle:'short', timeStyle:'short'}) : '';
+
+            if (yaRespondio) {
+                divLista.innerHTML += `
+                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:15px 20px; width:100%; margin-bottom:12px; background:#e8f5e9; border: 1.5px solid #a5d6a7; cursor:not-allowed;" onclick="alert('Ya enviaste tus respuestas para esta actividad. ¡Buen trabajo!')">
+                    <div style="text-align:left;">
+                      <div style="font-size:10px; font-weight:900; color:#2e7d32;">✅ COMPLETADO</div>
+                      <div style="font-weight:800; color:#1b5e20;">${t.titulo}</div>
+                    </div>
+                    <div style="font-size:20px; color:#a5d6a7;">🔒</div>
+                  </div>
+                `;
+            } else if (estaVencido) {
+                divLista.innerHTML += `
+                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:15px 20px; width:100%; margin-bottom:12px; background:#ffebee; border: 1.5px solid #ffcdd2; cursor:not-allowed;" onclick="alert('El plazo para esta actividad ha finalizado.')">
+                    <div style="text-align:left;">
+                      <div style="font-size:10px; font-weight:900; color:#c62828;">⏳ CERRADO</div>
+                      <div style="font-weight:800; color:#b71c1c;">${t.titulo}</div>
+                      <div style="font-size:9px; font-weight:bold; color:#c62828; margin-top:3px;">Cerró el: ${fVencStr}</div>
+                    </div>
+                    <div style="font-size:20px; color:#ef5350;">🔒</div>
+                  </div>
+                `;
+            } else {
+                divLista.innerHTML += `
+                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:15px 20px; width:100%; margin-bottom:12px;" onclick='cargarTaller(${JSON.stringify({id: id, ...t}).replace(/'/g, "&apos;")})'>
+                    <div style="text-align:left;">
+                      <div style="font-size:10px; font-weight:900; color:#1b5e20; text-transform:uppercase;">📖 ${t.areaConocimiento || 'COMPRENSIÓN'}</div>
+                      <div style="font-weight:800; color:#333;">${t.titulo}</div>
+                      ${fVencStr ? `<div style="font-size:9px; font-weight:bold; color:#d32f2f; margin-top:3px;">⏳ Cierra: ${fVencStr}</div>` : ''}
+                    </div>
+                    <div style="font-size:20px; color:#1b5e20;">➔</div>
+                  </div>
+                `;
+            }
+        });
+
+        if (actividadesDisponibles === 0) {
+            divLista.innerHTML = "<p style='text-align:center; font-size:12px; opacity:0.6; margin-top:20px;'>No hay talleres asignados por el docente.</p>";
+        }
+
+    } catch(e) {
+        divLista.innerHTML = "<p style='text-align:center; font-size:12px; color:red;'>Error de conexión con el servidor.</p>";
+    }
+  }
+
+  function cargarTaller(data) {
+    tallerEnCurso = data; 
+    navegarA('taller-activo');
+    document.getElementById("taller-titulo").innerText = data.titulo;
+    document.getElementById("taller-contenido").innerText = data.contenido;
+    const divP = document.getElementById("taller-preguntas"); 
+    divP.innerHTML = "";
+
+    data.preguntas.forEach((p, index) => {
+      let html = `<div class="pregunta-card"><div style="font-weight:800; font-size:14px; margin-bottom:10px; color:#1e293b;">${index+1}. ${p.pregunta}</div>`;
+      if(p.tipo === 'multiple') {
+        html += `<label class="opcion-label"><input type="radio" name="p${index}" value="a" style="margin-right:8px; accent-color:#1b5e20;"> A) ${p.opciones.a}</label>`;
+        html += `<label class="opcion-label"><input type="radio" name="p${index}" value="b" style="margin-right:8px; accent-color:#1b5e20;"> B) ${p.opciones.b}</label>`;
+        html += `<label class="opcion-label"><input type="radio" name="p${index}" value="c" style="margin-right:8px; accent-color:#1b5e20;"> C) ${p.opciones.c}</label>`;
+      } else if(p.tipo === 'verdadero_falso') {
+        html += `<label class="opcion-label"><input type="radio" name="p${index}" value="verdadero" style="margin-right:8px; accent-color:#1b5e20;"> Verdadero</label>`;
+        html += `<label class="opcion-label"><input type="radio" name="p${index}" value="falso" style="margin-right:8px; accent-color:#1b5e20;"> Falso</label>`;
+      } else {
+        html += `<textarea id="resp-abierta-${index}" placeholder="Escribe aquí tu respuesta de forma clara y con buena ortografía..." rows="4"></textarea>`;
+      }
+      divP.innerHTML += html + `</div>`;
+    });
+  }
+
+  async function evaluarTallerLectura() {
+    const btn = document.getElementById("btnFinalizarTaller");
+    let aciertos = 0, totalC = 0, totalAbiertas = 0, respondidas = true, resps = [];
+    
+    tallerEnCurso.preguntas.forEach((p, i) => {
+      let r = "", ok = false;
+      if(p.tipo === 'multiple' || p.tipo === 'verdadero_falso') {
+        totalC++; 
+        const sel = document.querySelector(`input[name="p${i}"]:checked`);
+        if(!sel) respondidas = false; else { r = sel.value; ok = (r === p.correcta); if(ok) aciertos++; }
+      } else {
+        totalAbiertas++;
+        r = document.getElementById(`resp-abierta-${i}`).value.trim(); if(!r) respondidas = false;
+      }
+      resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
+    });
+
+    if(!respondidas) return alert("Por favor, responde todas las preguntas antes de enviar.");
+    
+    btn.disabled = true; btn.innerText = "ENVIANDO...";
+    let requiereRevision = totalAbiertas > 0;
+    let notaCalculada = totalC > 0 ? (aciertos/totalC)*5 : 0; 
+
+    try {
+      await db.collection("resultadosTalleres").add({ 
+          idTaller: tallerEnCurso.id, 
+          tituloTaller: tallerEnCurso.titulo, 
+          nombreEstudiante: estSop.nombre, 
+          documentoEstudiante: estActualDoc, 
+          grado: gradoEstudianteActual, 
+          nota: requiereRevision ? 0 : notaCalculada,
+          aciertosCerrados: aciertos,
+          totalCerradas: totalC,
+          requiereRevision: requiereRevision,
+          respuestas: resps, 
+          fecha: new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'short' }), 
+          timestamp: Date.now() 
+      });
+      
+      if(requiereRevision) {
+          alert(`✅ ¡Taller enviado con éxito!\n\nObtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\n\n⏳ Tu nota final está pendiente de que el profe Oscar califique tu respuesta escrita.`);
+      } else {
+          alert(`✅ ¡Enviado!\nTu calificación final es: ${notaCalculada.toFixed(1)}`);
+      }
+      volverAlMenu();
+      btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS";
+    } catch(e) { 
+        alert("Error de conexión. Intenta de nuevo."); 
+        btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS"; 
+    }
+  }
+
 </script>
 </body>
 </html>
-
