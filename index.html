@@ -258,6 +258,15 @@
     <button class="btn blue" id="btnFinalizarTaller" onclick="evaluarTallerLectura()">ENVIAR RESPUESTAS</button>
   </div>
 
+  <div id="successTaller" class="success-overlay" style="background: rgba(106, 27, 154, 0.95);">
+    <div style="background: white; padding: 30px 20px; border-radius: 24px; text-align: center; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+      <h2 style="color: #6a1b9a; font-weight: 900; font-size: 24px; margin: 0 0 10px 0;">¡Excelente trabajo!</h2>
+      <p id="successTallerText" style="color: #475569; font-size: 14px; font-weight: 700; white-space: pre-line; margin-bottom: 20px; line-height: 1.5;"></p>
+      <button class="btn" style="background: #6a1b9a; color: white; width: auto; padding: 12px 30px; font-size: 14px;" onclick="cerrarSuccessTaller()">CONTINUAR 🚀</button>
+    </div>
+  </div>
+
   <div id="modal-aviso-zoom" onclick="cerrarNotaGrande()">
     <div id="zoom-content" class="note-large" onclick="event.stopPropagation()">
       <div class="note-pin"></div>
@@ -434,7 +443,7 @@
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
 
   /* ==============================================================
-     FUNCIÓN AGREGADA DE LECTURA (FILTROS DE PRIVACIDAD IMPLEMENTADOS)
+     INICIO LÓGICA DE COMPRENSIÓN LECTORA Y TALLERES CON MULTIMEDIA
      ============================================================== */
 
   async function abrirSeccionLectura() {
@@ -458,10 +467,10 @@
         snap.forEach(doc => {
             const t = doc.data();
             
-            // FILTRO ESTRICTO: Si la actividad tiene un estudiante objetivo y no es este niño, la saltamos.
+            // FILTRO DE PRIVACIDAD: Si el profe asignó un estudiante específico y no es el actual, se oculta.
             if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
             
-            // FILTRO ESTRICTO: Si el niño está en la lista de excluidos, la saltamos.
+            // FILTRO DE PRIVACIDAD: Si el estudiante actual está en la lista de excluidos, se oculta.
             if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
 
             actividadesDisponibles++;
@@ -508,7 +517,7 @@
         });
 
         if (actividadesDisponibles === 0) {
-            divLista.innerHTML = "<p style='text-align:center; font-size:12px; opacity:0.6; margin-top:20px;'>No hay talleres asignados por el docente.</p>";
+            divLista.innerHTML = "<p style='text-align:center; font-size:12px; opacity:0.6; margin-top:20px;'>No hay talleres asignados por el docente para ti.</p>";
         }
 
     } catch(e) {
@@ -520,10 +529,26 @@
     tallerEnCurso = data; 
     navegarA('taller-activo');
     document.getElementById("taller-titulo").innerText = data.titulo;
-    document.getElementById("taller-contenido").innerText = data.contenido;
+    
+    // Renderizado dinámico de texto, imagen y video
+    let contenidoHtml = "";
+    if(data.videoUrl) {
+        const vidId = getYouTubeId(data.videoUrl);
+        if(vidId) contenidoHtml += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe></div>`;
+    }
+    if(data.imageUrl) {
+        contenidoHtml += `<img src="${data.imageUrl}" style="width:100%; border-radius:12px; margin-bottom:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">`;
+    }
+    if(data.contenido) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerText = data.contenido;
+        contenidoHtml += `<div style="white-space: pre-line;">${tempDiv.innerHTML}</div>`;
+    }
+    document.getElementById("taller-contenido").innerHTML = contenidoHtml;
+    
+    // Renderizado de preguntas
     const divP = document.getElementById("taller-preguntas"); 
     divP.innerHTML = "";
-
     data.preguntas.forEach((p, index) => {
       let html = `<div class="pregunta-card"><div style="font-weight:800; font-size:14px; margin-bottom:10px; color:#1e293b;">${index+1}. ${p.pregunta}</div>`;
       if(p.tipo === 'multiple') {
@@ -579,17 +604,26 @@
           timestamp: Date.now() 
       });
       
+      // MOSTRAR OVERLAY INFANTIL EN LUGAR DE ALERT
+      let msg = "";
       if(requiereRevision) {
-          alert(`✅ ¡Taller enviado con éxito!\n\nObtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\n\n⏳ Tu nota final está pendiente de que el profe Oscar califique tu respuesta escrita.`);
+          msg = `Obtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\n\n⏳ Tu nota final está pendiente de que el profe Oscar califique tu respuesta escrita.`;
       } else {
-          alert(`✅ ¡Enviado!\nTu calificación final es: ${notaCalculada.toFixed(1)}`);
+          msg = `¡Completaste la actividad!\nTu calificación final es: ${notaCalculada.toFixed(1)}`;
       }
-      volverAlMenu();
+      document.getElementById('successTallerText').innerText = msg;
+      document.getElementById('successTaller').style.display = 'flex';
+      
       btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS";
     } catch(e) { 
         alert("Error de conexión. Intenta de nuevo."); 
         btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS"; 
     }
+  }
+
+  function cerrarSuccessTaller() {
+      document.getElementById('successTaller').style.display = 'none';
+      volverAlMenu();
   }
 
 </script>
