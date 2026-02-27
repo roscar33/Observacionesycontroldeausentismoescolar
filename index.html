@@ -456,8 +456,8 @@
         const talleresCompletados = [];
         resSnap.forEach(doc => talleresCompletados.push(doc.data().idTaller));
 
+        // Traemos todos los talleres activos, sin filtrar desde la base de datos por grado
         const snap = await db.collection("talleresLectura")
-            .where("gradoDestino", "array-contains-any", [gradoEstudianteActual, "Todos"])
             .where("activo", "==", true)
             .get();
 
@@ -467,10 +467,22 @@
         snap.forEach(doc => {
             const t = doc.data();
             
-            // FILTRO DE PRIVACIDAD: Si el profe asignó un estudiante específico y no es el actual, se oculta.
-            if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
+            // LA CLAVE: El profesor ahora guarda el documento. Comparamos directamente contra estActualDoc
+            const esParaMiEspecificamente = t.estudianteEspecifico === estActualDoc;
             
-            // FILTRO DE PRIVACIDAD: Si el estudiante actual está en la lista de excluidos, se oculta.
+            const gradosDestino = Array.isArray(t.gradoDestino) ? t.gradoDestino : [];
+            const esParaMiGradoOTodos = gradosDestino.includes(gradoEstudianteActual) || gradosDestino.includes("Todos");
+
+            if (t.estudianteEspecifico) {
+                // Si la prueba tiene un documento específico y NO es el mío, la ignoro.
+                if (!esParaMiEspecificamente) return;
+            } else {
+                // Si la prueba NO tiene estudiante específico, reviso si es para mi grado.
+                if (!esParaMiGradoOTodos) return;
+            }
+
+            // Filtros antiguos por retrocompatibilidad
+            if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
             if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
 
             actividadesDisponibles++;
@@ -530,7 +542,6 @@
     navegarA('taller-activo');
     document.getElementById("taller-titulo").innerText = data.titulo;
     
-    // Renderizado dinámico de texto, imagen y video
     let contenidoHtml = "";
     if(data.videoUrl) {
         const vidId = getYouTubeId(data.videoUrl);
@@ -546,11 +557,11 @@
     }
     document.getElementById("taller-contenido").innerHTML = contenidoHtml;
     
-    // Renderizado de preguntas
     const divP = document.getElementById("taller-preguntas"); 
     divP.innerHTML = "";
     data.preguntas.forEach((p, index) => {
       let html = `<div class="pregunta-card"><div style="font-weight:800; font-size:14px; margin-bottom:10px; color:#1e293b;">${index+1}. ${p.pregunta}</div>`;
+      
       if(p.tipo === 'multiple') {
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="a" style="margin-right:8px; accent-color:#1b5e20;"> A) ${p.opciones.a}</label>`;
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="b" style="margin-right:8px; accent-color:#1b5e20;"> B) ${p.opciones.b}</label>`;
@@ -558,6 +569,15 @@
       } else if(p.tipo === 'verdadero_falso') {
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="verdadero" style="margin-right:8px; accent-color:#1b5e20;"> Verdadero</label>`;
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="falso" style="margin-right:8px; accent-color:#1b5e20;"> Falso</label>`;
+      } else if(p.tipo === 'completacion') {
+        html += `<div style="background:#fff; padding:12px; border-radius:10px; font-style:italic; margin-bottom:12px; border:1px dashed #cbd5e1; color:#475569;">${p.textoConcepto}</div>`;
+        html += `<input type="text" id="resp-comp-${index}" placeholder="Escribe tu respuesta para completar..." style="width:100%; padding:14px; border-radius:12px; border:1.5px solid #cbd5e1; font-size:14px; outline:none;">`;
+      } else if(p.tipo === 'ahorcado') {
+        let chars = (p.palabraOculta || "").split('');
+        let boxes = chars.map(c => c === ' ' ? '<div style="width:15px; display:inline-block;"></div>' : `<div style="display:inline-block; width:20px; border-bottom:3px solid #1e293b; margin:0 3px; height:25px;"></div>`).join('');
+        html += `<div style="text-align:center; margin:15px 0;">${boxes}</div>`;
+        if (p.pistas) { html += `<div style="text-align:center; font-size:11px; color:#ef4444; font-weight:900; margin-bottom:10px; text-transform:uppercase;">💡 PISTAS: ${p.pistas}</div>`; }
+        html += `<input type="text" id="resp-ahorcado-${index}" placeholder="Escribe la palabra oculta..." style="width:100%; padding:14px; border-radius:12px; border:1.5px solid #cbd5e1; font-size:14px; text-align:center; text-transform:uppercase; font-weight:bold; outline:none; letter-spacing:2px;">`;
       } else {
         html += `<textarea id="resp-abierta-${index}" placeholder="Escribe aquí tu respuesta de forma clara y con buena ortografía..." rows="4"></textarea>`;
       }
@@ -569,12 +589,24 @@
     const btn = document.getElementById("btnFinalizarTaller");
     let aciertos = 0, totalC = 0, totalAbiertas = 0, respondidas = true, resps = [];
     
+    const normalize = str => (str||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
     tallerEnCurso.preguntas.forEach((p, i) => {
       let r = "", ok = false;
       if(p.tipo === 'multiple' || p.tipo === 'verdadero_falso') {
         totalC++; 
         const sel = document.querySelector(`input[name="p${i}"]:checked`);
         if(!sel) respondidas = false; else { r = sel.value; ok = (r === p.correcta); if(ok) aciertos++; }
+      } else if(p.tipo === 'completacion') {
+        totalC++;
+        r = document.getElementById(`resp-comp-${i}`).value.trim(); 
+        if(!r) respondidas = false;
+        else { ok = (normalize(r) === normalize(p.palabrasCorrectas)); if(ok) aciertos++; }
+      } else if(p.tipo === 'ahorcado') {
+        totalC++;
+        r = document.getElementById(`resp-ahorcado-${i}`).value.trim(); 
+        if(!r) respondidas = false;
+        else { ok = (normalize(r) === normalize(p.palabraOculta)); if(ok) aciertos++; }
       } else {
         totalAbiertas++;
         r = document.getElementById(`resp-abierta-${i}`).value.trim(); if(!r) respondidas = false;
@@ -604,7 +636,6 @@
           timestamp: Date.now() 
       });
       
-      // MOSTRAR OVERLAY INFANTIL EN LUGAR DE ALERT
       let msg = "";
       if(requiereRevision) {
           msg = `Obtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\n\n⏳ Tu nota final está pendiente de que el profe Oscar califique tu respuesta escrita.`;
