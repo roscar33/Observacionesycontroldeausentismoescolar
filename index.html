@@ -52,7 +52,7 @@
   .pizarra-header-ui { background: #6d4c41; color: white; padding: 15px; border-radius: 14px 14px 0 0; text-align: center; font-weight: 900; font-size: 18px; margin: -20px -16px 15px; }
   .footer-container { margin-top: 30px; text-align: center; padding: 20px; }
   .footer-text { font-family: 'Great Vibes', cursive; font-size: 32px; color: #1b5e20; }
-  .success-overlay { display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 5000; color:white; text-align:center; padding: 40px 24px; justify-content:center; align-items:center; flex-direction:column; backdrop-filter: blur(8px); }
+  .success-overlay { display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 5000; color:white; text-align:center; padding: 40px 24px; justify-content:center; align-items:center; flex-direction:column; backdrop-filter: blur(8px); transition: background 0.3s ease; }
 
   /* AGENDA TEXTO */
   .agenda-task-desc { font-size: 14px; color: #334155; line-height: 1.6; margin-top: 10px; background: #f8fafc; padding: 18px; border-radius: 16px; border: 1px solid #e2e8f0; word-break: break-word; }
@@ -143,6 +143,15 @@
   .opcion-label { display: block; padding: 12px; background: white; border: 1.5px solid #cbd5e1; border-radius: 12px; margin-top: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
   .opcion-label:has(input:checked) { border-color: #1b5e20; background: #e8f5e9; color: #1b5e20; }
   .badge-tipo { font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
+
+  /* ESTILOS PARA EL HISTORIAL DE TALLERES */
+  .acordeon-historial { width: 100%; background: #e2e8f0; border: none; padding: 15px; border-radius: 16px; font-weight: 900; color: #334155; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; margin-top: 30px; margin-bottom: 10px; }
+  .acordeon-historial.active { background: #1b5e20; color: white; border-radius: 16px 16px 0 0; }
+  .panel-historial { padding: 0 10px; background-color: white; display: none; overflow: hidden; border-radius: 0 0 16px 16px; border: 1px solid #e2e8f0; border-top: none; }
+
+  /* ANIMACIÓN PARA EL RELOJ */
+  @keyframes pulseTime { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+  .live-countdown { animation: pulseTime 1.5s infinite; }
 
 </style>
 
@@ -246,8 +255,22 @@
 
   <div id="view-lec-list" class="container">
     <button class="btn-back" onclick="navegarA('int')">🔙 Regresar</button>
-    <div style="text-align:center; font-weight:900; margin-bottom:15px; color:#6a1b9a;">TALLERES ASIGNADOS</div>
+    
+    <div style="text-align:center; font-weight:900; margin-bottom:5px; color:#1b5e20; font-size:18px;">TALLERES PENDIENTES</div>
+    
+    <div style="background:#fff3e0; border-left:4px solid #f57c00; padding:10px; border-radius:8px; margin-bottom:20px; font-size:11px; font-weight:600; color:#e65100;">
+        ⚠️ Recuerda que si dejas vencer el plazo de entrega, la actividad se cerrará automáticamente y no podrás diligenciarla.
+    </div>
+
     <div id="lista-talleres-firebase" style="display: flex; flex-direction: column; gap: 12px;"></div>
+    
+    <button class="acordeon-historial" onclick="this.classList.toggle('active'); let panel = this.nextElementSibling; if (panel.style.display === 'block') { panel.style.display = 'none'; } else { panel.style.display = 'block'; }">
+        ✅ TALLERES YA PRESENTADOS <span>▼</span>
+    </button>
+    <div class="panel-historial" id="historial-talleres-firebase">
+        <p style="text-align:center; font-size:12px; margin:20px 0; color:#94a3b8;">No hay actividades presentadas aún.</p>
+    </div>
+
   </div>
 
   <div id="view-taller-activo" class="container">
@@ -260,10 +283,10 @@
 
   <div id="successTaller" class="success-overlay" style="background: rgba(106, 27, 154, 0.95);">
     <div style="background: white; padding: 30px 20px; border-radius: 24px; text-align: center; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-      <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
-      <h2 style="color: #6a1b9a; font-weight: 900; font-size: 24px; margin: 0 0 10px 0;">¡Excelente trabajo!</h2>
+      <div id="successTallerEmoji" style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+      <h2 id="successTallerTitle" style="color: #6a1b9a; font-weight: 900; font-size: 24px; margin: 0 0 10px 0;">¡Excelente trabajo!</h2>
       <p id="successTallerText" style="color: #475569; font-size: 14px; font-weight: 700; white-space: pre-line; margin-bottom: 20px; line-height: 1.5;"></p>
-      <button class="btn" style="background: #6a1b9a; color: white; width: auto; padding: 12px 30px; font-size: 14px;" onclick="cerrarSuccessTaller()">CONTINUAR 🚀</button>
+      <button id="successTallerBtn" class="btn" style="background: #6a1b9a; color: white; width: auto; padding: 12px 30px; font-size: 14px;" onclick="cerrarSuccessTaller()">CONTINUAR 🚀</button>
     </div>
   </div>
 
@@ -290,6 +313,8 @@
   let docAlertaActual = ""; let periodoNotasActual = 1; let gradoEstudianteActual = ""; let cacheTareasAgenda = []; let currentTaskId = null; let currentTaskTitle = null;
   let tallerEnCurso = null; 
 
+  let intentosPreguntas = {};
+
   window.onload = function() { const saved = localStorage.getItem("padre_doc"); if(saved) { document.getElementById("globalDocInput").value = saved; document.getElementById("chkGlobalSave").checked = true; } };
 
   function iniciarSesionApp() {
@@ -306,6 +331,32 @@
 
   function formatDateFriendly(dateStr) { if(!dateStr) return ''; const parts = dateStr.split('-'); if(parts.length !== 3) return dateStr; const date = new Date(parts[0], parts[1] - 1, parts[2]); return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
   function consultarPorWhatsApp(titulo, area) { const telefonoDocente = "573012901456"; const nombreEstudiante = estSop ? estSop.nombre : "el estudiante"; const grado = gradoEstudianteActual; const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`; const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`; window.open(url, '_blank'); }
+
+  // Función exclusiva para la Agenda Tradicional (Sin rojo ni rosado)
+  function getAreaStyle(a) { 
+      const area = (a || '').toUpperCase(); 
+      if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; 
+      if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#0891b2', badge: '#0891b2', text: '#ffffff', bg: '#ecfeff' }; 
+      if(area.includes('NATURALES')) return { border: '#059669', badge: '#059669', text: '#ffffff', bg: '#ecfdf5' }; 
+      if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#d97706', text: '#ffffff', bg: '#fffbeb' }; 
+      if(area.includes('INGLES')) return { border: '#7c3aed', badge: '#7c3aed', text: '#ffffff', bg: '#f5f3ff' }; 
+      if(area.includes('ARTISTICA')) return { border: '#ca8a04', badge: '#ca8a04', text: '#ffffff', bg: '#fefce8' }; 
+      if(area.includes('EDUCACION FISICA')) return { border: '#65a30d', badge: '#65a30d', text: '#ffffff', bg: '#f7fee7' }; 
+      if(area.includes('ETICA') || area.includes('RELIGION')) return { border: '#0d9488', badge: '#0d9488', text: '#ffffff', bg: '#f0fdf4' }; 
+      if(area.includes('TECNOLOGIA') || area.includes('INFORMATICA')) return { border: '#4f46e5', badge: '#4f46e5', text: '#ffffff', bg: '#eef2ff' }; 
+      return { border: '#475569', badge: '#475569', text: '#ffffff', bg: '#f8fafc' }; 
+  }
+
+  // NUEVA: Función de colores por TIPO de Actividad para Talleres
+  function getActivityStyle(tipo) {
+      const t = (tipo || '').toUpperCase();
+      if(t.includes('AMBIENTACIÓN') || t.includes('AMBIENTACION')) return { border: '#0d9488', badge: '#0d9488', text: '#ffffff', bg: '#f0fdf4' }; // Menta/Cian
+      if(t.includes('REPASO') || t.includes('REFUERZO')) return { border: '#ca8a04', badge: '#ca8a04', text: '#ffffff', bg: '#fefce8' }; // Mostaza
+      if(t.includes('LECTORA')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; // Azul celeste
+      if(t.includes('EVALUATIVO')) return { border: '#7c3aed', badge: '#7c3aed', text: '#ffffff', bg: '#f5f3ff' }; // Morado
+      if(t.includes('RECUPERACIÓN') || t.includes('RECUPERACION')) return { border: '#ea580c', badge: '#ea580c', text: '#ffffff', bg: '#fff7ed' }; // Naranja
+      return { border: '#475569', badge: '#475569', text: '#ffffff', bg: '#f8fafc' }; // Gris default
+  }
 
   function cargarTableroAvisos() {
     const div = document.getElementById("dashboard-avisos");
@@ -398,7 +449,7 @@
 
   function formatearFecha(f) { if(!f) return ""; const d = new Date(f + "T00:00:00"); return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
   function getYouTubeEmbedUrl(url) { if (!url) return null; let id = ''; try { if (url.includes('v=')) id = url.split('v=')[1].split('&')[0]; else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0]; return id ? `https://www.youtube.com/embed/${id}` : null; } catch (e) { return null; } }
-  function getAreaStyle(a) { const area = (a || '').toUpperCase(); if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#e0f2fe', text: '#0369a1' }; if(area.includes('ESPAÑOL') || area.includes('LENGUAJE')) return { border: '#e11d48', badge: '#ffe4e6', text: '#be123c' }; if(area.includes('NATURALES')) return { border: '#059669', badge: '#d1fae5', text: '#047857' }; if(area.includes('SOCIALES')) return { border: '#d97706', badge: '#fef3c7', text: '#b45309' }; return { border: '#94a3b8', badge: '#f1f5f9', text: '#475569' }; }
+  
   function formatTaskDescription(text) { if (!text) return "Sin descripción detallada."; const lines = text.split('\n'); let finalHtml = ''; lines.forEach(line => { let trimmedLine = line.trim(); if (!trimmedLine) { finalHtml += '<div class="paragraph-spacer"></div>'; return; } const bulletMatch = trimmedLine.match(/^[-*•]\s*(.*)/); if (bulletMatch) { let content = bulletMatch[1]; content = content.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>'); finalHtml += `<div class="bullet-row"><span class="bullet-dot">●</span><span>${content}</span></div>`; } else { let content = trimmedLine.replace(/\b([A-ZÁÉÍÓÚÑ\s]{4,})\b/g, '<span class="caps-highlight">$1</span>'); finalHtml += `<span>${content}</span><br>`; } }); return finalHtml; }
 
   async function activarFormularioExcusa() { const est = estudiantesValidos.find(e => e.doc === estActualDoc); document.getElementById("nombreExc").innerText=est.nombre; const snapC = await db.collection("configuracionGlobal").doc("asistencia").get(); periodoAsis = snapC.exists ? (snapC.data().periodoActual || 1) : 1; document.getElementById("periodoAsisLabel").innerText="PERIODO ACTUAL #"+periodoAsis; consultarStats(estActualDoc); initPad('sigExc'); }
@@ -449,88 +500,156 @@
   async function abrirSeccionLectura() {
     navegarA('lec-list');
     const divLista = document.getElementById("lista-talleres-firebase"); 
+    const divHistorial = document.getElementById("historial-talleres-firebase");
+    
     divLista.innerHTML = "<p style='text-align:center; font-size:12px; margin-top:20px;'>Buscando talleres...</p>";
+    divHistorial.innerHTML = "";
 
     try {
         const resSnap = await db.collection("resultadosTalleres").where("documentoEstudiante", "==", estActualDoc).get();
-        const talleresCompletados = [];
-        resSnap.forEach(doc => talleresCompletados.push(doc.data().idTaller));
+        const talleresCompletadosData = {}; 
+        resSnap.forEach(doc => {
+            talleresCompletadosData[doc.data().idTaller] = doc.data();
+        });
 
-        // Traemos todos los talleres activos, sin filtrar desde la base de datos por grado
-        const snap = await db.collection("talleresLectura")
-            .where("activo", "==", true)
-            .get();
+        const snap = await db.collection("talleresLectura").where("activo", "==", true).get();
 
         divLista.innerHTML = "";
-        let actividadesDisponibles = 0;
+        let actividadesPendientes = [];
+        let actividadesHistorial = [];
         
         snap.forEach(doc => {
             const t = doc.data();
             
-            // LA CLAVE: El profesor ahora guarda el documento. Comparamos directamente contra estActualDoc
             const esParaMiEspecificamente = t.estudianteEspecifico === estActualDoc;
-            
             const gradosDestino = Array.isArray(t.gradoDestino) ? t.gradoDestino : [];
             const esParaMiGradoOTodos = gradosDestino.includes(gradoEstudianteActual) || gradosDestino.includes("Todos");
 
-            if (t.estudianteEspecifico) {
-                // Si la prueba tiene un documento específico y NO es el mío, la ignoro.
-                if (!esParaMiEspecificamente) return;
-            } else {
-                // Si la prueba NO tiene estudiante específico, reviso si es para mi grado.
-                if (!esParaMiGradoOTodos) return;
-            }
-
-            // Filtros antiguos por retrocompatibilidad
+            if (t.estudianteEspecifico) { if (!esParaMiEspecificamente) return; } 
+            else { if (!esParaMiGradoOTodos) return; }
             if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
             if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
 
-            actividadesDisponibles++;
             const id = doc.id;
-            const yaRespondio = talleresCompletados.includes(id);
+            const miRespuesta = talleresCompletadosData[id];
+            const yaRespondio = !!miRespuesta;
+            
             const ahora = new Date();
             const vencimiento = t.fechaVencimiento ? new Date(t.fechaVencimiento) : null;
-            const estaVencido = vencimiento && ahora > vencimiento;
-            let fVencStr = vencimiento ? vencimiento.toLocaleString('es-CO', { dateStyle:'short', timeStyle:'short'}) : '';
+            const estaVencido = vencimiento && ahora > vencimiento && !yaRespondio;
 
-            if (yaRespondio) {
-                divLista.innerHTML += `
-                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:15px 20px; width:100%; margin-bottom:12px; background:#e8f5e9; border: 1.5px solid #a5d6a7; cursor:not-allowed;" onclick="alert('Ya enviaste tus respuestas para esta actividad. ¡Buen trabajo!')">
-                    <div style="text-align:left;">
-                      <div style="font-size:10px; font-weight:900; color:#2e7d32;">✅ COMPLETADO</div>
-                      <div style="font-weight:800; color:#1b5e20;">${t.titulo}</div>
-                    </div>
-                    <div style="font-size:20px; color:#a5d6a7;">🔒</div>
-                  </div>
-                `;
-            } else if (estaVencido) {
-                divLista.innerHTML += `
-                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:15px 20px; width:100%; margin-bottom:12px; background:#ffebee; border: 1.5px solid #ffcdd2; cursor:not-allowed;" onclick="alert('El plazo para esta actividad ha finalizado.')">
-                    <div style="text-align:left;">
-                      <div style="font-size:10px; font-weight:900; color:#c62828;">⏳ CERRADO</div>
-                      <div style="font-weight:800; color:#b71c1c;">${t.titulo}</div>
-                      <div style="font-size:9px; font-weight:bold; color:#c62828; margin-top:3px;">Cerró el: ${fVencStr}</div>
-                    </div>
-                    <div style="font-size:20px; color:#ef5350;">🔒</div>
-                  </div>
-                `;
+            if (yaRespondio || estaVencido) {
+                actividadesHistorial.push({ id, data: t, respuesta: miRespuesta, vencido: estaVencido, yaRespondio: yaRespondio });
             } else {
-                divLista.innerHTML += `
-                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:15px 20px; width:100%; margin-bottom:12px;" onclick='cargarTaller(${JSON.stringify({id: id, ...t}).replace(/'/g, "&apos;")})'>
-                    <div style="text-align:left;">
-                      <div style="font-size:10px; font-weight:900; color:#1b5e20; text-transform:uppercase;">📖 ${t.areaConocimiento || 'COMPRENSIÓN'}</div>
-                      <div style="font-weight:800; color:#333;">${t.titulo}</div>
-                      ${fVencStr ? `<div style="font-size:9px; font-weight:bold; color:#d32f2f; margin-top:3px;">⏳ Cierra: ${fVencStr}</div>` : ''}
-                    </div>
-                    <div style="font-size:20px; color:#1b5e20;">➔</div>
-                  </div>
-                `;
+                actividadesPendientes.push({ id, data: t, vencimiento: vencimiento });
             }
         });
 
-        if (actividadesDisponibles === 0) {
-            divLista.innerHTML = "<p style='text-align:center; font-size:12px; opacity:0.6; margin-top:20px;'>No hay talleres asignados por el docente para ti.</p>";
+        actividadesPendientes.sort((a, b) => {
+            if (!a.vencimiento) return 1;
+            if (!b.vencimiento) return -1;
+            return a.vencimiento - b.vencimiento;
+        });
+
+        if (actividadesPendientes.length === 0) {
+            divLista.innerHTML = "<p style='text-align:center; font-size:12px; opacity:0.6; margin-top:20px; font-weight:bold;'>🎉 ¡No tienes tareas pendientes!</p>";
+        } else {
+            actividadesPendientes.forEach(item => {
+                const t = item.data;
+                const colors = getActivityStyle(t.tipoActividad); // <-- AHORA USA EL TIPO DE ACTIVIDAD
+                
+                let isoDate = item.vencimiento ? item.vencimiento.toISOString() : '';
+                let fVencStr = item.vencimiento ? item.vencimiento.toLocaleString('es-CO', { weekday: 'long', day:'numeric', month:'short', hour:'numeric', minute:'2-digit'}) : '';
+                
+                divLista.innerHTML += `
+                  <div class="card-btn" style="flex-direction:row; justify-content:space-between; padding:18px 20px; width:100%; margin-bottom:12px; border-left:6px solid ${colors.border}; border-right:2px solid ${colors.border}; border-top:2px solid ${colors.bg}; border-bottom:2px solid ${colors.bg}; background:${colors.bg}; box-shadow: 0 6px 12px rgba(0,0,0,0.05);" onclick='cargarTaller(${JSON.stringify({id: item.id, ...t}).replace(/'/g, "&apos;")})'>
+                    <div style="text-align:left; flex:1;">
+                      <span style="font-size:10px; font-weight:900; background:${colors.badge}; color:${colors.text}; padding:5px 10px; border-radius:8px; text-transform:uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); letter-spacing:0.5px;">📚 ${t.areaConocimiento || 'General'} | ${t.tipoActividad || 'TALLER'}</span>
+                      <div style="font-weight:900; color:#1e293b; font-size:17px; margin-top:10px; line-height:1.2;">${t.titulo}</div>
+                      ${item.vencimiento ? `<div style="font-size:11px; font-weight:800; color:#c62828; margin-top:10px; background:#ffebee; display:inline-block; padding:6px 10px; border-radius:8px; border:1px solid #ffcdd2;">
+                        📅 Cierre: ${fVencStr} <br>
+                        <span class="live-countdown" data-date="${isoDate}" style="display:inline-block; margin-top:4px; font-size:13px; font-weight:900; color:#b71c1c;">Calculando tiempo...</span>
+                      </div>` : ''}
+                    </div>
+                    <div style="font-size:24px; color:${colors.border}; padding-left:15px; display:flex; align-items:center;">➔</div>
+                  </div>
+                `;
+            });
         }
+
+        if (actividadesHistorial.length === 0) {
+            divHistorial.innerHTML = "<p style='text-align:center; font-size:12px; margin:20px 0; color:#94a3b8;'>No hay actividades en el historial.</p>";
+        } else {
+            actividadesHistorial.forEach(item => {
+                const t = item.data;
+                const r = item.respuesta;
+                let estadoHtml = "";
+                let accionClick = "";
+                let opacidadEstilo = "opacity:1;";
+                let borderEstilo = "";
+                
+                if (item.yaRespondio && r) {
+                    let textoNota = "";
+                    if (r.requiereRevision) {
+                        textoNota = `<div style="color:#f57c00; font-size:10px; font-weight:800; margin-top:4px;">⏳ Nota parcial: ${r.nota.toFixed(1)} (Pendiente revisión profe)</div>`;
+                    } else {
+                        let colorNota = r.nota >= 3.0 ? '#2e7d32' : '#d32f2f';
+                        textoNota = `<div style="color:${colorNota}; font-size:14px; font-weight:900; margin-top:4px;">Nota Final: ${r.nota.toFixed(1)}</div>`;
+                    }
+                    // FECHA AÑADIDA AQUÍ
+                    let fechaPresentado = r.fecha ? `<div style="font-size:10px; font-weight:800; color:#64748b; margin-top:6px; background:#f1f5f9; padding:4px 8px; border-radius:6px; display:inline-block;">🗓️ Realizado: ${r.fecha}</div>` : "";
+                    
+                    estadoHtml = `<div style="font-size:10px; font-weight:900; color:#2e7d32; display:flex; align-items:center; gap:5px;">✅ COMPLETADO</div>${textoNota}${fechaPresentado}`;
+                    borderEstilo = "border-left: 5px solid #2e7d32;";
+                } else if (item.vencido) {
+                    opacidadEstilo = "opacity:0.6;";
+                    borderEstilo = "border-left: 5px solid #94a3b8; background-color: #f1f5f9;";
+                    estadoHtml = `
+                        <div style="font-size:11px; font-weight:900; color:#c62828; margin-top:5px; padding:8px; background:#ffebee; border-radius:8px;">
+                           ⏳ ACTIVIDAD CERRADA POR VENCIMIENTO DE PLAZO.<br><span style="font-weight:600; font-size:10px; color:#b71c1c;">Si tuviste alguna dificultad, comunícate con el profe Oscar para solicitar una reapertura y recuperar tu nota.</span>
+                        </div>`;
+                    accionClick = `onclick="alert('Esta actividad está cerrada. Comunícate con el profesor Oscar si necesitas que te la habilite nuevamente para recuperar tu nota.')"`;
+                }
+
+                divHistorial.innerHTML += `
+                  <div style="border:1px solid #e2e8f0; border-radius:12px; padding:15px; margin-bottom:10px; ${opacidadEstilo} ${borderEstilo} cursor:pointer;" ${accionClick}>
+                    <div style="font-size:9px; font-weight:900; color:#64748b; text-transform:uppercase; margin-bottom:4px;">📚 ${t.areaConocimiento || 'General'} | ${t.tipoActividad || 'TALLER'}</div>
+                    <div style="font-size:13px; font-weight:800; color:#334155; margin-bottom:8px;">${t.titulo}</div>
+                    ${estadoHtml}
+                  </div>
+                `;
+            });
+        }
+        
+        if(window.tallerInterval) clearInterval(window.tallerInterval);
+        window.tallerInterval = setInterval(() => {
+            document.querySelectorAll('.live-countdown').forEach(el => {
+                const limitStr = el.getAttribute('data-date');
+                if(!limitStr) return;
+                
+                const limit = new Date(limitStr).getTime();
+                const now = new Date().getTime();
+                const dist = limit - now;
+                
+                if (dist < 0) {
+                    el.innerHTML = "🚨 ¡TIEMPO AGOTADO!";
+                    el.style.color = "white";
+                    el.style.background = "#d32f2f";
+                    el.style.padding = "2px 6px";
+                    el.style.borderRadius = "4px";
+                } else {
+                    const d = Math.floor(dist / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((dist % (1000 * 60)) / 1000);
+                    
+                    let str = "⏱️ Faltan: ";
+                    if (d > 0) str += `${d}d `;
+                    str += `${h}h ${m}m ${s}s`;
+                    el.innerHTML = str;
+                }
+            });
+        }, 1000);
 
     } catch(e) {
         divLista.innerHTML = "<p style='text-align:center; font-size:12px; color:red;'>Error de conexión con el servidor.</p>";
@@ -557,6 +676,8 @@
     }
     document.getElementById("taller-contenido").innerHTML = contenidoHtml;
     
+    intentosPreguntas = {};
+
     const divP = document.getElementById("taller-preguntas"); 
     divP.innerHTML = "";
     data.preguntas.forEach((p, index) => {
@@ -566,18 +687,27 @@
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="a" style="margin-right:8px; accent-color:#1b5e20;"> A) ${p.opciones.a}</label>`;
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="b" style="margin-right:8px; accent-color:#1b5e20;"> B) ${p.opciones.b}</label>`;
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="c" style="margin-right:8px; accent-color:#1b5e20;"> C) ${p.opciones.c}</label>`;
+        html += `<label class="opcion-label"><input type="radio" name="p${index}" value="d" style="margin-right:8px; accent-color:#1b5e20;"> D) ${p.opciones.d}</label>`;
       } else if(p.tipo === 'verdadero_falso') {
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="verdadero" style="margin-right:8px; accent-color:#1b5e20;"> Verdadero</label>`;
         html += `<label class="opcion-label"><input type="radio" name="p${index}" value="falso" style="margin-right:8px; accent-color:#1b5e20;"> Falso</label>`;
       } else if(p.tipo === 'completacion') {
-        html += `<div style="background:#fff; padding:12px; border-radius:10px; font-style:italic; margin-bottom:12px; border:1px dashed #cbd5e1; color:#475569;">${p.textoConcepto}</div>`;
-        html += `<input type="text" id="resp-comp-${index}" placeholder="Escribe tu respuesta para completar..." style="width:100%; padding:14px; border-radius:12px; border:1.5px solid #cbd5e1; font-size:14px; outline:none;">`;
+        intentosPreguntas[index] = 3;
+        let textoInLine = p.textoConcepto.replace(/_{2,}/g, () => {
+            return `<input type="text" class="inline-comp-${index}" style="width: 90px; padding: 2px 5px; margin: 0 4px; border: none; border-bottom: 2px solid #1b5e20; background: #e8f5e9; text-align: center; font-weight: bold; outline: none; color: #1b5e20; border-radius: 4px 4px 0 0;">`;
+        });
+        html += `<div style="background:#fff; padding:15px; border-radius:10px; font-size:15px; line-height:2.2; margin-bottom:12px; border:1px dashed #cbd5e1; color:#1e293b;">${textoInLine}</div>`;
+        html += `<div id="feedback-comp-${index}" style="font-size:12px; font-weight:900; margin-bottom:8px;"></div>`;
+        html += `<button type="button" id="btn-comp-${index}" onclick="verificarCompletacion(${index}, '${p.palabrasCorrectas.replace(/'/g, "\\'")}')" class="btn blue" style="padding:10px; font-size:11px; margin-top:0;">COMPROBAR RESPUESTA (3 Intentos)</button>`;
       } else if(p.tipo === 'ahorcado') {
+        intentosPreguntas[index] = 2; 
         let chars = (p.palabraOculta || "").split('');
         let boxes = chars.map(c => c === ' ' ? '<div style="width:15px; display:inline-block;"></div>' : `<div style="display:inline-block; width:20px; border-bottom:3px solid #1e293b; margin:0 3px; height:25px;"></div>`).join('');
         html += `<div style="text-align:center; margin:15px 0;">${boxes}</div>`;
         if (p.pistas) { html += `<div style="text-align:center; font-size:11px; color:#ef4444; font-weight:900; margin-bottom:10px; text-transform:uppercase;">💡 PISTAS: ${p.pistas}</div>`; }
         html += `<input type="text" id="resp-ahorcado-${index}" placeholder="Escribe la palabra oculta..." style="width:100%; padding:14px; border-radius:12px; border:1.5px solid #cbd5e1; font-size:14px; text-align:center; text-transform:uppercase; font-weight:bold; outline:none; letter-spacing:2px;">`;
+        html += `<div id="feedback-ahorcado-${index}" style="font-size:12px; font-weight:900; margin-bottom:8px; text-align:center;"></div>`;
+        html += `<button type="button" id="btn-ahorcado-${index}" onclick="verificarAhorcado(${index}, '${p.palabraOculta.replace(/'/g, "\\'")}')" class="btn blue" style="padding:10px; font-size:11px; margin-top:0;">COMPROBAR RESPUESTA (2 Intentos)</button>`;
       } else {
         html += `<textarea id="resp-abierta-${index}" placeholder="Escribe aquí tu respuesta de forma clara y con buena ortografía..." rows="4"></textarea>`;
       }
@@ -585,11 +715,87 @@
     });
   }
 
+  function verificarCompletacion(i, correctasStr) {
+      if(intentosPreguntas[i] <= 0 || intentosPreguntas[i] === "SUCCESS") return;
+      const inputs = document.querySelectorAll(`.inline-comp-${i}`);
+      let resEstudianteArr = [];
+      let todasVacias = true;
+      inputs.forEach(inp => { resEstudianteArr.push(inp.value.trim()); if(inp.value.trim() !== "") todasVacias = false; });
+      if(todasVacias) return alert("Escribe algo en los espacios antes de comprobar.");
+      
+      const normalize = str => (str||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.,;:"'¡!¿?]/g, "").trim();
+      let resProfe = correctasStr.split(',').map(w => normalize(w));
+      let resEst = resEstudianteArr.map(w => normalize(w));
+      
+      let ok = true;
+      for(let j = 0; j < resProfe.length; j++) { if(resProfe[j] !== resEst[j]) { ok = false; break; } }
+      
+      let feedback = document.getElementById(`feedback-comp-${i}`);
+      let btn = document.getElementById(`btn-comp-${i}`);
+      
+      if(ok) {
+          feedback.innerHTML = "✅ ¡Correcto! Ya puedes continuar.";
+          feedback.style.color = "#2e7d32";
+          inputs.forEach(inp => { inp.style.background = "#c8e6c9"; inp.style.borderBottomColor = "#2e7d32"; inp.disabled = true; });
+          btn.style.display = "none";
+          intentosPreguntas[i] = "SUCCESS";
+      } else {
+          intentosPreguntas[i]--;
+          if(intentosPreguntas[i] > 0) {
+              feedback.innerHTML = `❌ Casi... Te quedan ${intentosPreguntas[i]} intento(s).`;
+              feedback.style.color = "#d32f2f";
+          } else {
+              feedback.innerHTML = `🔒 Agotaste tus intentos en esta pregunta.`;
+              feedback.style.color = "#d32f2f";
+              inputs.forEach(inp => { inp.style.background = "#ffcdd2"; inp.style.borderBottomColor = "#c62828"; inp.disabled = true; });
+              btn.style.display = "none";
+              intentosPreguntas[i] = "FAILED";
+          }
+      }
+  }
+
+  function verificarAhorcado(i, correctaStr) {
+      if(intentosPreguntas[i] <= 0 || intentosPreguntas[i] === "SUCCESS") return;
+      const input = document.getElementById(`resp-ahorcado-${i}`);
+      if(input.value.trim() === "") return alert("Escribe una palabra antes de comprobar.");
+      
+      const normalize = str => (str||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.,;:"'¡!¿?]/g, "").trim();
+      let resProfe = normalize(correctaStr);
+      let resEst = normalize(input.value);
+      
+      let feedback = document.getElementById(`feedback-ahorcado-${i}`);
+      let btn = document.getElementById(`btn-ahorcado-${i}`);
+      
+      if(resProfe === resEst) {
+          feedback.innerHTML = "✅ ¡Perfecto! Has descubierto la palabra.";
+          feedback.style.color = "#2e7d32";
+          input.style.background = "#c8e6c9"; 
+          input.style.borderColor = "#2e7d32"; 
+          input.disabled = true;
+          btn.style.display = "none";
+          intentosPreguntas[i] = "SUCCESS";
+      } else {
+          intentosPreguntas[i]--;
+          if(intentosPreguntas[i] > 0) {
+              feedback.innerHTML = `❌ Te queda ${intentosPreguntas[i]} intento. ¡Revisa bien la palabra!`;
+              feedback.style.color = "#d32f2f";
+          } else {
+              feedback.innerHTML = `🔒 Agotaste tus intentos en esta pregunta.`;
+              feedback.style.color = "#d32f2f";
+              input.style.background = "#ffcdd2"; 
+              input.style.borderColor = "#c62828"; 
+              input.disabled = true;
+              btn.style.display = "none";
+              intentosPreguntas[i] = "FAILED";
+          }
+      }
+  }
+
   async function evaluarTallerLectura() {
     const btn = document.getElementById("btnFinalizarTaller");
     let aciertos = 0, totalC = 0, totalAbiertas = 0, respondidas = true, resps = [];
     
-    const normalize = str => (str||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    const normalize = str => (str||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.,;:"'¡!¿?]/g, "").trim();
 
     tallerEnCurso.preguntas.forEach((p, i) => {
       let r = "", ok = false;
@@ -599,14 +805,31 @@
         if(!sel) respondidas = false; else { r = sel.value; ok = (r === p.correcta); if(ok) aciertos++; }
       } else if(p.tipo === 'completacion') {
         totalC++;
-        r = document.getElementById(`resp-comp-${i}`).value.trim(); 
-        if(!r) respondidas = false;
-        else { ok = (normalize(r) === normalize(p.palabrasCorrectas)); if(ok) aciertos++; }
+        const inputs = document.querySelectorAll(`.inline-comp-${i}`);
+        let resEstudianteArr = [];
+        let todasVacias = true;
+        inputs.forEach(inp => { resEstudianteArr.push(inp.value.trim()); if(inp.value.trim() !== "") todasVacias = false; });
+        r = resEstudianteArr.join(', ');
+        
+        if(todasVacias && intentosPreguntas[i] !== "FAILED") {
+            respondidas = false;
+        } else {
+            let resProfe = p.palabrasCorrectas.split(',').map(w => normalize(w));
+            let resEst = resEstudianteArr.map(w => normalize(w));
+            ok = true;
+            for(let j = 0; j < resProfe.length; j++) { if(resProfe[j] !== resEst[j]) { ok = false; break; } }
+            if(ok) aciertos++;
+        }
       } else if(p.tipo === 'ahorcado') {
         totalC++;
         r = document.getElementById(`resp-ahorcado-${i}`).value.trim(); 
-        if(!r) respondidas = false;
-        else { ok = (normalize(r) === normalize(p.palabraOculta)); if(ok) aciertos++; }
+        
+        if(r === "" && intentosPreguntas[i] !== "FAILED") {
+            respondidas = false;
+        } else { 
+            ok = (normalize(r) === normalize(p.palabraOculta)); 
+            if(ok) aciertos++; 
+        }
       } else {
         totalAbiertas++;
         r = document.getElementById(`resp-abierta-${i}`).value.trim(); if(!r) respondidas = false;
@@ -627,7 +850,7 @@
           nombreEstudiante: estSop.nombre, 
           documentoEstudiante: estActualDoc, 
           grado: gradoEstudianteActual, 
-          nota: requiereRevision ? 0 : notaCalculada,
+          nota: notaCalculada,
           aciertosCerrados: aciertos,
           totalCerradas: totalC,
           requiereRevision: requiereRevision,
@@ -637,13 +860,46 @@
       });
       
       let msg = "";
+      let titulo = "";
+      let emoji = "";
+      let colorBg = "";
+
       if(requiereRevision) {
-          msg = `Obtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\n\n⏳ Tu nota final está pendiente de que el profe Oscar califique tu respuesta escrita.`;
+          emoji = "👍";
+          titulo = "¡Buen esfuerzo!";
+          msg = `Obtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\nTu nota parcial es: ${notaCalculada.toFixed(1)}\n\n⏳ Tu nota final está pendiente de que el profe Oscar califique tu respuesta escrita.`;
+          colorBg = "rgba(106, 27, 154, 0.95)"; 
       } else {
-          msg = `¡Completaste la actividad!\nTu calificación final es: ${notaCalculada.toFixed(1)}`;
+          if (notaCalculada >= 4.0) {
+              emoji = "🎉";
+              titulo = "¡Excelente trabajo!";
+              msg = `¡Felicitaciones! Has dominado el tema.\nTu calificación final es: ${notaCalculada.toFixed(1)}`;
+              colorBg = "rgba(46, 125, 50, 0.95)"; 
+          } else if (notaCalculada >= 3.0) {
+              emoji = "👍";
+              titulo = "¡Buen intento!";
+              msg = `¡Aprobaste la actividad!\nTu calificación final es: ${notaCalculada.toFixed(1)}`;
+              colorBg = "rgba(106, 27, 154, 0.95)"; 
+          } else {
+              emoji = "💪";
+              titulo = "¡Ánimo, tú puedes!";
+              msg = `Sigue practicando. Esta vez obtuviste ${notaCalculada.toFixed(1)}.\nNo te rindas, ¡la próxima te irá mejor!`;
+              colorBg = "rgba(230, 81, 0, 0.95)"; 
+          }
       }
+
+      document.getElementById('successTallerEmoji').innerText = emoji;
+      document.getElementById('successTallerTitle').innerText = titulo;
       document.getElementById('successTallerText').innerText = msg;
-      document.getElementById('successTaller').style.display = 'flex';
+      
+      const overlay = document.getElementById('successTaller');
+      overlay.style.background = colorBg;
+      
+      const btnColorHex = colorBg.replace('0.95)', '1)');
+      document.getElementById('successTallerTitle').style.color = btnColorHex;
+      document.getElementById('successTallerBtn').style.background = btnColorHex;
+      
+      overlay.style.display = 'flex';
       
       btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS";
     } catch(e) { 
