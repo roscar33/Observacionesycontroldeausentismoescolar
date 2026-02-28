@@ -278,6 +278,7 @@
     <div id="taller-titulo" style="font-weight:900; color:#1b5e20; text-align:center; margin-bottom:15px; font-size:18px;"></div>
     <div id="taller-contenido" class="lectura-texto"></div>
     <div id="taller-preguntas"></div>
+    <div id="taller-opciones-extra"></div>
     <button class="btn blue" id="btnFinalizarTaller" onclick="evaluarTallerLectura()">ENVIAR RESPUESTAS</button>
   </div>
 
@@ -332,7 +333,6 @@
   function formatDateFriendly(dateStr) { if(!dateStr) return ''; const parts = dateStr.split('-'); if(parts.length !== 3) return dateStr; const date = new Date(parts[0], parts[1] - 1, parts[2]); return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
   function consultarPorWhatsApp(titulo, area) { const telefonoDocente = "573012901456"; const nombreEstudiante = estSop ? estSop.nombre : "el estudiante"; const grado = gradoEstudianteActual; const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`; const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`; window.open(url, '_blank'); }
 
-  // Función exclusiva para la Agenda Tradicional
   function getAreaStyle(a) { 
       const area = (a || '').toUpperCase(); 
       if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; 
@@ -535,7 +535,6 @@
             
             const ahora = new Date();
 
-            // LÓGICA DE PROGRAMACIÓN DE FECHA
             if (t.fechaPublicacion && new Date(t.fechaPublicacion) > ahora) return;
 
             const vencimiento = t.fechaVencimiento ? new Date(t.fechaVencimiento) : null;
@@ -731,6 +730,77 @@
       }
       divP.innerHTML += html + `</div>`;
     });
+
+    // RENDERIZAR BOTÓN DE GUARDAR PROGRESO SI EL DOCENTE LO PERMITIÓ
+    document.getElementById("taller-opciones-extra").innerHTML = data.permitirProgreso 
+        ? `<button type="button" class="btn" style="background:#f57c00; box-shadow:0 4px 0 #e65100; margin-bottom:15px;" onclick="guardarProgresoTaller()">💾 GUARDAR PROGRESO</button>` 
+        : ``;
+
+    // VERIFICAR Y RESTAURAR PROGRESO GUARDADO
+    const progresoGuardado = localStorage.getItem('progreso_' + estActualDoc + '_' + data.id);
+    if(progresoGuardado && data.permitirProgreso) {
+        if(confirm("Tienes un progreso guardado en esta actividad. ¿Deseas restaurarlo?")) {
+            const parsed = JSON.parse(progresoGuardado);
+            const resps = parsed.resps || {};
+            intentosPreguntas = parsed.intentos || intentosPreguntas;
+            
+            data.preguntas.forEach((p, i) => {
+                if(p.tipo === 'multiple' || p.tipo === 'verdadero_falso') {
+                    if(resps[`p${i}`]) {
+                        const radio = document.querySelector(`input[name="p${i}"][value="${resps[`p${i}`]}"]`);
+                        if(radio) radio.checked = true;
+                    }
+                } else if(p.tipo === 'completacion') {
+                    if(resps[`comp${i}`]) {
+                        const inputs = document.querySelectorAll(`.inline-comp-${i}`);
+                        inputs.forEach((inp, idx) => inp.value = resps[`comp${i}`][idx] || "");
+                    }
+                } else if(p.tipo === 'ahorcado') {
+                    if(resps[`ahorcado${i}`]) {
+                        document.getElementById(`resp-ahorcado-${i}`).value = resps[`ahorcado${i}`];
+                    }
+                } else if(p.tipo === 'pareados') {
+                    if(resps[`pareados${i}`]) {
+                        p.pares.forEach((par, idxPar) => {
+                            const sel = document.getElementById(`resp-pareado-${i}-${idxPar}`);
+                            if(sel) sel.value = resps[`pareados${i}`][idxPar] || "";
+                        });
+                    }
+                } else {
+                    if(resps[`abierta${i}`]) {
+                        document.getElementById(`resp-abierta-${i}`).value = resps[`abierta${i}`];
+                    }
+                }
+            });
+        }
+    }
+  }
+
+  function guardarProgresoTaller() {
+    if(!tallerEnCurso) return;
+    let resps = {};
+    tallerEnCurso.preguntas.forEach((p, i) => {
+        if(p.tipo === 'multiple' || p.tipo === 'verdadero_falso') {
+            const sel = document.querySelector(`input[name="p${i}"]:checked`);
+            if(sel) resps[`p${i}`] = sel.value;
+        } else if(p.tipo === 'completacion') {
+            const inputs = document.querySelectorAll(`.inline-comp-${i}`);
+            let arr = []; inputs.forEach(inp => arr.push(inp.value)); resps[`comp${i}`] = arr;
+        } else if(p.tipo === 'ahorcado') {
+            resps[`ahorcado${i}`] = document.getElementById(`resp-ahorcado-${i}`).value;
+        } else if(p.tipo === 'pareados') {
+            let arr = [];
+            p.pares.forEach((par, idxPar) => { 
+                const sel = document.getElementById(`resp-pareado-${i}-${idxPar}`);
+                if(sel) arr.push(sel.value); 
+            });
+            resps[`pareados${i}`] = arr;
+        } else {
+            resps[`abierta${i}`] = document.getElementById(`resp-abierta-${i}`).value;
+        }
+    });
+    localStorage.setItem('progreso_' + estActualDoc + '_' + tallerEnCurso.id, JSON.stringify({resps, intentos: intentosPreguntas}));
+    alert("✅ Progreso guardado exitosamente. Puedes salir de la aplicación y continuar luego.");
   }
 
   function verificarCompletacion(i, correctasStr) {
@@ -856,7 +926,9 @@
         let resHtml = [];
         p.pares.forEach((par, idxPar) => {
             totalC++; 
-            const selectVal = document.getElementById(`resp-pareado-${i}-${idxPar}`).value.trim();
+            const selEl = document.getElementById(`resp-pareado-${i}-${idxPar}`);
+            const selectVal = selEl ? selEl.value.trim() : "";
+            
             if(selectVal === "") respondidas = false;
             else {
                 let isCorr = (selectVal === par.der);
@@ -896,6 +968,9 @@
           timestamp: Date.now() 
       });
       
+      // BORRAMOS EL PROGRESO AL ENVIAR EXITOSAMENTE
+      localStorage.removeItem('progreso_' + estActualDoc + '_' + tallerEnCurso.id);
+
       let msg = "";
       let titulo = "";
       let emoji = "";
