@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Enter<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
@@ -333,6 +333,7 @@
   function formatDateFriendly(dateStr) { if(!dateStr) return ''; const parts = dateStr.split('-'); if(parts.length !== 3) return dateStr; const date = new Date(parts[0], parts[1] - 1, parts[2]); return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
   function consultarPorWhatsApp(titulo, area) { const telefonoDocente = "573012901456"; const nombreEstudiante = estSop ? estSop.nombre : "el estudiante"; const grado = gradoEstudianteActual; const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`; const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`; window.open(url, '_blank'); }
 
+  // Función exclusiva para la Agenda Tradicional
   function getAreaStyle(a) { 
       const area = (a || '').toUpperCase(); 
       if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; 
@@ -511,7 +512,7 @@
             talleresCompletadosData[doc.data().idTaller] = doc.data();
         });
 
-        const snap = await db.collection("talleresLectura").where("activo", "==", true).get();
+        const snap = await db.collection("talleresLectura").where("status", "==", "published").get();
 
         divLista.innerHTML = "";
         let actividadesPendientes = [];
@@ -535,13 +536,20 @@
             
             const ahora = new Date();
 
-            if (t.fechaPublicacion && new Date(t.fechaPublicacion) > ahora) return;
+            if (t.fechaPublicacion && new Date(t.fechaPublicacion) > ahora && !yaRespondio) return;
 
             const vencimiento = t.fechaVencimiento ? new Date(t.fechaVencimiento) : null;
             const estaVencido = vencimiento && ahora > vencimiento && !yaRespondio;
-
-            if (yaRespondio || estaVencido) {
-                actividadesHistorial.push({ id, data: t, respuesta: miRespuesta, vencido: estaVencido, yaRespondio: yaRespondio });
+            
+            if (yaRespondio || estaVencido || t.archived) {
+                actividadesHistorial.push({ 
+                    id, 
+                    data: t, 
+                    respuesta: miRespuesta, 
+                    vencido: estaVencido || t.archived, 
+                    yaRespondio: yaRespondio,
+                    archivado: t.archived
+                });
             } else {
                 actividadesPendientes.push({ id, data: t, vencimiento: vencimiento });
             }
@@ -603,14 +611,15 @@
                     
                     estadoHtml = `<div style="font-size:10px; font-weight:900; color:#2e7d32; display:flex; align-items:center; gap:5px;">✅ COMPLETADO</div>${textoNota}${fechaPresentado}`;
                     borderEstilo = "border-left: 5px solid #2e7d32;";
-                } else if (item.vencido) {
+                } else if (item.vencido || item.archivado) {
                     opacidadEstilo = "opacity:0.6;";
                     borderEstilo = "border-left: 5px solid #94a3b8; background-color: #f1f5f9;";
+                    let motivoCierre = item.archivado && !item.vencido ? "ARCHIVADA POR EL DOCENTE" : "CERRADA POR VENCIMIENTO DE PLAZO";
                     estadoHtml = `
                         <div style="font-size:11px; font-weight:900; color:#c62828; margin-top:5px; padding:8px; background:#ffebee; border-radius:8px;">
-                           ⏳ ACTIVIDAD CERRADA POR VENCIMIENTO DE PLAZO.<br><span style="font-weight:600; font-size:10px; color:#b71c1c;">Si tuviste alguna dificultad, comunícate con el profe Oscar para solicitar una reapertura y recuperar tu nota.</span>
+                           ⏳ ACTIVIDAD ${motivoCierre}.<br><span style="font-weight:600; font-size:10px; color:#b71c1c;">Si tuviste alguna dificultad, comunícate con el profe Oscar.</span>
                         </div>`;
-                    accionClick = `onclick="alert('Esta actividad está cerrada. Comunícate con el profesor Oscar si necesitas que te la habilite nuevamente para recuperar tu nota.')"`;
+                    accionClick = `onclick="alert('Esta actividad está cerrada. Comunícate con el profesor Oscar si necesitas que te la habilite nuevamente.')"`;
                 }
 
                 divHistorial.innerHTML += `
