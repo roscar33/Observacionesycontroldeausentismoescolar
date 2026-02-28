@@ -534,6 +534,10 @@
             const yaRespondio = !!miRespuesta;
             
             const ahora = new Date();
+
+            // LÓGICA DE PROGRAMACIÓN DE FECHA
+            if (t.fechaPublicacion && new Date(t.fechaPublicacion) > ahora) return;
+
             const vencimiento = t.fechaVencimiento ? new Date(t.fechaVencimiento) : null;
             const estaVencido = vencimiento && ahora > vencimiento && !yaRespondio;
 
