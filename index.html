@@ -332,7 +332,7 @@
   function formatDateFriendly(dateStr) { if(!dateStr) return ''; const parts = dateStr.split('-'); if(parts.length !== 3) return dateStr; const date = new Date(parts[0], parts[1] - 1, parts[2]); return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
   function consultarPorWhatsApp(titulo, area) { const telefonoDocente = "573012901456"; const nombreEstudiante = estSop ? estSop.nombre : "el estudiante"; const grado = gradoEstudianteActual; const mensaje = `Hola profe 👋. Soy *${nombreEstudiante}* del grado *${grado}*.\n\nTengo una inquietud sobre la actividad de *${area}*: "${titulo}". \n\nQuedo atento, muchas gracias.`; const url = `https://wa.me/${telefonoDocente}?text=${encodeURIComponent(mensaje)}`; window.open(url, '_blank'); }
 
-  // Función exclusiva para la Agenda Tradicional (Sin rojo ni rosado)
+  // Función exclusiva para la Agenda Tradicional
   function getAreaStyle(a) { 
       const area = (a || '').toUpperCase(); 
       if(area.includes('MATEMATICAS')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; 
@@ -347,15 +347,14 @@
       return { border: '#475569', badge: '#475569', text: '#ffffff', bg: '#f8fafc' }; 
   }
 
-  // NUEVA: Función de colores por TIPO de Actividad para Talleres
   function getActivityStyle(tipo) {
       const t = (tipo || '').toUpperCase();
-      if(t.includes('AMBIENTACIÓN') || t.includes('AMBIENTACION')) return { border: '#0d9488', badge: '#0d9488', text: '#ffffff', bg: '#f0fdf4' }; // Menta/Cian
-      if(t.includes('REPASO') || t.includes('REFUERZO')) return { border: '#ca8a04', badge: '#ca8a04', text: '#ffffff', bg: '#fefce8' }; // Mostaza
-      if(t.includes('LECTORA')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; // Azul celeste
-      if(t.includes('EVALUATIVO')) return { border: '#7c3aed', badge: '#7c3aed', text: '#ffffff', bg: '#f5f3ff' }; // Morado
-      if(t.includes('RECUPERACIÓN') || t.includes('RECUPERACION')) return { border: '#ea580c', badge: '#ea580c', text: '#ffffff', bg: '#fff7ed' }; // Naranja
-      return { border: '#475569', badge: '#475569', text: '#ffffff', bg: '#f8fafc' }; // Gris default
+      if(t.includes('AMBIENTACIÓN') || t.includes('AMBIENTACION')) return { border: '#0d9488', badge: '#0d9488', text: '#ffffff', bg: '#f0fdf4' }; 
+      if(t.includes('REPASO') || t.includes('REFUERZO')) return { border: '#ca8a04', badge: '#ca8a04', text: '#ffffff', bg: '#fefce8' }; 
+      if(t.includes('LECTORA')) return { border: '#0284c7', badge: '#0284c7', text: '#ffffff', bg: '#f0f9ff' }; 
+      if(t.includes('EVALUATIVO')) return { border: '#7c3aed', badge: '#7c3aed', text: '#ffffff', bg: '#f5f3ff' }; 
+      if(t.includes('RECUPERACIÓN') || t.includes('RECUPERACION')) return { border: '#ea580c', badge: '#ea580c', text: '#ffffff', bg: '#fff7ed' }; 
+      return { border: '#475569', badge: '#475569', text: '#ffffff', bg: '#f8fafc' }; 
   }
 
   function cargarTableroAvisos() {
@@ -556,7 +555,7 @@
         } else {
             actividadesPendientes.forEach(item => {
                 const t = item.data;
-                const colors = getActivityStyle(t.tipoActividad); // <-- AHORA USA EL TIPO DE ACTIVIDAD
+                const colors = getActivityStyle(t.tipoActividad); 
                 
                 let isoDate = item.vencimiento ? item.vencimiento.toISOString() : '';
                 let fVencStr = item.vencimiento ? item.vencimiento.toLocaleString('es-CO', { weekday: 'long', day:'numeric', month:'short', hour:'numeric', minute:'2-digit'}) : '';
@@ -596,7 +595,7 @@
                         let colorNota = r.nota >= 3.0 ? '#2e7d32' : '#d32f2f';
                         textoNota = `<div style="color:${colorNota}; font-size:14px; font-weight:900; margin-top:4px;">Nota Final: ${r.nota.toFixed(1)}</div>`;
                     }
-                    // FECHA AÑADIDA AQUÍ
+                    
                     let fechaPresentado = r.fecha ? `<div style="font-size:10px; font-weight:800; color:#64748b; margin-top:6px; background:#f1f5f9; padding:4px 8px; border-radius:6px; display:inline-block;">🗓️ Realizado: ${r.fecha}</div>` : "";
                     
                     estadoHtml = `<div style="font-size:10px; font-weight:900; color:#2e7d32; display:flex; align-items:center; gap:5px;">✅ COMPLETADO</div>${textoNota}${fechaPresentado}`;
@@ -708,6 +707,21 @@
         html += `<input type="text" id="resp-ahorcado-${index}" placeholder="Escribe la palabra oculta..." style="width:100%; padding:14px; border-radius:12px; border:1.5px solid #cbd5e1; font-size:14px; text-align:center; text-transform:uppercase; font-weight:bold; outline:none; letter-spacing:2px;">`;
         html += `<div id="feedback-ahorcado-${index}" style="font-size:12px; font-weight:900; margin-bottom:8px; text-align:center;"></div>`;
         html += `<button type="button" id="btn-ahorcado-${index}" onclick="verificarAhorcado(${index}, '${p.palabraOculta.replace(/'/g, "\\'")}')" class="btn blue" style="padding:10px; font-size:11px; margin-top:0;">COMPROBAR RESPUESTA (2 Intentos)</button>`;
+      } else if(p.tipo === 'pareados') {
+        let derList = p.pares.map(par => par.der);
+        derList.sort(() => Math.random() - 0.5); 
+        let optionsHtml = `<option value="">Selecciona...</option>` + derList.map(der => `<option value="${der.replace(/"/g, '&quot;')}">${der}</option>`).join('');
+        
+        html += `<div style="font-size:12px; color:#475569; margin-bottom:12px; font-weight:bold;">Selecciona la pareja correcta para cada elemento:</div>`;
+        p.pares.forEach((par, idxPar) => {
+            html += `
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <div style="flex:1; background:#e2e8f0; padding:10px; border-radius:10px; font-size:13px; font-weight:700; color:#1e293b;">${par.izq}</div>
+                <select id="resp-pareado-${index}-${idxPar}" style="flex:1; padding:10px; border-radius:10px; border:1.5px solid #cbd5e1; font-size:12px; outline:none; background:#fff; min-width:0; text-overflow:ellipsis;">
+                    ${optionsHtml}
+                </select>
+            </div>`;
+        });
       } else {
         html += `<textarea id="resp-abierta-${index}" placeholder="Escribe aquí tu respuesta de forma clara y con buena ortografía..." rows="4"></textarea>`;
       }
@@ -803,6 +817,7 @@
         totalC++; 
         const sel = document.querySelector(`input[name="p${i}"]:checked`);
         if(!sel) respondidas = false; else { r = sel.value; ok = (r === p.correcta); if(ok) aciertos++; }
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
       } else if(p.tipo === 'completacion') {
         totalC++;
         const inputs = document.querySelectorAll(`.inline-comp-${i}`);
@@ -820,6 +835,7 @@
             for(let j = 0; j < resProfe.length; j++) { if(resProfe[j] !== resEst[j]) { ok = false; break; } }
             if(ok) aciertos++;
         }
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
       } else if(p.tipo === 'ahorcado') {
         totalC++;
         r = document.getElementById(`resp-ahorcado-${i}`).value.trim(); 
@@ -830,11 +846,28 @@
             ok = (normalize(r) === normalize(p.palabraOculta)); 
             if(ok) aciertos++; 
         }
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
+      } else if(p.tipo === 'pareados') {
+        let aciertosPareado = 0;
+        let resHtml = [];
+        p.pares.forEach((par, idxPar) => {
+            totalC++; 
+            const selectVal = document.getElementById(`resp-pareado-${i}-${idxPar}`).value.trim();
+            if(selectVal === "") respondidas = false;
+            else {
+                let isCorr = (selectVal === par.der);
+                if (isCorr) { aciertos++; aciertosPareado++; }
+                resHtml.push(`<b>${par.izq}</b>: ${selectVal} ${isCorr?'✅':'❌'}`);
+            }
+        });
+        ok = (aciertosPareado === p.pares.length);
+        r = resHtml.join(" | ");
+        resps.push({ pregunta: p.pregunta, tipo: 'pareado_item', respuestaDada: r, esCorrecta: ok });
       } else {
         totalAbiertas++;
         r = document.getElementById(`resp-abierta-${i}`).value.trim(); if(!r) respondidas = false;
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
       }
-      resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
     });
 
     if(!respondidas) return alert("Por favor, responde todas las preguntas antes de enviar.");
