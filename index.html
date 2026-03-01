@@ -48,7 +48,7 @@
   /* ELEMENTOS UI */
   input, textarea, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #ddd; font-size: 16px; background: #f9f9f9; outline: none; }
   .btn { width: 100%; padding: 15px; background: #1b5e20; color: #fff; font-weight: 800; border: none; border-radius: 14px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 0 #145018; margin-top: 5px; }
-  .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; } .btn.sec { background: #546e7a; box-shadow: 0 4px 0 #37474f; }
+  .btn.blue { background: #0277bd; box-shadow: 0 4px 0 #01579b; } .btn.sec { background: #f1f5f9; color:#475569; box-shadow: 0 4px 0 #cbd5e1; }
   .sig-wrap { margin-top: 15px; padding: 10px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #b0bec5; }
   canvas { width: 100%; height: 180px; border-radius: 8px; background: #fff; touch-action: none; display: block; }
   .pizarra-header-ui { background: #6d4c41; color: white; padding: 15px; border-radius: 14px 14px 0 0; text-align: center; font-weight: 900; font-size: 18px; margin: -20px -16px 15px; }
@@ -180,14 +180,14 @@
     { doc: "12345678", nombre: "PEDRO PEREZ", grado: "Quinto" }
   ];
 
-  // CATÁLOGO DE ESCARAPELAS AMPLIADO
+  // CATÁLOGO DE ESCARAPELAS (SOLO PARA TALLERES INTERACTIVOS)
   const catalogoLogros = {
       "primer_paso": { icono: "🚀", titulo: "Explorador", desc: "Completaste tu primera actividad en la plataforma.", color: "#3b82f6" },
-      "matematicas_5": { icono: "🧠", titulo: "Cerebro Matemático", desc: "Obtuviste un 5.0 perfecto en Matemáticas.", color: "#0284c7" },
-      "espanol_5": { icono: "📖", titulo: "Lector Imparable", desc: "Obtuviste un 5.0 perfecto en Español.", color: "#0891b2" },
-      "naturales_5": { icono: "🔬", titulo: "Científico Loco", desc: "Obtuviste un 5.0 perfecto en Naturales.", color: "#059669" },
-      "sociales_5": { icono: "🌍", titulo: "Viajero del Tiempo", desc: "Obtuviste un 5.0 perfecto en Sociales.", color: "#d97706" },
-      "ingles_5": { icono: "🗽", titulo: "Bilingüe", desc: "Obtuviste un 5.0 perfecto en Inglés.", color: "#7c3aed" },
+      "matematicas_5": { icono: "🧠", titulo: "Cerebro Matemático", desc: "Obtuviste un 5.0 perfecto en taller de Matemáticas.", color: "#0284c7" },
+      "espanol_5": { icono: "📖", titulo: "Lector Imparable", desc: "Obtuviste un 5.0 perfecto en taller de Español.", color: "#0891b2" },
+      "naturales_5": { icono: "🔬", titulo: "Científico Loco", desc: "Obtuviste un 5.0 perfecto en taller de Naturales.", color: "#059669" },
+      "sociales_5": { icono: "🌍", titulo: "Viajero del Tiempo", desc: "Obtuviste un 5.0 perfecto en taller de Sociales.", color: "#d97706" },
+      "ingles_5": { icono: "🗽", titulo: "Bilingüe", desc: "Obtuviste un 5.0 perfecto en taller de Inglés.", color: "#7c3aed" },
       "perfecto_gral": { icono: "⭐", titulo: "Estrella Perfecta", desc: "Obtuviste un 5.0 perfecto en una actividad.", color: "#ca8a04" },
       "rapido": { icono: "⚡", titulo: "El Relámpago", desc: "Entregaste el taller el mismo día de la publicación.", color: "#ea580c" }
   };
@@ -218,15 +218,21 @@
   </div>
 
   <div id="main-dashboard">
-    <div id="user-level-container" style="grid-column: span 2; background: linear-gradient(135deg, #1b5e20, #0d9488); border-radius: 20px; padding: 15px; color: white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); cursor:pointer; transition:transform 0.2s;" onclick="document.getElementById('modal-historial-xp').style.display='flex'; cargarHistorialXP();">
-       <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">
-           <span id="user-rank">🌱 NOVATO (Nvl 1)</span>
-           <span id="user-xp" style="color:#fef08a;">0 / 1000 XP</span>
+    
+    <div id="user-level-container" style="grid-column: span 2; background: #fff; border-radius: 20px; padding: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); cursor:pointer; transition:transform 0.2s, background 0.5s ease;" onclick="document.getElementById('modal-historial-xp').style.display='flex'; cargarHistorialXP();">
+       <div style="display:flex; align-items:center; gap: 15px;">
+          <div id="level-icon" style="font-size: 40px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));">🌱</div>
+          <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">
+                   <span id="user-rank" style="color:white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Novato (Nvl 1)</span>
+                   <span id="user-xp" style="color:rgba(255,255,255,0.9); font-weight:bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">0 / 1000 XP</span>
+              </div>
+              <div style="background:rgba(0,0,0,0.25); height:14px; border-radius:7px; overflow:hidden; border: 1px solid rgba(255,255,255,0.3);">
+                   <div id="user-xp-bar" style="background:#ffffff; width:0%; height:100%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(255,255,255,0.8);"></div>
+              </div>
+          </div>
        </div>
-       <div style="background:rgba(0,0,0,0.3); height:12px; border-radius:6px; overflow:hidden; border: 1px solid rgba(255,255,255,0.2);">
-           <div id="user-xp-bar" style="background:#fef08a; width:0%; height:100%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(254, 240, 138, 0.5);"></div>
-       </div>
-       <div style="text-align:center; font-size:8px; margin-top:6px; opacity:0.7;">👉 Toca para ver historial de XP</div>
+       <div style="text-align:center; font-size:9px; margin-top:12px; color:rgba(255,255,255,0.8); font-weight:bold; letter-spacing:0.5px;">👉 TOCA PARA VER EL HISTORIAL DE PUNTOS 👈</div>
     </div>
     
     <button class="card-btn" onclick="navegarA('exc')"><div class="icon-circle blue-bg">📋</div><span class="card-label">Asistencia</span><span class="card-info">Fallas y Excusas</span></button>
@@ -236,10 +242,10 @@
     
     <button class="card-btn" onclick="navegarA('int')"><div class="icon-circle teal-bg">🎮</div><span class="card-label">Escuela Interactiva</span><span class="card-info">Juegos y Práctica</span></button>
 
-    <button class="card-btn full" style="border:2px solid #fef08a; background:#fefce8;" onclick="navegarA('logros')">
-        <div class="icon-circle" style="background:#fef08a; font-size:35px; box-shadow:0 4px 10px rgba(202,138,4,0.2);">🏅</div>
-        <span class="card-label" style="color:#ca8a04;">MIS ESCARAPELAS</span>
-        <span class="card-info" style="color:#d97706;">Vitrina de logros y nivel</span>
+    <button class="card-btn full" style="border:2px solid #facc15; background:#fefce8;" onclick="navegarA('logros')">
+        <div class="icon-circle" style="background:#facc15; font-size:35px; box-shadow:0 4px 10px rgba(250,204,21,0.3);">🏅</div>
+        <span class="card-label" style="color:#a16207;">ESCARAPELAS Y MEDALLAS</span>
+        <span class="card-info" style="color:#ca8a04;">Vitrina de logros y recompensas de clase</span>
     </button>
 
     <div class="tablero-container">
@@ -255,17 +261,24 @@
   <div id="view-logros" class="container">
       <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button>
       <div style="text-align:center; font-weight:900; margin-bottom:5px; color:#1b5e20; font-size:18px;">VITRINA DE LOGROS</div>
-      <p style="text-align:center; font-size:12px; color:#64748b; margin-bottom:20px;">Sube de nivel y desbloquea escarapelas completando actividades con excelencia.</p>
-      <div id="grid-logros" style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"></div>
+      <p style="text-align:center; font-size:12px; color:#64748b; margin-bottom:20px;">Colecciona escarapelas en la app y medallas por tu excelencia en clase.</p>
+      
+      <div style="display:flex; gap:10px; margin-bottom:20px; background:#f1f5f9; padding:5px; border-radius:14px;">
+          <button id="btn-tab-escarapelas" class="btn" style="margin:0; font-size:11px; padding:10px; flex:1;" onclick="switchLogrosTab('escarapelas')">📱 Escarapelas (App)</button>
+          <button id="btn-tab-medallas" class="btn sec" style="margin:0; font-size:11px; padding:10px; font-weight:800; flex:1;" onclick="switchLogrosTab('medallas')">🏫 Medallas (Clase)</button>
+      </div>
+
+      <div id="grid-escarapelas" style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"></div>
+      <div id="grid-medallas" style="display:none; grid-template-columns:1fr 1fr; gap:15px;"></div>
   </div>
 
   <div id="modal-historial-xp" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px);">
       <div style="background:white; width:100%; max-width:350px; border-radius:24px; overflow:hidden; display:flex; flex-direction:column; max-height:80vh;">
-          <div style="background:#1b5e20; color:white; padding:15px; font-weight:900; text-align:center; display:flex; justify-content:space-between; align-items:center;">
-              <span>📊 HISTORIAL DE PUNTOS XP</span>
-              <button onclick="document.getElementById('modal-historial-xp').style.display='none'" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">✕</button>
+          <div style="background:#1b5e20; color:white; padding:20px 15px; font-weight:900; text-align:center; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:14px;">📊 HISTORIAL DE PUNTOS</span>
+              <button onclick="document.getElementById('modal-historial-xp').style.display='none'" style="background:rgba(255,255,255,0.2); border:none; color:white; width:30px; height:30px; border-radius:50%; font-size:14px; cursor:pointer;">✕</button>
           </div>
-          <div id="lista-historial-xp" style="padding:15px; overflow-y:auto; flex:1;">
+          <div id="lista-historial-xp" style="padding:15px; overflow-y:auto; flex:1; background:#f8fafc;">
               </div>
       </div>
   </div>
@@ -345,7 +358,7 @@
       <div class="note-pin"></div>
       <div id="zoom-multimedia"></div>
       <div id="zoom-text"></div>
-      <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto;" onclick="cerrarNotaGrande()">CERRAR</button>
+      <button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto; border:1px solid #cbd5e1;" onclick="cerrarNotaGrande()">CERRAR</button>
     </div>
   </div>
 
@@ -382,20 +395,20 @@
     });
   }
 
-  // --- LÓGICA DE ESCALA DE NIVELES PROGRESIVA ---
+  // --- LÓGICA DE ESCALA DE NIVELES PROGRESIVA CON COLORES E ICONOS ---
   function getNivelData(xp) {
       if (xp < 0) xp = 0;
       const scale = [
-          { lvl: 1,  min: 0,     max: 999,   rango: "🌱 Novato" },
-          { lvl: 2,  min: 1000,  max: 1999,  rango: "🌱 Novato" },
-          { lvl: 3,  min: 2000,  max: 3199,  rango: "🧭 Explorador" },
-          { lvl: 4,  min: 3200,  max: 4499,  rango: "🧭 Explorador" },
-          { lvl: 5,  min: 4500,  max: 5899,  rango: "⚔️ Aventurero" },
-          { lvl: 6,  min: 5900,  max: 7399,  rango: "⚔️ Aventurero" },
-          { lvl: 7,  min: 7400,  max: 8999,  rango: "🦉 Sabio" },
-          { lvl: 8,  min: 9000,  max: 10799, rango: "🦉 Sabio" },
-          { lvl: 9,  min: 10800, max: 12799, rango: "👑 Maestro" },
-          { lvl: 10, min: 12800, max: Infinity, rango: "👑 Maestro Santa Juana" }
+          { lvl: 1,  min: 0,     max: 999,   rango: "Novato", icono: "🌱", color: "#16a34a", gradient: "linear-gradient(135deg, #22c55e, #16a34a)" },
+          { lvl: 2,  min: 1000,  max: 1999,  rango: "Novato II", icono: "🌿", color: "#059669", gradient: "linear-gradient(135deg, #10b981, #059669)" },
+          { lvl: 3,  min: 2000,  max: 3199,  rango: "Explorador", icono: "🧭", color: "#0284c7", gradient: "linear-gradient(135deg, #0ea5e9, #0284c7)" },
+          { lvl: 4,  min: 3200,  max: 4499,  rango: "Explorador II", icono: "🗺️", color: "#2563eb", gradient: "linear-gradient(135deg, #3b82f6, #2563eb)" },
+          { lvl: 5,  min: 4500,  max: 5899,  rango: "Aventurero", icono: "⚔️", color: "#ea580c", gradient: "linear-gradient(135deg, #f97316, #ea580c)" },
+          { lvl: 6,  min: 5900,  max: 7399,  rango: "Aventurero II", icono: "🛡️", color: "#dc2626", gradient: "linear-gradient(135deg, #ef4444, #dc2626)" },
+          { lvl: 7,  min: 7400,  max: 8999,  rango: "Sabio", icono: "🦉", color: "#9333ea", gradient: "linear-gradient(135deg, #a855f7, #9333ea)" },
+          { lvl: 8,  min: 9000,  max: 10799, rango: "Sabio II", icono: "📜", color: "#c026d3", gradient: "linear-gradient(135deg, #d946ef, #c026d3)" },
+          { lvl: 9,  min: 10800, max: 12799, rango: "Maestro", icono: "👑", color: "#ca8a04", gradient: "linear-gradient(135deg, #eab308, #ca8a04)" },
+          { lvl: 10, min: 12800, max: Infinity, rango: "Leyenda Santa Juana", icono: "🏆", color: "#b45309", gradient: "linear-gradient(135deg, #f59e0b, #b45309)" }
       ];
       let data = scale[0];
       for (let i = 0; i < scale.length; i++) {
@@ -412,23 +425,33 @@
 
   function actualizarUIXP(xp) {
       const nd = getNivelData(xp);
+      const container = document.getElementById("user-level-container");
       const elRank = document.getElementById("user-rank");
       const elXp = document.getElementById("user-xp");
       const elBar = document.getElementById("user-xp-bar");
+      const elIcon = document.getElementById("level-icon");
       
-      if(elRank) elRank.innerText = `${nd.rango} (Nvl ${nd.lvl})`;
+      if(container) {
+          container.style.background = nd.gradient;
+      }
+      if(elRank) {
+          elRank.innerText = `${nd.rango} (Nvl ${nd.lvl})`;
+      }
       if(elXp) elXp.innerText = nd.max === Infinity ? `Nivel Máximo` : `${nd.xpInLevel} / ${nd.xpRequired} XP`;
-      if(elBar) elBar.style.width = `${nd.percent}%`;
+      if(elBar) {
+          elBar.style.width = `${nd.percent}%`;
+      }
+      if(elIcon) elIcon.innerText = nd.icono;
   }
 
-  // --- REPARACIÓN DE ERROR ROJO: ORDENAMIENTO DE HISTORIAL EN JAVASCRIPT ---
+  // --- ORDENAMIENTO DE HISTORIAL EN JAVASCRIPT ---
   function cargarHistorialXP() {
       const container = document.getElementById("lista-historial-xp");
-      container.innerHTML = "<p style='text-align:center; font-size:12px;'>Cargando historial...</p>";
+      container.innerHTML = "<p style='text-align:center; font-size:12px; margin-top:20px; color:#64748b;'>Cargando historial...</p>";
       db.collection("historialXP").where("documentoEstudiante", "==", estActualDoc).get().then(snap => {
           let records = [];
           if(snap.empty) { 
-              container.innerHTML = "<p style='text-align:center; font-size:12px;'>No hay registros aún.</p>"; 
+              container.innerHTML = "<p style='text-align:center; font-size:12px; margin-top:20px; color:#64748b;'>No hay registros de XP aún.</p>"; 
               return;
           }
           snap.forEach(doc => records.push({id: doc.id, ...doc.data()}));
@@ -436,8 +459,8 @@
           // Ordenar matemáticamente en la app (del más reciente al más antiguo)
           records.sort((a, b) => b.timestamp - a.timestamp);
           
-          // Limitar a los últimos 30 en la vista
-          records = records.slice(0, 30);
+          // Limitar a los últimos 40 en la vista
+          records = records.slice(0, 40);
 
           let html = "";
           records.forEach(d => {
@@ -445,25 +468,48 @@
               const sign = isPos ? '+' : '';
               const color = isPos ? '#16a34a' : '#dc2626';
               const bg = isPos ? '#f0fdf4' : '#fef2f2';
+              const border = isPos ? '#bbf7d0' : '#fecaca';
               const dateStr = new Date(d.timestamp).toLocaleString('es-CO', {day:'numeric', month:'short', hour:'numeric', minute:'2-digit'});
-              html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:12px; margin-bottom:8px; background:${bg}; border:1px solid ${color}30;">
-                         <div style="flex:1;">
-                           <div style="font-weight:900; font-size:11px; color:#1e293b;">${d.motivo}</div>
-                           <div style="font-size:9px; font-weight:700; color:#64748b; margin-top:2px;">🕒 ${dateStr}</div>
+              html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:12px; margin-bottom:8px; background:${bg}; border:1px solid ${border};">
+                         <div style="flex:1; padding-right:10px;">
+                           <div style="font-weight:900; font-size:11px; color:#1e293b; line-height:1.2;">${d.motivo}</div>
+                           <div style="font-size:9px; font-weight:700; color:#64748b; margin-top:4px;">🕒 ${dateStr}</div>
                          </div>
-                         <div style="font-weight:900; font-size:16px; color:${color};">${sign}${d.cantidad}</div>
+                         <div style="font-weight:900; font-size:16px; color:${color}; background:white; padding:5px 10px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${sign}${d.cantidad}</div>
                        </div>`;
           });
           container.innerHTML = html;
       }).catch(e => {
-          container.innerHTML = "<p style='text-align:center; font-size:12px; color:red;'>Error de conexión. Intenta de nuevo.</p>";
+          container.innerHTML = "<p style='text-align:center; font-size:12px; color:red; margin-top:20px;'>Error de conexión. Intenta de nuevo.</p>";
       });
   }
 
-  // Permite al estudiante/papá eliminar su propio aviso de XP
+  // Permite al estudiante eliminar su propio aviso de XP
   window.eliminarAvisoXP = function(id, event) {
       event.stopPropagation();
       db.collection("tableroAvisos").doc(id).delete();
+  }
+
+  // --- LOGICA DE TABS DE LOGROS Y MEDALLAS ---
+  function switchLogrosTab(tab) {
+      if(tab === 'escarapelas') {
+          document.getElementById('grid-escarapelas').style.display = 'grid';
+          document.getElementById('grid-medallas').style.display = 'none';
+          document.getElementById('btn-tab-escarapelas').className = 'btn';
+          document.getElementById('btn-tab-escarapelas').style.background = '#1b5e20';
+          document.getElementById('btn-tab-escarapelas').style.color = '#fff';
+          document.getElementById('btn-tab-medallas').className = 'btn sec';
+          document.getElementById('btn-tab-medallas').style.background = 'transparent';
+      } else {
+          document.getElementById('grid-escarapelas').style.display = 'none';
+          document.getElementById('grid-medallas').style.display = 'grid';
+          document.getElementById('btn-tab-escarapelas').className = 'btn sec';
+          document.getElementById('btn-tab-escarapelas').style.background = 'transparent';
+          document.getElementById('btn-tab-escarapelas').style.color = '#475569';
+          document.getElementById('btn-tab-medallas').className = 'btn';
+          document.getElementById('btn-tab-medallas').style.background = '#0284c7';
+          document.getElementById('btn-tab-medallas').style.color = '#fff';
+      }
   }
 
   function navegarA(seccion) { 
@@ -473,7 +519,7 @@
       if(seccion === 'exc') activarFormularioExcusa(); 
       if(seccion === 'obs') buscarObservaciones(); 
       if(seccion === 'piz') iniciarCargaAlerta(); 
-      if(seccion === 'logros') cargarLogros(); 
+      if(seccion === 'logros') { cargarLogros(); switchLogrosTab('escarapelas'); }
   }
   
   function volverAlMenu() { document.querySelectorAll('.container').forEach(c => c.style.display = "none"); document.getElementById("main-dashboard").style.display = "grid"; }
@@ -506,30 +552,72 @@
   }
 
   async function cargarLogros() {
-      const div = document.getElementById("grid-logros");
-      div.innerHTML = "<p style='grid-column: span 2; text-align:center;'>Cargando vitrina...</p>";
+      const divEsc = document.getElementById("grid-escarapelas");
+      const divMed = document.getElementById("grid-medallas");
+      divEsc.innerHTML = "<p style='grid-column: span 2; text-align:center;'>Cargando vitrina...</p>";
+      divMed.innerHTML = "";
+      
       const snap = await db.collection("logrosEstudiantes").doc(estActualDoc).get();
       let misLogros = snap.exists ? (snap.data().logros || []) : [];
+      let rawData = snap.exists ? snap.data() : {};
+      let misMedallas = rawData.medallas || {};
       
-      let html = "";
+      // 1. CARGAR ESCARAPELAS
+      let htmlEsc = "";
       for (const key in catalogoLogros) {
           const logro = catalogoLogros[key];
           const desbloqueado = misLogros.includes(key);
           if (desbloqueado) {
-              html += `<div style="background:${logro.color}15; border:2px solid ${logro.color}; border-radius:16px; padding:15px; text-align:center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transform: scale(1); transition: transform 0.2s;">
+              htmlEsc += `<div style="background:${logro.color}15; border:2px solid ${logro.color}; border-radius:16px; padding:15px; text-align:center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transform: scale(1); transition: transform 0.2s;">
                   <div style="font-size:40px; margin-bottom:10px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));">${logro.icono}</div>
                   <div style="font-size:12px; font-weight:900; color:${logro.color}; text-transform:uppercase;">${logro.titulo}</div>
                   <div style="font-size:9px; font-weight:700; color:#475569; margin-top:5px;">${logro.desc}</div>
               </div>`;
           } else {
-              html += `<div style="background:#f1f5f9; border:2px dashed #cbd5e1; border-radius:16px; padding:15px; text-align:center; opacity:0.6;">
+              htmlEsc += `<div style="background:#f1f5f9; border:2px dashed #cbd5e1; border-radius:16px; padding:15px; text-align:center; opacity:0.6;">
                   <div style="font-size:40px; margin-bottom:10px; filter: grayscale(100%) opacity(0.3);">🔒</div>
                   <div style="font-size:12px; font-weight:900; color:#64748b; text-transform:uppercase;">BLOQUEADO</div>
                   <div style="font-size:9px; font-weight:700; color:#94a3b8; margin-top:5px;">${logro.desc}</div>
               </div>`;
           }
       }
-      div.innerHTML = html;
+      divEsc.innerHTML = htmlEsc;
+
+      // 2. CARGAR MEDALLAS CON ESTRELLITAS ⭐
+      const areasMedallas = [
+          { id: 'MATEMATICAS', icon: '🧠', color: '#0284c7', nombre: 'Matemáticas' },
+          { id: 'ESPAÑOL (LENGUAJE)', icon: '📖', color: '#0891b2', nombre: 'Español' },
+          { id: 'CIENCIAS NATURALES', icon: '🔬', color: '#059669', nombre: 'Naturales' },
+          { id: 'CIENCIAS SOCIALES', icon: '🌍', color: '#d97706', nombre: 'Sociales' },
+          { id: 'INGLES', icon: '🗽', color: '#7c3aed', nombre: 'Inglés' },
+          { id: 'ARTISTICA', icon: '🎨', color: '#ca8a04', nombre: 'Artística' },
+          { id: 'EDUCACION FISICA', icon: '⚽', color: '#65a30d', nombre: 'Ed. Física' },
+          { id: 'ETICA Y VALORES', icon: '🕊️', color: '#0d9488', nombre: 'Ética' },
+          { id: 'RELIGION', icon: '🕯️', color: '#4f46e5', nombre: 'Religión' },
+          { id: 'TECNOLOGIA E INFORMATICA', icon: '💻', color: '#475569', nombre: 'Tecnología' }
+      ];
+
+      let htmlMed = "";
+      areasMedallas.forEach(area => {
+          let cantidad = misMedallas[area.id] || rawData[`medallas.${area.id}`] || 0;
+          if (cantidad > 0) {
+              let starsHtml = "⭐".repeat(cantidad); 
+              
+              htmlMed += `<div style="background:${area.color}15; border:2px solid ${area.color}; border-radius:16px; padding:15px; text-align:center; position:relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                  <div style="position:absolute; top:-10px; right:-10px; background:#fff; border:1.5px solid #cbd5e1; padding:3px 6px; border-radius:12px; font-size:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1); letter-spacing:1px; white-space:nowrap;">${starsHtml}</div>
+                  <div style="font-size:40px; margin-bottom:10px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));">${area.icon}</div>
+                  <div style="font-size:11px; font-weight:900; color:${area.color}; text-transform:uppercase;">${area.nombre}</div>
+                  <div style="font-size:9px; font-weight:700; color:#475569; margin-top:5px;">5.0 en Trabajo de Clase</div>
+              </div>`;
+          } else {
+              htmlMed += `<div style="background:#f1f5f9; border:2px dashed #cbd5e1; border-radius:16px; padding:15px; text-align:center; opacity:0.6;">
+                  <div style="font-size:40px; margin-bottom:10px; filter: grayscale(100%) opacity(0.3);">🔒</div>
+                  <div style="font-size:11px; font-weight:900; color:#64748b; text-transform:uppercase;">${area.nombre}</div>
+                  <div style="font-size:9px; font-weight:700; color:#94a3b8; margin-top:5px;">Requiere 5.0 en Clase</div>
+              </div>`;
+          }
+      });
+      divMed.innerHTML = htmlMed;
   }
 
   async function verificarYOtorgarLogros(candidatos, xpSuma, tituloTaller) {
@@ -645,7 +733,7 @@
        const work = workMatch ? workMatch[1] : 'Actividad';
        let date = dateMatch ? dateMatch[1] : '';
        if(date.includes('-') && date.length === 10) date = formatDateFriendly(date);
-       content.innerHTML = `<div class="metal-clip" style="top: -15px;"></div><div class="parchment-paper white-style" style="min-height: 350px; justify-content: center;"><div class="parchment-header"><div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body" style="font-size: 16px;"><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Actividad</span><span class="parchment-val" style="font-size: 18px;">${work}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Área</span><span class="parchment-val" style="font-size: 18px;">${area}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span><span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span></div></div><div class="parchment-footer" style="font-size: 12px; margin-top: 20px;">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%;" onclick="cerrarNotaGrande()">CERRAR</button></div>`;
+       content.innerHTML = `<div class="metal-clip" style="top: -15px;"></div><div class="parchment-paper white-style" style="min-height: 350px; justify-content: center;"><div class="parchment-header"><div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body" style="font-size: 16px;"><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Actividad</span><span class="parchment-val" style="font-size: 18px;">${work}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Área</span><span class="parchment-val" style="font-size: 18px;">${area}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span><span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span></div></div><div class="parchment-footer" style="font-size: 12px; margin-top: 20px;">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%; border:1px solid #cbd5e1;" onclick="cerrarNotaGrande()">CERRAR</button></div>`;
     } else {
        let colorClass = "note-yellow";
        if (data.color === 'pink') colorClass = "note-pink"; else if (data.color === 'blue') colorClass = "note-blue"; else if (data.color === 'green') colorClass = "note-green"; else if (data.color === 'orange') colorClass = "note-orange"; else if (data.color === 'red') colorClass = "note-red"; else if (data.color === 'purple') colorClass = "note-purple"; else if (data.color === 'teal') colorClass = "note-teal"; else if (data.color === 'lime') colorClass = "note-lime"; else if (data.color === 'white') colorClass = "note-white"; else if (data.color === 'brown') colorClass = "note-brown";
@@ -653,7 +741,7 @@
        let multiHtml = '';
        if(data.imageUrl) { multiHtml += `<img src="${data.imageUrl}" class="zoom-photo" onclick="this.classList.toggle('zoom-active')"><a href="${data.imageUrl}" download="Imagen_Periodico.png" style="text-decoration:none;"><button class="btn blue" style="padding:10px; font-size:12px; margin-bottom:10px; width:100%;">⬇️ DESCARGAR IMAGEN</button></a>`; }
        if(data.videoUrl) { const vidId = getYouTubeId(data.videoUrl); if(vidId) multiHtml += `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`; }
-       content.innerHTML = `<div class="note-pin"></div><div id="zoom-multimedia">${multiHtml}</div><div id="zoom-text" style="white-space: pre-line;">${data.mensaje}</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto;" onclick="cerrarNotaGrande()">CERRAR</button>`;
+       content.innerHTML = `<div class="note-pin"></div><div id="zoom-multimedia">${multiHtml}</div><div id="zoom-text" style="white-space: pre-line;">${data.mensaje}</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:auto; border:1px solid #cbd5e1;" onclick="cerrarNotaGrande()">CERRAR</button>`;
     }
     modal.style.display = "flex";
   }
@@ -706,10 +794,6 @@
   function cerrarSuccessMsg() { document.getElementById("successMsg").style.display="none"; }
   function initPad(id){ const c=document.getElementById(id); if(!c) return; const ctx=c.getContext("2d"); const r=window.devicePixelRatio||1; c.width=c.offsetWidth*r; c.height=160*r; ctx.setTransform(r,0,0,r,0,0); ctx.lineWidth=2.5; ctx.lineCap="round"; let d=false; const gP=(e)=>{ const rect=c.getBoundingClientRect(); return { x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left, y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top }; }; c.addEventListener("mousedown",(e)=>{d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("mousemove",(e)=>{if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); window.addEventListener("mouseup",()=>d=false); c.addEventListener("touchstart",(e)=>{e.preventDefault(); d=true; ctx.beginPath(); const p=gP(e); ctx.moveTo(p.x,p.y);}); c.addEventListener("touchmove",(e)=>{e.preventDefault(); if(!d)return; const p=gP(e); ctx.lineTo(p.x,p.y); ctx.stroke(); pads.set(id,{hasData:true,c});}); c.addEventListener("touchend",()=>d=false); pads.set(id,{hasData:false,c}); }
   function limpiarPad(id) { const p=pads.get(id); if(p){ p.c.getContext("2d").clearRect(0,0,p.c.width,p.c.height); pads.set(id,{c:p.c,hasData:false}); } }
-
-  /* ==============================================================
-     INICIO LÓGICA DE COMPRENSIÓN LECTORA Y TALLERES CON MULTIMEDIA
-     ============================================================== */
 
   async function abrirSeccionLectura() {
     navegarA('lec-list');
@@ -1269,7 +1353,6 @@
       document.getElementById('successTaller').style.display = 'none';
       volverAlMenu();
 
-      // DISPARAR ALERTA DE LOGROS SI GANÓ ALGUNO
       if (logrosRecienGanados && logrosRecienGanados.length > 0) {
           let nombresLogros = logrosRecienGanados.map(n => `${catalogoLogros[n].icono} ${catalogoLogros[n].titulo}`).join("<br>");
           Swal.fire({
