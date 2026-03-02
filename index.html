@@ -692,39 +692,129 @@
       }
   }
 
-  async function verificarYOtorgarLogros(candidatos, xpSuma, tituloTaller) {
-      const docRef = db.collection("logrosEstudiantes").doc(estActualDoc);
-      const snap = await docRef.get();
-      let actuales = snap.exists ? (snap.data().logros || []) : [];
-      let xpActual = snap.exists ? (snap.data().xp || 0) : 0;
-      
-      let nuevos = candidatos.filter(c => !actuales.includes(c));
-      let xpTotalGana = xpSuma + (nuevos.length * 100);
-      let nuevoXP = xpActual + xpTotalGana;
+  async function evaluarTallerLectura() {
+    const btn = document.getElementById("btnFinalizarTaller");
+    let aciertos = 0, totalC = 0, totalAbiertas = 0, respondidas = true, resps = [];
+    
+    const normalize = str => (str||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.,;:"'¡!¿?]/g, "").trim();
 
-      xpRecienGanada = xpTotalGana; 
-      
-      if (nuevos.length > 0 || xpTotalGana > 0) {
-          const batch = db.batch();
-
-          if (snap.exists) {
-              batch.update(docRef, { logros: firebase.firestore.FieldValue.arrayUnion(...nuevos), xp: firebase.firestore.FieldValue.increment(xpTotalGana) });
-          } else {
-              batch.set(docRef, { logros: nuevos, xp: nuevoXP, documentoEstudiante: estActualDoc, nombreEstudiante: estSop.nombre });
-          }
-
-          if (xpSuma > 0) {
-              const h1 = db.collection("historialXP").doc();
-              batch.set(h1, { documentoEstudiante: estActualDoc, motivo: `Actividad: ${tituloTaller}`, cantidad: xpSuma, timestamp: Date.now() });
-          }
-          nuevos.forEach(c => {
-              const h2 = db.collection("historialXP").doc();
-              batch.set(h2, { documentoEstudiante: estActualDoc, motivo: `Escarapela: ${catalogoLogros[c].titulo}`, cantidad: 100, timestamp: Date.now() });
-          });
-
-          await batch.commit();
-          if(nuevos.length > 0) logrosRecienGanados = nuevos;
+    tallerEnCurso.preguntas.forEach((p, i) => {
+      let r = "", ok = false;
+      if(p.tipo === 'multiple' || p.tipo === 'verdadero_falso') {
+        totalC++; 
+        const sel = document.querySelector(`input[name="p${i}"]:checked`);
+        if(!sel) respondidas = false; else { r = sel.value; ok = (r === p.correcta); if(ok) aciertos++; }
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
+      } else if(p.tipo === 'completacion') {
+        totalC++;
+        const inputs = document.querySelectorAll(`.inline-comp-${i}`);
+        let resEstudianteArr = [];
+        let todasVacias = true;
+        inputs.forEach(inp => { resEstudianteArr.push(inp.value.trim()); if(inp.value.trim() !== "") todasVacias = false; });
+        r = resEstudianteArr.join(', ');
+        
+        if(todasVacias && intentosPreguntas[i] !== "FAILED") {
+            respondidas = false;
+        } else {
+            let resProfe = p.palabrasCorrectas.split(',').map(w => normalize(w));
+            let resEst = resEstudianteArr.map(w => normalize(w));
+            ok = true;
+            for(let j = 0; j < resProfe.length; j++) { if(resProfe[j] !== resEst[j]) { ok = false; break; } }
+            if(ok) aciertos++;
+        }
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
+      } else if(p.tipo === 'ahorcado') {
+        totalC++;
+        r = document.getElementById(`resp-ahorcado-${i}`).value.trim(); 
+        if(r === "" && intentosPreguntas[i] !== "FAILED") { respondidas = false; } else { ok = (normalize(r) === normalize(p.palabraOculta)); if(ok) aciertos++; }
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
+      } else if(p.tipo === 'pareados') {
+        let aciertosPareado = 0; let resHtml = [];
+        p.pares.forEach((par, idxPar) => {
+            totalC++; 
+            const selEl = document.getElementById(`resp-pareado-${i}-${idxPar}`);
+            const selectVal = selEl ? selEl.value.trim() : "";
+            if(selectVal === "") respondidas = false;
+            else { let isCorr = (selectVal === par.der); if (isCorr) { aciertos++; aciertosPareado++; } resHtml.push(`<b>${par.izq}</b>: ${selectVal} ${isCorr?'✅':'❌'}`); }
+        });
+        ok = (aciertosPareado === p.pares.length);
+        r = resHtml.join(" | ");
+        resps.push({ pregunta: p.pregunta, tipo: 'pareado_item', respuestaDada: r, esCorrecta: ok });
+      } else {
+        totalAbiertas++;
+        r = document.getElementById(`resp-abierta-${i}`).value.trim(); if(!r) respondidas = false;
+        resps.push({ pregunta: p.pregunta, tipo: p.tipo, respuestaDada: r, esCorrecta: ok });
       }
+    });
+
+    if(!respondidas) return alert("Por favor, responde todas las preguntas antes de enviar.");
+    
+    btn.disabled = true; btn.innerText = "ENVIANDO...";
+    let requiereRevision = totalAbiertas > 0;
+    let notaCalculada = totalC > 0 ? (aciertos/totalC)*5 : 0; 
+
+    try {
+      await db.collection("resultadosTalleres").add({ 
+          idTaller: tallerEnCurso.id, tituloTaller: tallerEnCurso.titulo, nombreEstudiante: estSop.nombre, documentoEstudiante: estActualDoc, grado: gradoEstudianteActual, 
+          nota: notaCalculada, aciertosCerrados: aciertos, totalCerradas: totalC, requiereRevision: requiereRevision, respuestas: resps, 
+          fecha: new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'short' }), timestamp: Date.now() 
+      });
+      localStorage.removeItem('progreso_' + estActualDoc + '_' + tallerEnCurso.id);
+
+      let msg = ""; let titulo = ""; let emoji = ""; let colorBg = "";
+
+      // 🔴 NUEVA LÓGICA: Si requiere revisión, NO damos XP todavía.
+      if(requiereRevision) {
+          emoji = "👍";
+          titulo = "¡Buen esfuerzo!";
+          msg = `Obtuviste ${aciertos} de ${totalC} correctas en las preguntas automáticas.\nTu nota parcial es: ${notaCalculada.toFixed(1)}\n\n⏳ Tu nota final y tus XP están pendientes de que el profe Oscar califique tu respuesta escrita.`;
+          colorBg = "rgba(106, 27, 154, 0.95)"; 
+          xpRecienGanada = 0;
+          logrosRecienGanados = [];
+      } else {
+          // 🟢 Si NO hay preguntas abiertas, calculamos y damos el XP inmediatamente.
+          let xpSuma = 50; 
+          if (notaCalculada >= 4.0) xpSuma += 20;
+
+          let logrosGanados = ["primer_paso"];
+          if (notaCalculada === 5) {
+              let ac = (tallerEnCurso.areaConocimiento || "").toUpperCase();
+              if (ac.includes("MATEMATICAS")) logrosGanados.push("matematicas_5");
+              else if (ac.includes("ESPAÑOL") || ac.includes("LENGUAJE")) logrosGanados.push("espanol_5");
+              else if (ac.includes("NATURALES")) logrosGanados.push("naturales_5");
+              else if (ac.includes("SOCIALES")) logrosGanados.push("sociales_5");
+              else if (ac.includes("INGLES")) logrosGanados.push("ingles_5");
+              else logrosGanados.push("perfecto_gral");
+          }
+          
+          const hoy = new Date().toLocaleDateString('es-CO');
+          const pubDate = tallerEnCurso.fechaPublicacion ? new Date(tallerEnCurso.fechaPublicacion).toLocaleDateString('es-CO') : null;
+          if(pubDate && hoy === pubDate) logrosGanados.push("rapido");
+
+          await verificarYOtorgarLogros(logrosGanados, xpSuma, tallerEnCurso.titulo);
+
+          if (notaCalculada >= 4.0) { emoji = "🎉"; titulo = "¡Excelente trabajo!"; msg = `¡Felicitaciones! Has dominado el tema.\nTu calificación final es: ${notaCalculada.toFixed(1)}`; colorBg = "rgba(46, 125, 50, 0.95)"; } 
+          else if (notaCalculada >= 3.0) { emoji = "👍"; titulo = "¡Buen intento!"; msg = `¡Aprobaste la actividad!\nTu calificación final es: ${notaCalculada.toFixed(1)}`; colorBg = "rgba(106, 27, 154, 0.95)"; } 
+          else { emoji = "💪"; titulo = "¡Ánimo, tú puedes!"; msg = `Sigue practicando. Esta vez obtuviste ${notaCalculada.toFixed(1)}.\nNo te rindas, ¡la próxima te irá mejor!`; colorBg = "rgba(230, 81, 0, 0.95)"; }
+          msg += `\n\n✨ ¡Ganaste +${xpRecienGanada} XP!`;
+      }
+
+      document.getElementById('successTallerEmoji').innerText = emoji;
+      document.getElementById('successTallerTitle').innerText = titulo;
+      document.getElementById('successTallerText').innerText = msg;
+      
+      const overlay = document.getElementById('successTaller');
+      overlay.style.background = colorBg;
+      
+      const btnColorHex = colorBg.replace('0.95)', '1)');
+      document.getElementById('successTallerTitle').style.color = btnColorHex;
+      document.getElementById('successTallerBtn').style.background = btnColorHex;
+      
+      overlay.style.display = 'flex';
+      btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS";
+    } catch(e) { 
+        alert("Error de conexión. Intenta de nuevo."); btn.disabled = false; btn.innerText = "ENVIAR RESPUESTAS"; 
+    }
   }
 
   function cargarTableroAvisos() {
