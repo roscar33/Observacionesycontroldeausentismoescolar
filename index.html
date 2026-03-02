@@ -431,16 +431,15 @@
       const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/); 
       return match ? match[1] : null; 
   }
-
-  function formatearFecha(f) { 
-      if(!f) return ""; 
-      try {
-          const d = new Date(f + "T00:00:00"); 
-          return d.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
-      } catch(e) {
-          return f;
-      }
-  }
+function formatearFecha(f) { 
+    if(!f) return ""; 
+    try {
+        const d = new Date(f + "T00:00:00"); 
+        return d.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(',', ''); 
+    } catch(e) {
+        return f;
+    }
+}
 
   function iniciarSesionApp() {
     const doc = document.getElementById("globalDocInput").value.trim(); 
