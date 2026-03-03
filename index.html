@@ -1003,6 +1003,12 @@
           if (conv && conv.conversacion) { chatHtml = `<div style="margin-top:10px; max-height:150px; overflow-y:auto; background:#f8fafc; padding:8px; border-radius:12px; display:flex; flex-direction:column; gap:5px;">` + conv.conversacion.map(m => `<div style="padding:6px 10px; border-radius:10px; font-size:11px; max-width:85%; ${m.rol==='docente'?'align-self:flex-start; background:#e0f2fe; color:#0369a1;':'align-self:flex-end; background:#dcfce7; color:#166534;'}"><b style="display:block; font-size:9px; opacity:0.6;">${m.rol==='docente'?'Profe':'Tú'}</b>${m.texto}</div>`).join("") + `</div>`; } 
           
           let mediaTextHtml = "";
+
+          // NUEVO: MOSTRAR IMAGEN EN LA AGENDA DEL ESTUDIANTE
+          if(t.imageUrl) {
+              mediaTextHtml += `<div style="margin-top:15px; border-radius:15px; overflow:hidden; border:1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"><img src="${t.imageUrl}" style="width:100%; height:auto; display:block;"></div>`;
+          }
+
           if(t.videoLink) {
               const ytId = getYouTubeId(t.videoLink);
               const tkId = getTikTokId(t.videoLink);
