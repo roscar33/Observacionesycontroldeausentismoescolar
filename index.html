@@ -151,8 +151,8 @@
   .acordeon-historial.active { background: #1b5e20; color: white; border-radius: 16px 16px 0 0; }
   .panel-historial { padding: 0 10px; background-color: white; display: none; overflow: hidden; border-radius: 0 0 16px 16px; border: 1px solid #e2e8f0; border-top: none; }
 
-  /* ANIMACIÓN PARA EL RELOJ */
-  @keyframes pulseTime { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+  /* ANIMACIÓN PARA EL RELOJ Y GLOBOS */
+  @keyframes pulseTime { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
   .live-countdown { animation: pulseTime 1.5s infinite; }
 
 </style>
@@ -236,8 +236,16 @@
     
     <button class="card-btn" onclick="navegarA('exc')"><div class="icon-circle blue-bg">📋</div><span class="card-label">Asistencia</span><span class="card-info">Fallas y Excusas</span></button>
     <button class="card-btn" onclick="navegarA('obs')"><div class="icon-circle orange-bg">✍️</div><span class="card-label">Observador</span><span class="card-info">Conducta Escolar</span></button>
-    <button class="card-btn" onclick="navegarA('piz')"><div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span></button>
-    <button class="card-btn" onclick="navegarA('int')"><div class="icon-circle teal-bg">🎮</div><span class="card-label">Escuela Interactiva</span><span class="card-info">Juegos y Práctica</span></button>
+    
+    <button class="card-btn" style="position:relative;" onclick="navegarA('piz')">
+        <div id="badge-agenda" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:12px; font-weight:900; padding:4px 8px; border-radius:50px; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.2); z-index:10; animation: pulseTime 2s infinite;">0</div>
+        <div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span>
+    </button>
+    
+    <button class="card-btn" style="position:relative;" onclick="navegarA('int')">
+        <div id="badge-interactiva" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:12px; font-weight:900; padding:4px 8px; border-radius:50px; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.2); z-index:10; animation: pulseTime 2s infinite;">0</div>
+        <div class="icon-circle teal-bg">🎮</div><span class="card-label">Escuela Interactiva</span><span class="card-info">Juegos y Práctica</span>
+    </button>
 
     <div class="tablero-container">
       <div class="tablero-titulo">📰 Periódico Escolar</div>
@@ -441,6 +449,75 @@
       }
   }
 
+  function esTareaVencida(fechaStr) { 
+      if (!fechaStr) return false; 
+      const ahora = new Date(); 
+      const vencimiento = new Date(fechaStr + "T23:59:59"); 
+      return ahora > vencimiento; 
+  }
+
+  function actualizarGloboAgenda() {
+      db.collection("agendaEscolar").where("gradeLevel", "==", gradoEstudianteActual).where("archived", "==", false).onSnapshot(snap => {
+          let count = 0;
+          snap.forEach(d => {
+              const t = d.data();
+              if (t.status === 'draft' || t.publico === false) return;
+              if (t.publishAt && new Date(t.publishAt) > new Date()) return;
+              if (t.targetStudent && t.targetStudent !== estActualDoc) return;
+              if (esTareaVencida(t.date)) return;
+              count++;
+          });
+          const badge = document.getElementById("badge-agenda");
+          if (badge) {
+              if (count > 0) {
+                  badge.style.display = "block";
+                  badge.innerText = count;
+              } else {
+                  badge.style.display = "none";
+              }
+          }
+      });
+  }
+
+  function actualizarGloboInteractiva() {
+      db.collection("resultadosTalleres").where("documentoEstudiante", "==", estActualDoc).onSnapshot(resSnap => {
+          const completados = [];
+          resSnap.forEach(d => completados.push(d.data().idTaller));
+
+          db.collection("talleresLectura").where("status", "==", "published").onSnapshot(snap => {
+              let count = 0;
+              const ahora = new Date();
+              snap.forEach(doc => {
+                  const t = doc.data();
+                  if (completados.includes(doc.id)) return; 
+                  if (t.archived) return; 
+                  if (t.fechaPublicacion && new Date(t.fechaPublicacion) > ahora) return; 
+                  if (t.fechaVencimiento && ahora > new Date(t.fechaVencimiento)) return; 
+
+                  const esParaMiEspecificamente = t.estudianteEspecifico === estActualDoc;
+                  const gradosDestino = Array.isArray(t.gradoDestino) ? t.gradoDestino : [];
+                  const esParaMiGradoOTodos = gradosDestino.includes(gradoEstudianteActual) || gradosDestino.includes("Todos");
+
+                  if (t.estudianteEspecifico) { if (!esParaMiEspecificamente) return; }
+                  else { if (!esParaMiGradoOTodos) return; }
+                  if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
+                  if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
+
+                  count++;
+              });
+              const badge = document.getElementById("badge-interactiva");
+              if (badge) {
+                  if (count > 0) {
+                      badge.style.display = "block";
+                      badge.innerText = count;
+                  } else {
+                      badge.style.display = "none";
+                  }
+              }
+          });
+      });
+  }
+
   function iniciarSesionApp() {
     const doc = document.getElementById("globalDocInput").value.trim(); 
     const est = estudiantesValidos.find(e => e.doc === doc); 
@@ -457,6 +534,8 @@
     document.getElementById("main-dashboard").style.display = "grid";
     
     cargarTableroAvisos();
+    actualizarGloboAgenda(); 
+    actualizarGloboInteractiva(); 
     
     db.collection("logrosEstudiantes").doc(doc).onSnapshot(snap => {
         let xp = snap.exists ? (snap.data().xp || 0) : 0;
@@ -767,7 +846,9 @@
             let date = dateMatch ? dateMatch[1] : 'Ver Agenda';
             if(date.includes('-') && date.length === 10) date = formatearFecha(date);
             let paperClass = 'parchment-paper white-style';
-            div.innerHTML += `<div class="wood-board" onclick='abrirZoom(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${closeBtnHtml}<div class="metal-clip"></div><div class="${paperClass}"><div class="parchment-header"><div class="parchment-title">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body"><div class="parchment-row"><span class="parchment-label">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row"><span class="parchment-label">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label">Entrega</span><span class="parchment-val">🗓️ ${date}</span></div></div><div class="parchment-footer">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div></div></div>`;
+            
+            // IDEA 2: REDIRECCION DIRECTA AL CLIC EN EL AVISO DE TAREA
+            div.innerHTML += `<div class="wood-board" onclick='navegarA("piz"); cerrarNotaGrande();'>${closeBtnHtml}<div class="metal-clip"></div><div class="${paperClass}"><div class="parchment-header"><div class="parchment-title">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body"><div class="parchment-row"><span class="parchment-label">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row"><span class="parchment-label">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label">Entrega</span><span class="parchment-val">🗓️ ${date}</span></div></div><div class="parchment-footer" style="color: #1e293b; background: #f1f5f9; padding: 4px; border-radius: 4px; margin-top: 5px; font-weight: bold; cursor:pointer;">👉 Toca aquí para abrir la agenda</div></div></div>`;
         } else {
             let badgeHtml = "";
             if (scope === 'General') { badgeHtml = `<div class="heart-badge">🌎 GLOBAL</div>`; } 
@@ -980,11 +1061,17 @@
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  async function iniciarCargaAlerta() { document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; await cargarPeriodoNotasActual(); cargarNotasBajasPeriodo(docAlertaActual); cargarAgendaEscolar(gradoEstudianteActual); }
+  // IDEA 2: PIZARRA ABRE EN AGENDA POR DEFECTO
+  async function iniciarCargaAlerta() { 
+      document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; 
+      await cargarPeriodoNotasActual(); 
+      cargarNotasBajasPeriodo(docAlertaActual); 
+      cargarAgendaEscolar(gradoEstudianteActual); 
+      switchTabAlerta('agenda'); 
+  }
+
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
   async function cargarNotasBajasPeriodo(docEst) { document.getElementById("aaBadge").innerText = `PERIODO ACTUAL #${periodoNotasActual}`; const div = document.getElementById("aaLista"); div.innerHTML = "Cargando..."; const snap = await db.collection("notasAcademicas").where("documentoEstudiante", "==", docEst).where("periodo", "==", periodoNotasActual).get(); let items = []; snap.forEach(d => { const r = d.data(); let n = r.nota; if (typeof n === "string") n = parseFloat(n.replace(",", ".")); if (n < 3) items.push({ area: r.area.toUpperCase(), actividad: r.actividad || r.nombreActividad, nota: n, observacion: r.observacion || "" }); }); if (items.length === 0) { div.innerHTML = `<div style="text-align:center;padding:30px;opacity:0.6;">✅ Todo al día.</div>`; return; } div.innerHTML = items.map(it => `<div style="background:#fff; border:1.5px solid #fee2e2; border-left:6px solid #dc2626; border-radius:16px; margin-bottom:12px; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:10px; font-weight:800; color:#991b1b;">${it.area}</div><div style="font-size:14px; font-weight:900;">${it.actividad}</div></div><div style="background:#fef2f2; color:#b91c1c; border:1.5px solid #fecaca; padding:4px 10px; border-radius:10px; font-weight:900;">${it.nota.toFixed(1).replace(".", ",")}</div></div><div class="agenda-task-desc" style="font-size: 12px; padding: 12px; margin-top: 10px;">${formatTaskDescription(it.observacion)}</div></div>`).join(""); }
-  
-  function esTareaVencida(fechaStr) { if (!fechaStr) return false; const ahora = new Date(); const vencimiento = new Date(fechaStr + "T23:59:59"); return ahora > vencimiento; }
 
   async function cargarAgendaEscolar(grado) { 
       const div = document.getElementById("aaAgendaLista"); div.innerHTML = "Cargando agenda..."; 
@@ -1004,7 +1091,6 @@
           
           let mediaTextHtml = "";
 
-          // NUEVO: MOSTRAR IMAGEN EN LA AGENDA DEL ESTUDIANTE
           if(t.imageUrl) {
               mediaTextHtml += `<div style="margin-top:15px; border-radius:15px; overflow:hidden; border:1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"><img src="${t.imageUrl}" style="width:100%; height:auto; display:block;"></div>`;
           }
@@ -1598,4 +1684,4 @@
   }
 </script>
 </body>
-</html>
+ </html>
