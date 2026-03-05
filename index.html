@@ -465,6 +465,9 @@
               if (t.publishAt && new Date(t.publishAt) > new Date()) return;
               if (t.targetStudent && t.targetStudent !== estActualDoc) return;
               if (esTareaVencida(t.date)) return;
+              
+              if (t.excludedStudents && t.excludedStudents.includes(estActualDoc)) return;
+              
               count++;
           });
           const badge = document.getElementById("badge-agenda");
@@ -814,6 +817,9 @@
         if (d.archived) return;
         if (d.publishAt && new Date(d.publishAt) > new Date()) return; 
         if (d.expiresAt && new Date(d.expiresAt) < new Date()) return; 
+        
+        if (d.excludedStudents && d.excludedStudents.includes(estActualDoc)) return;
+        
         const scope = d.scope || 'General';
         const targetGrades = d.targetGrades || [];
         const targetDoc = d.targetStudentDoc || '';
@@ -835,9 +841,8 @@
             const area = areaMatch ? areaMatch[1] : 'General';
             const work = workMatch ? workMatch[1] : 'Actividad';
             const date = dateMatch ? dateMatch[1] : '';
-            // AQUÍ APLICAMOS LOS TONOS AZULES SUAVES
             div.innerHTML += `<div class="wood-board" onclick='navegarA("int"); cerrarNotaGrande()'>${closeBtnHtml}<div class="metal-clip"></div><div class="parchment-paper" style="background: #e0f2fe; border-color: #7dd3fc;"><div class="parchment-header" style="border-bottom: 2px solid #0284c7;"><div class="parchment-title" style="color: #0369a1;">🎮 NUEVA ACTIVIDAD</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8; color: #075985;">Escuela Interactiva</div></div><div class="parchment-body"><div class="parchment-row" style="border-bottom: 1px dashed #bae6fd;"><span class="parchment-label" style="color: #0369a1;">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row" style="border-bottom: 1px dashed #bae6fd;"><span class="parchment-label" style="color: #0369a1;">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label" style="color: #0369a1;">Vencimiento</span><span class="parchment-val" style="color:#d32f2f;">⏳ ${date}</span></div></div><div class="parchment-footer" style="color: #0369a1; background: #bae6fd; padding: 4px; border-radius: 4px; margin-top: 5px; font-weight: bold; cursor:pointer;">👉 Toca aquí para resolver</div></div></div>`;
-        }
+        } 
         else if (d.isSystemNotice) {
             const areaMatch = d.mensaje.match(/📍 Área: (.*)/);
             const workMatch = d.mensaje.match(/📝 Trabajo: (.*)/);
@@ -848,7 +853,6 @@
             if(date.includes('-') && date.length === 10) date = formatearFecha(date);
             let paperClass = 'parchment-paper white-style';
             
-            // IDEA 2: REDIRECCION DIRECTA AL CLIC EN EL AVISO DE TAREA
             div.innerHTML += `<div class="wood-board" onclick='navegarA("piz"); cerrarNotaGrande();'>${closeBtnHtml}<div class="metal-clip"></div><div class="${paperClass}"><div class="parchment-header"><div class="parchment-title">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body"><div class="parchment-row"><span class="parchment-label">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row"><span class="parchment-label">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label">Entrega</span><span class="parchment-val">🗓️ ${date}</span></div></div><div class="parchment-footer" style="color: #1e293b; background: #f1f5f9; padding: 4px; border-radius: 4px; margin-top: 5px; font-weight: bold; cursor:pointer;">👉 Toca aquí para abrir la agenda</div></div></div>`;
         } else {
             let badgeHtml = "";
@@ -1062,7 +1066,6 @@
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
-  // IDEA 2: PIZARRA ABRE EN AGENDA POR DEFECTO
   async function iniciarCargaAlerta() { 
       document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; 
       await cargarPeriodoNotasActual(); 
@@ -1080,7 +1083,14 @@
       const msgsSnap = await db.collection("mensajesAgenda").where("studentDoc", "==", docAlertaActual).get(); 
       const convMap = {}; msgsSnap.forEach(doc => { convMap[doc.data().taskId] = doc.data(); }); 
       let tareas = []; snap.forEach(d => tareas.push({ id: d.id, ...d.data() })); 
-      let filtered = tareas.filter(t => { if (esTareaVencida(t.date)) return false; if (t.publishAt && new Date(t.publishAt) > new Date()) return false; return (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false; }); 
+      
+      let filtered = tareas.filter(t => { 
+          if (esTareaVencida(t.date)) return false; 
+          if (t.publishAt && new Date(t.publishAt) > new Date()) return false; 
+          if (t.excludedStudents && t.excludedStudents.includes(docAlertaActual)) return false;
+          return (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false; 
+      }); 
+      
       const order = document.getElementById("agendaSortOrder").value; 
       if(order === "prox") { filtered.sort((a,b) => (a.date || "").localeCompare(b.date || "")); } else if (order === "lejos") { filtered.sort((a,b) => (b.date || "").localeCompare(a.date || "")); } else { filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)); } 
       cacheTareasAgenda = filtered; if(filtered.length === 0) { div.innerHTML = "<p style='text-align:center;'>No hay tareas pendientes.</p>"; return; } 
