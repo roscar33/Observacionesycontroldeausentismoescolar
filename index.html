@@ -155,6 +155,13 @@
   @keyframes pulseTime { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
   .live-countdown { animation: pulseTime 1.5s infinite; }
 
+  /* --- NUEVO: OVERLAY DE NOTICIAS URGENTES --- */
+  #overlay-noticias-urgentes { display:none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 6000; background: rgba(245, 158, 11, 0.95); justify-content:center; align-items:center; flex-direction:column; backdrop-filter: blur(8px); padding: 20px; animation: fadeIn 0.3s ease; }
+  .urgentes-card { background: #f8fafc; width: 100%; max-width: 400px; max-height: 85vh; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; border: 4px solid white; }
+  .urgentes-header { background: #ea580c; color: white; padding: 20px; text-align: center; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
+  .urgentes-body { padding: 20px; overflow-y: auto; flex: 1; display:flex; flex-direction:column; }
+  .urgentes-footer { padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0; text-align: center; }
+
 </style>
 
 <script>
@@ -194,6 +201,16 @@
 </head>
 
 <body>
+
+  <div id="overlay-noticias-urgentes">
+    <div class="urgentes-card">
+      <div class="urgentes-header">📢 ¡AVISOS IMPORTANTES!</div>
+      <div class="urgentes-body" id="urgentes-body-content"></div>
+      <div class="urgentes-footer">
+        <button class="btn" style="background:#ea580c; color:#fff; font-size:16px; padding:18px; border-radius:16px; box-shadow:0 4px 0 #c2410c;" onclick="cerrarOverlayNoticias()">¡ENTENDIDO!</button>
+      </div>
+    </div>
+  </div>
 
   <div class="header" id="mainHeader">
     <img src="escudo.png" alt="Escudo">
@@ -313,7 +330,32 @@
       <div id="resultadoObs"></div>
   </div>
    
-  <div id="view-piz" class="container"><button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button><div class="pizarra-header-ui">🏫 Pizarra Escolar</div><div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;"><button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button><button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none;" onclick="switchTabAlerta('agenda')">📅 Agenda</button></div><div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div><div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div><div id="view-aa-notas"><div id="aaLista"></div></div><div id="view-aa-agenda" style="display:none;"><div class="agenda-filters"><span class="filter-label">Ordenar:</span><select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)"><option value="prox">Más próximas</option><option value="lejos">Más lejanas</option><option value="creado">Recientes</option></select></div><button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button><div id="aaAgendaLista"></div></div></div>
+  <div id="view-piz" class="container">
+      <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button>
+      <div class="pizarra-header-ui">🏫 Pizarra Escolar</div>
+      
+      <div style="display:flex; background:#5d4037; padding:10px 5px 0; margin:0 -20px 15px;">
+          <button id="tab-notas" style="flex:1; padding:14px; font-weight:bold; color:white; background:transparent; border:none; transition:0.3s;" onclick="switchTabAlerta('notas')">⚠️ Alertas</button>
+          <button id="tab-agenda" style="flex:1; padding:14px; font-weight:bold; color:white; background:#8d6e63; border:none; border-radius:14px 14px 0 0; transition:0.3s;" onclick="switchTabAlerta('agenda')">📅 Agenda</button>
+      </div>
+      
+      <div id="aaNombre" style="text-align:center; font-weight:900; margin-bottom:5px;"></div>
+      <div id="aaBadge" style="text-align:center; font-size:10px; background:#1b5e20; color:white; padding:3px 10px; margin:0 auto 15px; border-radius:50px; width:fit-content;"></div>
+      
+      <div id="view-aa-notas" style="display:none;"><div id="aaLista"></div></div>
+      <div id="view-aa-agenda" style="display:block;">
+          <div class="agenda-filters">
+              <span class="filter-label">Ordenar:</span>
+              <select id="agendaSortOrder" class="filter-select" onchange="cargarAgendaEscolar(gradoEstudianteActual)">
+                  <option value="prox">Más próximas</option>
+                  <option value="lejos">Más lejanas</option>
+                  <option value="creado">Recientes</option>
+              </select>
+          </div>
+          <button onclick="descargarAgendaPDF()" class="btn" style="background:#ef4444; margin-bottom:15px;">📄 Descargar Agenda PDF</button>
+          <div id="aaAgendaLista"></div>
+      </div>
+  </div>
 
   <div id="view-int" class="container">
     <button class="btn-back" onclick="volverAlMenu()">🔙 Regresar</button>
@@ -466,7 +508,7 @@
               if (t.targetStudent && t.targetStudent !== estActualDoc) return;
               if (esTareaVencida(t.date)) return;
               
-              if (t.excludedStudents && t.excludedStudents.includes(estActualDoc)) return;
+              if (Array.isArray(t.excludedStudents) && t.excludedStudents.includes(estActualDoc)) return;
               
               count++;
           });
@@ -504,7 +546,7 @@
                   if (t.estudianteEspecifico) { if (!esParaMiEspecificamente) return; }
                   else { if (!esParaMiGradoOTodos) return; }
                   if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
-                  if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
+                  if (Array.isArray(t.estudiantesExcluidos) && t.estudiantesExcluidos.includes(estActualDoc)) return;
 
                   count++;
               });
@@ -519,6 +561,61 @@
               }
           });
       });
+  }
+
+  // --- LÓGICA DE AVISOS URGENTES AL INICIAR SESIÓN ---
+  async function verificarAvisosAlIngresar() {
+      try {
+          const snap = await db.collection("tableroAvisos").orderBy("timestamp", "desc").limit(15).get();
+          let found = 0;
+          const contentDiv = document.getElementById('urgentes-body-content');
+          contentDiv.innerHTML = '';
+          const ahora = new Date();
+
+          snap.forEach(doc => {
+              const d = doc.data();
+              if (d.archived) return;
+              if (d.publishAt && new Date(d.publishAt) > ahora) return; 
+              if (d.expiresAt && new Date(d.expiresAt) < ahora) return; 
+              if (Array.isArray(d.excludedStudents) && d.excludedStudents.includes(estActualDoc)) return;
+              
+              const scope = d.scope || 'General';
+              const targetGrades = d.targetGrades || [];
+              const targetDoc = d.targetStudentDoc || '';
+              
+              if (scope === 'Grado' && !targetGrades.includes(gradoEstudianteActual)) return;
+              if (scope === 'Individual' && targetDoc !== estActualDoc) return;
+
+              let title = "📌 AVISO IMPORTANTE";
+              let bg = "#fff";
+              let border = "#f59e0b"; 
+              let textColor = "#334155";
+              
+              if(d.isTallerNotice) { title = "🎮 ACTIVIDAD INTERACTIVA PENDIENTE"; border = "#0284c7"; bg="#f0f9ff"; }
+              else if(d.isSystemNotice) { title = "🏫 NUEVA TAREA DE CLASE"; border = "#7c3aed"; bg="#f5f3ff"; }
+              else if(d.isXpNotice) { title = "🌟 NOTIFICACIÓN DE PUNTOS XP"; border = "#16a34a"; bg="#f0fdf4"; }
+
+              let imgH = d.imageUrl ? `<img src="${d.imageUrl}" style="width:100%; max-height:180px; object-fit:cover; border-radius:10px; margin-top:12px; border:1px solid #cbd5e1;">` : '';
+              
+              contentDiv.innerHTML += `
+              <div style="background:${bg}; border-left: 6px solid ${border}; padding: 18px; border-radius: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;">
+                  <div style="font-weight:900; font-size:11px; color:${border}; margin-bottom:8px; letter-spacing:0.5px;">${title}</div>
+                  <div style="font-size:14px; color:${textColor}; white-space:pre-line; line-height:1.5; font-weight:700;">${d.mensaje}</div>
+                  ${imgH}
+              </div>`;
+              found++;
+          });
+
+          if (found > 0) {
+              document.getElementById('overlay-noticias-urgentes').style.display = 'flex';
+          }
+      } catch (e) {
+          console.error("Error al cargar avisos urgentes:", e);
+      }
+  }
+
+  function cerrarOverlayNoticias() {
+      document.getElementById('overlay-noticias-urgentes').style.display = 'none';
   }
 
   function iniciarSesionApp() {
@@ -539,6 +636,9 @@
     cargarTableroAvisos();
     actualizarGloboAgenda(); 
     actualizarGloboInteractiva(); 
+    
+    // LLAMAMOS AL POPUP
+    verificarAvisosAlIngresar();
     
     db.collection("logrosEstudiantes").doc(doc).onSnapshot(snap => {
         let xp = snap.exists ? (snap.data().xp || 0) : 0;
@@ -818,7 +918,7 @@
         if (d.publishAt && new Date(d.publishAt) > new Date()) return; 
         if (d.expiresAt && new Date(d.expiresAt) < new Date()) return; 
         
-        if (d.excludedStudents && d.excludedStudents.includes(estActualDoc)) return;
+        if (Array.isArray(d.excludedStudents) && d.excludedStudents.includes(estActualDoc)) return;
         
         const scope = d.scope || 'General';
         const targetGrades = d.targetGrades || [];
@@ -915,7 +1015,7 @@
        const work = workMatch ? workMatch[1] : 'Actividad';
        let date = dateMatch ? dateMatch[1] : '';
        if(date.includes('-') && date.length === 10) date = formatearFecha(date);
-       content.innerHTML = `<div class="metal-clip" style="top: -15px;"></div><div class="parchment-paper white-style" style="min-height: 350px; justify-content: center;"><div class="parchment-header"><div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body" style="font-size: 16px;"><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Actividad</span><span class="parchment-val" style="font-size: 18px;">${work}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Área</span><span class="parchment-val" style="font-size: 18px;">${area}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span><span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span></div></div><div class="parchment-footer" style="font-size: 12px; margin-top: 20px;">Ingresa a la agenda para visualizar todos los detalles. ¡Exitos!</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%; border:1px solid #cbd5e1;" onclick="cerrarNotaGrande()">CERRAR</button></div>`;
+       content.innerHTML = `<div class="metal-clip" style="top: -15px;"></div><div class="parchment-paper white-style" style="min-height: 350px; justify-content: center;"><div class="parchment-header"><div class="parchment-title" style="font-size: 24px;">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:12px; margin-bottom:10px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body" style="font-size: 16px;"><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Actividad</span><span class="parchment-val" style="font-size: 18px;">${work}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Área</span><span class="parchment-val" style="font-size: 18px;">${area}</span></div><div class="parchment-row" style="margin-bottom: 15px;"><span class="parchment-label" style="font-size: 11px;">Fecha de Entrega</span><span class="parchment-val" style="font-size: 18px;">🗓️ ${date}</span></div></div><div class="parchment-footer" style="color: #1e293b; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 20px; font-weight: bold; cursor:pointer; text-align:center; font-size:14px;" onclick="cerrarNotaGrande(); navegarA('piz');">👉 Toca aquí para abrir la agenda</div><button class="btn sec" style="margin-top:20px; padding:10px; font-size:12px; width:100%; border:1px solid #cbd5e1;" onclick="cerrarNotaGrande()">CERRAR</button></div>`;
     } else {
        let colorClass = "note-yellow";
        if (data.color === 'pink') colorClass = "note-pink"; else if (data.color === 'blue') colorClass = "note-blue"; else if (data.color === 'green') colorClass = "note-green"; else if (data.color === 'orange') colorClass = "note-orange"; else if (data.color === 'red') colorClass = "note-red"; else if (data.color === 'purple') colorClass = "note-purple"; else if (data.color === 'teal') colorClass = "note-teal"; else if (data.color === 'lime') colorClass = "note-lime"; else if (data.color === 'white') colorClass = "note-white"; else if (data.color === 'brown') colorClass = "note-brown";
@@ -1066,12 +1166,35 @@
   async function firmarObs(id, dI, c) { const p=pads.get('cv_'+id); if(!p?.hasData) return alert("Firme."); await db.collection("registrosComportamentales").doc(id).update({ firmaAcudiente: p.c.toDataURL(), fechaFirma: new Date().toISOString() }); const snap = await db.collection("registrosComportamentales").where("documentoEstudiante", "==", dI).get(); let n=0; snap.forEach(d=>{if(d.data().ciclo==c)n++}); mostrarSem(n); }
   function mostrarSem(n) { const m12 = "Advertencia sobre conducta."; const m3 = "Citación oficial por acumulación de anotaciones."; document.getElementById("semText").innerText = n>=3?m3:m12; document.getElementById("overlaySem").style.display="flex"; }
 
+  function switchTabAlerta(tab) { 
+      document.getElementById("view-aa-notas").style.display = tab === 'notas' ? 'block' : 'none'; 
+      document.getElementById("view-aa-agenda").style.display = tab === 'agenda' ? 'block' : 'none'; 
+      
+      const btnNotas = document.getElementById("tab-notas");
+      const btnAgenda = document.getElementById("tab-agenda");
+      
+      if (tab === 'notas') {
+          btnNotas.style.background = '#8d6e63';
+          btnNotas.style.borderRadius = '14px 14px 0 0';
+          btnAgenda.style.background = 'transparent';
+      } else {
+          btnAgenda.style.background = '#8d6e63';
+          btnAgenda.style.borderRadius = '14px 14px 0 0';
+          btnNotas.style.background = 'transparent';
+      }
+  }
+
   async function iniciarCargaAlerta() { 
-      document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; 
-      await cargarPeriodoNotasActual(); 
-      cargarNotasBajasPeriodo(docAlertaActual); 
-      cargarAgendaEscolar(gradoEstudianteActual); 
-      switchTabAlerta('agenda'); 
+      try {
+          document.getElementById("aaNombre").innerText = estudiantesValidos.find(e=>e.doc===docAlertaActual).nombre; 
+          await cargarPeriodoNotasActual(); 
+          cargarNotasBajasPeriodo(docAlertaActual); 
+          cargarAgendaEscolar(gradoEstudianteActual); 
+      } catch(e) {
+          console.error(e);
+      } finally {
+          switchTabAlerta('agenda'); 
+      }
   }
 
   async function cargarPeriodoNotasActual() { const snap = await db.collection("configuracionGlobal").doc("notas").get(); periodoNotasActual = snap.exists ? (snap.data().periodoActual || 1) : 1; }
@@ -1087,7 +1210,7 @@
       let filtered = tareas.filter(t => { 
           if (esTareaVencida(t.date)) return false; 
           if (t.publishAt && new Date(t.publishAt) > new Date()) return false; 
-          if (t.excludedStudents && t.excludedStudents.includes(docAlertaActual)) return false;
+          if (Array.isArray(t.excludedStudents) && t.excludedStudents.includes(docAlertaActual)) return false;
           return (!t.targetStudent || t.targetStudent === docAlertaActual) && t.status !== 'draft' && t.publico !== false; 
       }); 
       
@@ -1135,7 +1258,6 @@
   }
   function descargarAgendaPDF() { const doc = new window.jsPDF(); const est = estudiantesValidos.find(e => e.doc === docAlertaActual); doc.text("AGENDA ESCOLAR - " + (est ? est.nombre : ""), 10, 15); const body = cacheTareasAgenda.map(t => [t.area || "Gral", t.title, formatearFecha(t.date)]); doc.autoTable({ startY: 25, head: [['ÁREA', 'ACTIVIDAD', 'ENTREGA']], body, headStyles:{fillColor:[27,94,32]} }); doc.save(`Agenda_${docAlertaActual}.pdf`); }
   async function enviarPregunta() { const txt = document.getElementById("textoPregunta").value.trim(); if (!txt) return alert("Escriba su duda."); const mRef = db.collection("mensajesAgenda"); const query = await mRef.where("taskId", "==", currentTaskId).where("studentDoc", "==", docAlertaActual).get(); const newMsg = { rol: 'user', texto: txt, timestamp: new Date().toISOString() }; if (!query.empty) { await mRef.doc(query.docs[0].id).update({ conversacion: firebase.firestore.FieldValue.arrayUnion(newMsg), lastUpdate: new Date().toISOString(), read: false }); } else { await mRef.add({ taskId: currentTaskId, taskTitle: currentTaskTitle, studentDoc: docAlertaActual, studentName: estSop.nombre, conversacion: [newMsg], lastUpdate: new Date().toISOString(), read: false, periodo: periodoNotasActual }); } alert("Duda enviada."); document.getElementById("textoPregunta").value = ""; document.getElementById("modalPreguntaTarea").style.display = "none"; cargarAgendaEscolar(gradoEstudianteActual); }
-  function switchTabAlerta(tab) { document.getElementById("view-aa-notas").style.display = tab === 'notas' ? 'block' : 'none'; document.getElementById("view-aa-agenda").style.display = tab === 'agenda' ? 'block' : 'none'; document.getElementById("tab-notas").classList.toggle('active', tab === 'notas'); document.getElementById("tab-agenda").classList.toggle('active', tab === 'agenda'); }
   function abrirSoporte() { document.getElementById("modalSoporte").style.display="block"; }
   function cerrarSoporte() { document.getElementById("modalSoporte").style.display="none"; }
   function irAFormSop() { document.getElementById("sop_menu").style.display="none"; document.getElementById("sop_form").style.display="block"; initPad('sigSoporte'); }
@@ -1177,7 +1299,7 @@
             if (t.estudianteEspecifico) { if (!esParaMiEspecificamente) return; } 
             else { if (!esParaMiGradoOTodos) return; }
             if (t.targetStudentDoc && t.targetStudentDoc !== estActualDoc) return;
-            if (t.estudiantesExcluidos && t.estudiantesExcluidos.includes(estActualDoc)) return;
+            if (Array.isArray(t.estudiantesExcluidos) && t.estudiantesExcluidos.includes(estActualDoc)) return;
 
             const id = doc.id;
             const miRespuesta = talleresCompletadosData[id];
