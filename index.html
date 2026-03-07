@@ -222,12 +222,12 @@
         <div class="icon-circle orange-bg">✍️</div><span class="card-label">Observador</span><span class="card-info">Conducta Escolar</span>
     </button>
     
-    <button class="card-btn" onclick="navegarA('piz')">
+    <button class="card-btn" style="position:relative;" onclick="navegarA('piz')">
         <div id="badge-agenda" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:12px; font-weight:900; padding:4px 8px; border-radius:50px; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.2); z-index:10; animation: pulseTime 2s infinite;">0</div>
         <div class="icon-circle purple-bg">🏫</div><span class="card-label">Pizarra Escolar</span><span class="card-info">Alertas y Agenda</span>
     </button>
     
-    <button class="card-btn" onclick="navegarA('int')">
+    <button class="card-btn" style="position:relative;" onclick="navegarA('int')">
         <div id="badge-interactiva" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:12px; font-weight:900; padding:4px 8px; border-radius:50px; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.2); z-index:10; animation: pulseTime 2s infinite;">0</div>
         <div class="icon-circle teal-bg">🎮</div><span class="card-label">Escuela Interactiva</span><span class="card-info">Juegos y Práctica</span>
     </button>
@@ -343,6 +343,15 @@
                 <span class="card-info" style="font-size:9px;">solo grados segundo</span>
             </button>
         </a>
+        
+        <a href="https://roscar33.github.io/Juegomyp/" target="_blank" style="text-decoration:none; grid-column: span 2;">
+            <button class="card-btn" style="width:100%; border:2px solid #fff3e0; min-height:120px;">
+                <div class="icon-circle orange-bg">🔤</div>
+                <span class="card-label">JUEGOS CON LETRAS</span>
+                <span class="card-info" style="font-size:9px;">Solo primero</span>
+            </button>
+        </a>
+        
         <button class="card-btn" style="grid-column: span 2; border:2px solid #f3e5f5; min-height:120px;" onclick="abrirSeccionLectura()">
             <div class="icon-circle purple-bg">📖</div>
             <span class="card-label">TALLERES Y ACTIVIDADES</span>
@@ -508,7 +517,6 @@
       return ahora > vencimiento; 
   }
 
-  // --- RASTREO / AUDITORÍA ---
   function registrarAuditoria(accion, detalle) {
       if(!estActualDoc || !estSop) return;
       db.collection("auditoriaAccesos").add({
@@ -600,7 +608,7 @@
               if (d.archived) return;
               if (d.publishAt && new Date(d.publishAt) > ahora) return; 
               if (d.expiresAt && new Date(d.expiresAt) < ahora) return; 
-              if (d.excludedStudents && d.excludedStudents.includes(estActualDoc)) return;
+              if (Array.isArray(d.excludedStudents) && d.excludedStudents.includes(estActualDoc)) return;
               
               const scope = d.scope || 'General';
               const targetGrades = d.targetGrades || [];
@@ -991,7 +999,7 @@
             if(date.includes('-') && date.length === 10) date = formatearFecha(date);
             let paperClass = 'parchment-paper white-style';
             
-            div.innerHTML += `<div class="wood-board" onclick='navegarA("piz"); cerrarNotaGrande();'>${closeBtnHtml}<div class="metal-clip"></div><div class="${paperClass}"><div class="parchment-header"><div class="parchment-title">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body"><div class="parchment-row"><span class="parchment-label">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row"><span class="parchment-label">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label">Entrega</span><span class="parchment-val">🗓️ ${date}</span></div></div><div class="parchment-footer" style="color: #1e293b; background: #f1f5f9; padding: 4px; border-radius: 4px; margin-top: 5px; font-weight: bold; cursor:pointer;">👉 Toca aquí para abrir la agenda</div></div></div>`;
+            div.innerHTML += `<div class="wood-board" onclick='navegarA("piz"); cerrarNotaGrande();'>${closeBtnHtml}<div class="metal-clip"></div><div class="${paperClass}"><div class="parchment-header"><div class="parchment-title">⚠️ ATENCIÓN</div><div style="text-align:center; font-size:9px; font-weight:600; opacity:0.8;">Nueva actividad en plataforma</div></div><div class="parchment-body"><div class="parchment-row"><span class="parchment-label">Actividad</span><span class="parchment-val">${work}</span></div><div class="parchment-row"><span class="parchment-label">Área</span><span class="parchment-val">${area}</span></div><div class="parchment-row"><span class="parchment-label">Entrega</span><span class="parchment-val">🗓️ ${date}</span></div></div><div class="parchment-footer" style="color: #1e293b; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 20px; font-weight: bold; cursor:pointer; text-align:center; font-size:14px;" onclick="cerrarNotaGrande(); navegarA('piz');">👉 Toca aquí para abrir la agenda</div></div></div>`;
         } else {
             let badgeHtml = "";
             if (scope === 'General') { badgeHtml = `<div class="heart-badge">🌎 GLOBAL</div>`; } 
@@ -1926,4 +1934,4 @@
   }
 </script>
 </body>
-</html>
+ </html>
