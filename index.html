@@ -434,7 +434,6 @@
   const firebaseConfig = { apiKey: "AIzaSyB2MJ-jdwQeT6sOfZ21tCrFYzGiuTNOAJ8", authDomain: "diariodeprocesos-6f78d.firebaseapp.com", projectId: "diariodeprocesos-6f78d" };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-
   const estudiantesValidos = [
     { doc: "1037780041", nombre: "MARIA FERNANDA GUERRA TORRES", grado: "Primero" }, 
     { doc: "1042155626", nombre: "MARTINEZ ARANGO AYLYN", grado: "Primero" }, 
@@ -445,6 +444,7 @@
     { doc: "1041636641", nombre: "MARTINEZ MARTINEZ SEBASTIAN", grado: "Segundo" },
     { doc: "1035922719", nombre: "MOLINA OCHOA BELEN", grado: "Tercero" }, 
     { doc: "1067959648", nombre: "PACHECO BARRERA JOSE DANIEL", grado: "Tercero" },
+    { doc: "1044989674", nombre: "GUERRERO DELGADO HELLEN GABRIELA", grado: "Tercero" },
     { doc: "1032328826", nombre: "LOPERA CADAVID LUCIANA", grado: "Segundo" }, 
     { doc: "1042155250", nombre: "CASAS FERNANDEZ ANTONELLA", grado: "Cuarto" },
     { doc: "1035801483", nombre: "RESTREPO VILLA DILMER FELIPE", grado: "Cuarto" }, 
@@ -949,7 +949,6 @@
           if(nuevos.length > 0) logrosRecienGanados = nuevos;
       }
   }
-
   function cargarTableroAvisos() {
     const div = document.getElementById("dashboard-avisos");
     let nombreAmigable = "Estudiante";
